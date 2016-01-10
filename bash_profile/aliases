@@ -1,0 +1,18 @@
+# Add BASH aliases
+alias js="jekyll serve"
+alias cjs="code . && js"
+alias console="php app/console"
+
+alias cmp="cd ~/Code/cmp.local"
+alias cmp-s="cd ~/Syllabi/cmp && open http://localhost:4000/cmp/ && cjs"
+alias cmp="cd ~/Code/cmp1.local"
+alias cmp="cd ~/Code/cmp2.local"
+alias cmp="cd ~/Code/cmp3.local"
+alias ed="cd ~/Code/ed.local"
+alias ed-s="cd ~/Syllabi/ed && open http://localhost:4000/ed && cjs"
+alias nmdad2="cd ~/Code/nmdad2.local"
+alias nmdad2-s="cd ~/Syllabi/nmdad2 && open http://localhost:4000/nmdad2/ && cjs"
+alias nmdad3="cd ~/Code/nmdad3.arteveldehogeschool.local"
+alias nmdad3-s="cd ~/Syllabi/nmdad3 && open http://localhost:4000/nmdad3/ && cjs"
+alias webd="cd ~/Code/webd.local"
+alias webd-s="cd ~/Syllabi/webd && open http://localhost:4000/webd/ && cjs"
