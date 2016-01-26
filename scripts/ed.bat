@@ -1,3 +1,0 @@
-@ECHO OFF
-%HOMEDRIVE%
-CD %USERPROFILE%\Code\ed.local
