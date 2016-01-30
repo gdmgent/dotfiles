@@ -7,10 +7,10 @@ alias c="cd ~/Code"
 alias h="cd ~"
 alias s="cd ~/Syllabi"
 
-alias artestead="cd ~/Code/artestead"
+alias artestead-c="cd ~/Code/artestead"
 alias artestead-s="cd ~/Syllabi/artestead-doc && open http://localhost:4000/artestead/ && cjs"
 
-alias dotfiles="cd ~/Code/dotfiles"
+alias dotfiles-c="cd ~/Code/dotfiles"
 alias dotfiles-s="cd ~/Syllabi/dotfiles-doc && open http://localhost:4000/dotfiles/ && cjs"
 
 # Crossmedia Publishing
