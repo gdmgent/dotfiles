@@ -1,6 +1,8 @@
 @ECHO OFF
+
 doskey c=CD %USERPROFILE%\Code\
 doskey h=CD %USERPROFILE%
+doskey s=CD %USERPROFILE%\Syllabi\
 
 doskey hosts=code %Systemroot%\System32\Drivers\Etc\hosts
 
@@ -12,3 +14,4 @@ doskey ed=CD %USERPROFILE%\Code\ed.local\
 doskey nmdad2=CD %USERPROFILE%\Code\nmdad2.local\
 doskey nmdad3=CD %USERPROFILE%\Code\nmdad3.local\
 doskey mmtoep=CD %USERPROFILE%\Code\mmtoep.local\
+doskey webd=CD %USERPROFILE%\Code\webd.local\
