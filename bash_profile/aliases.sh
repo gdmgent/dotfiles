@@ -7,6 +7,10 @@ alias c="cd ~/Code/"
 alias h="cd ~"
 alias s="cd ~/Syllabi/"
 
+alias ll="ls -la"
+
+alias hosts="sudo nano /etc/hosts"
+
 # Artestead
 alias artestead-c="cd ~/Code/artestead/"
 alias artestead-s="cd ~/Syllabi/artestead-doc/ && open http://localhost:4000/artestead/ && cjs"

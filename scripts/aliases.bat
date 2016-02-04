@@ -5,6 +5,8 @@ doskey c=cd %USERPROFILE%\Code\
 doskey h=cd %USERPROFILE%
 doskey s=cd %USERPROFILE%\Syllabi\
 
+doskey ll=ls -la
+
 doskey hosts=code %Systemroot%\System32\Drivers\Etc\hosts
 
 rem Artestead
