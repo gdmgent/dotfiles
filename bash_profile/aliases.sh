@@ -1,7 +1,7 @@
 # Add BASH aliases
 alias cjs="code . && js"
 alias console="php app/console"
-alias js="jekyll serve"
+alias js="jekyll serve --incremental"
 
 alias c="cd ~/Code/"
 alias h="cd ~"
