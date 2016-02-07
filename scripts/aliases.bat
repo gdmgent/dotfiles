@@ -32,9 +32,9 @@ rem E-design
 doskey ed=cd %USERPROFILE%\Code\ed.local\
 doskey ed-s=cd %USERPROFILE%\Syllabi\ed\ && cjs
 
-rem Mulimediatoepassingen
-doskey mmtoep=cd %USERPROFILE%\Code\mmtoep.local\
-doskey mmtoep-s=cd %USERPROFILE%\Syllabi\mmtoep\ && cjs
+rem Mulimedia-applicaties
+doskey mma=cd %USERPROFILE%\Code\mma.local\
+doskey mma-s=cd %USERPROFILE%\Syllabi\mma\ && cjs
 
 rem New Media Design & Development II
 doskey nmdad2=cd %USERPROFILE%\Code\nmdad2.local\

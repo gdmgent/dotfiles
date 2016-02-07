@@ -32,9 +32,9 @@ alias cmp3="cd ~/Code/cmp3.local/"
 alias ed="cd ~/Code/ed.local/"
 alias ed-s="cd ~/Syllabi/ed/ && open http://localhost:4000/ed && cjs"
 
-# Mulimediatoepassingen
-alias mmtoep="cd ~/Code/mmtoep.local/"
-alias mmtoep-s="cd ~/Syllabi/mmtoep/ && open http://localhost:4000/mmtoep/ && cjs"
+# Mulimedia-applicaties
+alias mma="cd ~/Code/mma.local/"
+alias mma-s="cd ~/Syllabi/mma/ && open http://localhost:4000/mma/ && cjs"
 
 # New Media Design & Development II
 alias nmdad2="cd ~/Code/nmdad2.local/"
