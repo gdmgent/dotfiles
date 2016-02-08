@@ -32,9 +32,9 @@ rem E-design
 doskey ed=cd %USERPROFILE%\Code\ed.local\
 doskey ed-s=cd %USERPROFILE%\Syllabi\ed\ $T open http://localhost:4000/ed/ $T code . $T jekyll serve --incremental
 
-rem Mulimediatoepassingen
-doskey mmtoep=cd %USERPROFILE%\Code\mmtoep.local\
-doskey mmtoep-s=cd %USERPROFILE%\Syllabi\mmtoep\ $T open http://localhost:4000/mmtoep/ $T code . $T jekyll serve --incremental
+rem Mulimedia-applicaties
+doskey mma=cd %USERPROFILE%\Code\mma.local\
+doskey mma-s=cd %USERPROFILE%\Syllabi\mma\ $T open http://localhost:4000/mma/ $T code . $T jekyll serve --incremental
 
 rem New Media Design & Development II
 doskey nmdad2=cd %USERPROFILE%\Code\nmdad2.local\
