@@ -1,7 +1,12 @@
 @echo off
-doskey cjs=code . $T jekyll serve --incremental
+doskey cjs=code . $T jekyll serve
+doskey cjsi=code . $T jekyll serve --incremental
 doskey console=php app/console $*
-doskey js=jekyll serve --incremental
+doskey js=jekyll serve
+doskey jsi=jekyll serve --incremental
+
+doskey ..=cd ..
+doskey ...=cd ..\..
 
 doskey c=cd %USERPROFILE%\Code\
 doskey h=cd %USERPROFILE%
