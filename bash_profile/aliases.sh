@@ -1,4 +1,5 @@
 # Add BASH aliases
+alias artisan="php artisan"
 alias cjs="code . && js"
 alias cjsi="code . && jsi"
 alias console="php app/console"

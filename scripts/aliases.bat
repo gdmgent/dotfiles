@@ -1,4 +1,5 @@
 @echo off
+doskey artisan=php artisan $*
 doskey cjs=code . $T jekyll serve
 doskey cjsi=code . $T jekyll serve --incremental
 doskey console=php app/console $*
