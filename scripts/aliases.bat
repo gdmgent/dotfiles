@@ -17,6 +17,15 @@ doskey ll=ls -la
 
 doskey hosts=code %Systemroot%\System32\Drivers\Etc\hosts
 
+rem Vagrant
+doskey vg=vagrant global-status
+doskey vh=vagrant halt
+doskey vp=vagrant provision
+doskey vr=vagrant reload
+doskey vs=vagrant status
+doskey vu=vagrant up
+doskey vup=vagrant up --provision
+
 rem Artestead
 doskey artestead-c=cd %USERPROFILE%\Code\artestead\
 doskey artestead-s=cd %USERPROFILE%\Syllabi\artestead-doc\ $T start http://localhost:4000/artestead/ $T code . $T jekyll serve --incremental

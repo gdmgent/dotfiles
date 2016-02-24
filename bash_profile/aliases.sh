@@ -17,6 +17,15 @@ alias ll="ls -la"
 
 alias hosts="sudo nano /etc/hosts"
 
+# Vagrant
+alias vg="vagrant global-status"
+alias vh="vagrant halt"
+alias vp="vagrant provision"
+alias vr="vagrant reload"
+alias vs="vagrant status"
+alias vu="vagrant up"
+alias vup="vagrant up --provision"
+
 # Artestead
 alias artestead-c="cd ~/Code/artestead/"
 alias artestead-s="cd ~/Syllabi/artestead-doc/ && open http://localhost:4000/artestead/ && cjs"

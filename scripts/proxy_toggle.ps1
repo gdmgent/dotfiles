@@ -7,7 +7,7 @@ $user                   = "User"
 Write-Host "======================================================="
 Write-Host "==  Artevelde University College Ghent Proxy Toggle  =="
 Write-Host "======================================================="
-Write-Host "1. Retrieve the proxy server from the internet options …"
+Write-Host "1. Retrieve the proxy server from the internet options ..."
 $currentProxyServer = Get-ItemProperty -path $internetSettingsRegKey ProxyServer -ErrorAction SilentlyContinue
 
 if ([string]::IsNullOrEmpty($currentProxyServer)) {
@@ -19,10 +19,10 @@ if ([string]::IsNullOrEmpty($currentProxyServer)) {
     [Environment]::SetEnvironmentVariable("HTTPS_PROXY"        , $proxyServer, $user)
     [Environment]::SetEnvironmentVariable("FTP_PROXY"          , $proxyServer, $user)
     [Environment]::SetEnvironmentVariable("NO_PROXY"           , $noProxy    , $user)
-    # [Environment]::SetEnvironmentVariable("VAGRANT_HTTP_PROXY" , $proxyServer, $user)
-    # [Environment]::SetEnvironmentVariable("VAGRANT_HTTPS_PROXY", $proxyServer, $user)
-    # [Environment]::SetEnvironmentVariable("VAGRANT_FTP_PROXY"  , $proxyServer, $user)
-    # [Environment]::SetEnvironmentVariable("VAGRANT_NO_PROXY"   , $noProxy    , $user)
+    [Environment]::SetEnvironmentVariable("VAGRANT_HTTP_PROXY" , $proxyServer, $user)
+    [Environment]::SetEnvironmentVariable("VAGRANT_HTTPS_PROXY", $proxyServer, $user)
+    [Environment]::SetEnvironmentVariable("VAGRANT_FTP_PROXY"  , $proxyServer, $user)
+    [Environment]::SetEnvironmentVariable("VAGRANT_NO_PROXY"   , $noProxy    , $user)
     Write-Host "4. Environment variables: Proxy is now enabled"
 } else {
     Write-Host "2. Internet options: Proxy is currently enabled, server: " + $currentProxyServer
@@ -33,10 +33,10 @@ if ([string]::IsNullOrEmpty($currentProxyServer)) {
     [Environment]::SetEnvironmentVariable("HTTPS_PROXY"        , $null, $user)
     [Environment]::SetEnvironmentVariable("FTP_PROXY"          , $null, $user)
     [Environment]::SetEnvironmentVariable("NO_PROXY"           , $null, $user)
-    # [Environment]::SetEnvironmentVariable("VAGRANT_HTTP_PROXY" , $null, $user)
-    # [Environment]::SetEnvironmentVariable("VAGRANT_HTTPS_PROXY", $null, $user)
-    # [Environment]::SetEnvironmentVariable("VAGRANT_FTP_PROXY"  , $null, $user)
-    # [Environment]::SetEnvironmentVariable("VAGRANT_NO_PROXY"   , $null, $user)
+    [Environment]::SetEnvironmentVariable("VAGRANT_HTTP_PROXY" , $null, $user)
+    [Environment]::SetEnvironmentVariable("VAGRANT_HTTPS_PROXY", $null, $user)
+    [Environment]::SetEnvironmentVariable("VAGRANT_FTP_PROXY"  , $null, $user)
+    [Environment]::SetEnvironmentVariable("VAGRANT_NO_PROXY"   , $null, $user)
     Write-Host "4. Environment variables: Proxy is now disabled"
 }
 Write-Host "======================================================="
