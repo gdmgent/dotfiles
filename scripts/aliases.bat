@@ -23,6 +23,7 @@ doskey vh=vagrant halt
 doskey vp=vagrant provision
 doskey vr=vagrant reload
 doskey vs=vagrant status
+doskey vsu=vagrant suspend
 doskey vu=vagrant up
 doskey vup=vagrant up --provision
 
