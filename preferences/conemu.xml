@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <key name="Software">
 	<key name="ConEmu">
-		<key name=".Vanilla" modified="2016-02-16 14:05:45" build="160207">
+		<key name=".Vanilla" modified="2016-02-25 17:39:37" build="160222">
 			<value name="StartType" type="hex" data="02"/>
 			<value name="CmdLine" type="string" data="C:\WINDOWS\System32\cmd.exe"/>
 			<value name="StartTasksFile" type="string" data=""/>
@@ -87,6 +87,7 @@
 			<value name="StoreTaskbarCommands" type="hex" data="00"/>
 			<value name="SaveCmdHistory" type="hex" data="01"/>
 			<value name="CmdLineHistory" type="multi">
+				<line data="{Shells::PowerShell (Admin)}"/>
 				<line data="{Shells::cmd}"/>
 				<line data="cmd.exe /k aliases.bat  /k &quot;%ConEmuBaseDir%\CmdInit.cmd&quot;"/>
 				<line data="{Shells::cmd (Admin)}"/>
@@ -142,11 +143,11 @@
 			<value name="ColorKeyValue" type="dword" data="00010101"/>
 			<value name="UseCurrentSizePos" type="hex" data="01"/>
 			<value name="WindowMode" type="dword" data="00000520"/>
-			<value name="ConWnd Width" type="dword" data="0000004f"/>
-			<value name="ConWnd Height" type="dword" data="00000018"/>
+			<value name="ConWnd Width" type="dword" data="00000051"/>
+			<value name="ConWnd Height" type="dword" data="00000015"/>
 			<value name="Cascaded" type="hex" data="01"/>
-			<value name="ConWnd X" type="long" data="-7"/>
-			<value name="ConWnd Y" type="long" data="0"/>
+			<value name="ConWnd X" type="long" data="11"/>
+			<value name="ConWnd Y" type="long" data="-27"/>
 			<value name="16bit Height" type="ulong" data="0"/>
 			<value name="AutoSaveSizePos" type="hex" data="01"/>
 			<value name="IntegralSize" type="hex" data="00"/>
@@ -370,8 +371,8 @@
 			<value name="Update.CheckHourly" type="hex" data="00"/>
 			<value name="Update.ConfirmDownload" type="hex" data="01"/>
 			<value name="Update.UseBuilds" type="hex" data="02"/>
-			<value name="Update.UseProxy" type="hex" data="00"/>
-			<value name="Update.Proxy" type="string" data=""/>
+			<value name="Update.UseProxy" type="hex" data="01"/>
+			<value name="Update.Proxy" type="string" data="http://proxy.arteveldehs.be:8080"/>
 			<value name="Update.ProxyUser" type="string" data=""/>
 			<value name="Update.ProxyPassword" type="string" data=""/>
 			<value name="Update.ExeCmdLine" type="string" data=""/>
@@ -551,9 +552,9 @@
 			<value name="DndLKey" type="hex" data="00"/>
 			<value name="DndRKey" type="hex" data="a2"/>
 			<value name="WndDragKey" type="dword" data="00121101"/>
-			<key name="Tasks" modified="2016-02-16 14:05:45" build="160207">
+			<key name="Tasks" modified="2016-02-25 17:39:37" build="160222">
 				<value name="Count" type="long" data="10"/>
-				<key name="Task1" modified="2016-02-16 14:05:45" build="160207">
+				<key name="Task1" modified="2016-02-25 17:39:37" build="160222">
 					<value name="Name" type="string" data="{Shells::cmd}"/>
 					<value name="Flags" type="dword" data="00000002"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -562,7 +563,7 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
-				<key name="Task2" modified="2016-02-16 14:05:45" build="160207">
+				<key name="Task2" modified="2016-02-25 17:39:37" build="160222">
 					<value name="Name" type="string" data="{Shells::cmd (Admin)}"/>
 					<value name="Flags" type="dword" data="00000000"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -571,7 +572,7 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
-				<key name="Task3" modified="2016-02-16 14:05:45" build="160207">
+				<key name="Task3" modified="2016-02-25 17:39:37" build="160222">
 					<value name="Name" type="string" data="{Shells::cmd-32}"/>
 					<value name="Flags" type="dword" data="00000000"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -580,7 +581,7 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
-				<key name="Task4" modified="2016-02-16 14:05:45" build="160207">
+				<key name="Task4" modified="2016-02-25 17:39:37" build="160222">
 					<value name="Name" type="string" data="{Shells::cmd 64/32}"/>
 					<value name="Flags" type="dword" data="00000000"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -590,7 +591,7 @@
 					<value name="Count" type="long" data="2"/>
 					<value name="Cmd2" type="string" data="&quot;%windir%\syswow64\cmd.exe&quot; /k &quot;&quot;%ConEmuBaseDir%\CmdInit.cmd&quot; &amp; echo This is 32 bit cmd.exe -new_console:s50V&quot;"/>
 				</key>
-				<key name="Task5" modified="2016-02-16 14:05:45" build="160207">
+				<key name="Task5" modified="2016-02-25 17:39:37" build="160222">
 					<value name="Name" type="string" data="{Shells::PowerShell}"/>
 					<value name="Flags" type="dword" data="00000000"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -600,7 +601,7 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
-				<key name="Task6" modified="2016-02-16 14:05:45" build="160207">
+				<key name="Task6" modified="2016-02-25 17:39:37" build="160222">
 					<value name="Name" type="string" data="{Shells::PowerShell (Admin)}"/>
 					<value name="Flags" type="dword" data="00000000"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -609,7 +610,7 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
-				<key name="Task7" modified="2016-02-16 14:05:45" build="160207">
+				<key name="Task7" modified="2016-02-25 17:39:37" build="160222">
 					<value name="Name" type="string" data="{Bash::bash}"/>
 					<value name="Flags" type="dword" data="00000000"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -618,7 +619,7 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
-				<key name="Task8" modified="2016-02-16 14:05:45" build="160207">
+				<key name="Task8" modified="2016-02-25 17:39:37" build="160222">
 					<value name="Name" type="string" data="{Bash::Git bash}"/>
 					<value name="Flags" type="dword" data="00000000"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -627,7 +628,7 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
-				<key name="Task9" modified="2016-02-16 14:05:45" build="160207">
+				<key name="Task9" modified="2016-02-25 17:39:37" build="160222">
 					<value name="Name" type="string" data="{Tests::Show ANSI colors}"/>
 					<value name="Flags" type="dword" data="00000000"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -636,7 +637,7 @@
 					<value name="Active" type="long" data="0"/>
 					<value name="Count" type="long" data="1"/>
 				</key>
-				<key name="Task10" modified="2016-02-16 14:05:45" build="160207">
+				<key name="Task10" modified="2016-02-25 17:39:37" build="160222">
 					<value name="Name" type="string" data="{Scripts::Chocolatey (Admin)}"/>
 					<value name="Flags" type="dword" data="00000000"/>
 					<value name="Hotkey" type="dword" data="00000000"/>
@@ -646,15 +647,15 @@
 					<value name="Count" type="long" data="1"/>
 				</key>
 			</key>
-			<key name="Apps" modified="2016-02-16 14:05:45" build="160207">
+			<key name="Apps" modified="2016-02-25 17:39:37" build="160222">
 				<value name="Count" type="long" data="0"/>
 			</key>
-			<key name="Colors" modified="2016-02-16 14:05:45" build="160207">
+			<key name="Colors" modified="2016-02-25 17:39:37" build="160222">
 				<value name="Count" type="long" data="0"/>
 			</key>
 			<value name="StartCreateDelay" type="ulong" data="100"/>
 			<value name="DefaultTerminalDebugLog" type="hex" data="00"/>
-			<value name="LastMonitor" type="string" data="0,0,1280,984"/>
+			<value name="LastMonitor" type="string" data="0,0,1920,1040"/>
 			<value name="Restore2ActiveMon" type="hex" data="00"/>
 			<value name="DownShowExOnTopMessage" type="hex" data="00"/>
 			<value name="EnvironmentSet" type="multi">
@@ -663,7 +664,7 @@
 			</value>
 			<value name="Update.InetTool" type="hex" data="00"/>
 			<value name="Update.InetToolCmd" type="string" data=""/>
-			<key name="HotKeys" modified="2016-02-16 14:05:45" build="160207">
+			<key name="HotKeys" modified="2016-02-25 17:39:37" build="160222">
 				<value name="KeyMacroVersion" type="hex" data="02"/>
 				<value name="Multi.Modifier" type="dword" data="0000005b"/>
 				<value name="Multi.ArrowsModifier" type="dword" data="0000005b"/>
@@ -844,6 +845,8 @@
 				<value name="Key.DebugProcess" type="dword" data="00105b44"/>
 				<value name="Key.DumpProcess" type="dword" data="00000000"/>
 				<value name="Key.DumpTree" type="dword" data="00000000"/>
+				<value name="Key.JumpActiveMonitor" type="dword" data="00000000"/>
+				<value name="Key.ResetTerm" type="dword" data="00000000"/>
 			</key>
 			<value name="ProcessCtrlZ" type="hex" data="00"/>
 			<value name="SuppressBells" type="hex" data="01"/>
