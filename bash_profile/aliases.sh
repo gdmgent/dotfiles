@@ -18,7 +18,8 @@ alias ll="ls -la"
 alias hosts="sudo nano /etc/hosts"
 
 # Vagrant
-alias vgs="vagrant global-status"
+alias vd="vagrant destroy"
+alias vg="vagrant global-status"
 alias vh="vagrant halt"
 alias vp="vagrant provision"
 alias vr="vagrant reload"

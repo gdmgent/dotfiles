@@ -18,6 +18,7 @@ doskey ll=ls -la
 doskey hosts=code %Systemroot%\System32\Drivers\Etc\hosts
 
 rem Vagrant
+doskey vd=vagrant destroy
 doskey vg=vagrant global-status
 doskey vh=vagrant halt
 doskey vp=vagrant provision
