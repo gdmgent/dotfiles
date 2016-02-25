@@ -20,10 +20,12 @@ doskey hosts=code %Systemroot%\System32\Drivers\Etc\hosts
 rem Vagrant
 doskey vd=vagrant destroy
 doskey vg=vagrant global-status
+doskey vgp=vagrant global-status --prune
 doskey vh=vagrant halt
 doskey vp=vagrant provision
 doskey vr=vagrant reload
 doskey vs=vagrant status
+doskey vss=vagrant ssh
 doskey vsu=vagrant suspend
 doskey vu=vagrant up
 doskey vup=vagrant up --provision
