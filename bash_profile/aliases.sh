@@ -1,10 +1,17 @@
 # Add BASH aliases
 alias artisan="php artisan"
 alias cjs="code . && js"
+alias cjsd="code . && jsd"
+alias cjsf="code . && jsf"
 alias cjsi="code . && jsi"
+alias cjsu="code . && jsu"
 alias console="php app/console"
 alias js="jekyll serve"
+alias jsd="jekyll serve --drafts"
+alias jsf="jekyll serve --future"
 alias jsi="jekyll serve --incremental"
+alias jsu="jekyll serve --unpublished"
+alias wip="git commit -a -m [WIP] && git push"
 
 alias ..="cd .."
 alias ...="cd ../.."
