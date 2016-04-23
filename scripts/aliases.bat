@@ -1,16 +1,16 @@
 @echo off
 doskey artisan=php artisan $*
-doskey cjs=code . $T jekyll serve
-doskey cjsd=code . $T jekyll serve --drafts
-doskey cjsf=code . $T jekyll serve --future
-doskey cjsi=code . $T jekyll serve --incremental
-doskey cjsu=code . $T jekyll serve --unpublished
+doskey cjs=code . $T jekyll serve --watch
+doskey cjsd=code . $T jekyll serve --watch --drafts
+doskey cjsf=code . $T jekyll serve --watch --future
+doskey cjsi=code . $T jekyll serve --watch --incremental
+doskey cjsu=code . $T jekyll serve --watch --unpublished
 doskey console=php app/console $*
-doskey js=jekyll serve
-doskey jsd=jekyll serve --drafts
-doskey jsf=jekyll serve --future
-doskey jsi=jekyll serve --incremental
-doskey jsu=jekyll serve --unpublished
+doskey js=jekyll serve --watch
+doskey jsd=jekyll serve --watch --drafts
+doskey jsf=jekyll serve --watch --future
+doskey jsi=jekyll serve --watch --incremental
+doskey jsu=jekyll serve --watch --unpublished
 doskey wip=git commit -a -m [WIP] $T git push
 
 doskey ..=cd ..
