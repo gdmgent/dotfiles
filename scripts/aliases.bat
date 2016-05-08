@@ -39,15 +39,24 @@ doskey vup=vagrant up --provision
 
 rem Artestead
 doskey artestead-c=cd %USERPROFILE%\Code\artestead\
-doskey artestead-s=cd %USERPROFILE%\Syllabi\artestead-doc\ $T start http://localhost:4000/artestead/ $T code . $T jekyll serve --incremental
+doskey artestead-s=cd %USERPROFILE%\Syllabi\artestead-doc\ $T start http://localhost:4000/artestead/ $T code . $T jekyll serve --unpublished
 
 rem Dotfiles
 doskey dotfiles-c=cd %USERPROFILE%\Code\dotfiles\
-doskey dotfiles-s=cd %USERPROFILE%\Syllabi\dotfiles-doc\ $T start http://localhost:4000/dotfiles/ $T code . $T jekyll serve --incremental
+doskey dotfiles-s=cd %USERPROFILE%\Syllabi\dotfiles-doc\ $T start http://localhost:4000/dotfiles/ $T code . $T jekyll serve --unpublished
+
+rem Syllabus
+doskey syllabus-s=cd %USERPROFILE%\Syllabi\syllabus\ $T start http://localhost:4000/syllabus/ $T code . $T jekyll serve --unpublished
+
+rem Web & New Media
+doskey wanm-s=cd %USERPROFILE%\Syllabi\wanm\ $T start http://localhost:4000/wanm/ $T code . $T jekyll serve --unpublished
+
+rem OLODs
+rem -----
 
 rem Crossmedia Publishing
 doskey cmp=cd %USERPROFILE%\Code\cmp.local\
-doskey cmp-s=cd %USERPROFILE%\Syllabi\cmp\ $T start http://localhost:4000/cmp/ $T code . $T jekyll serve --incremental
+doskey cmp-s=cd %USERPROFILE%\Syllabi\cmp\ $T start http://localhost:4000/cmp/ $T code . $T jekyll serve --unpublished
 
 rem Crossmedia Publishing I, II & III
 doskey cmp1=cd %USERPROFILE%\Code\cmp1.local\
@@ -56,20 +65,23 @@ doskey cmp3=cd %USERPROFILE%\Code\cmp3.local\
 
 rem E-design
 doskey ed=cd %USERPROFILE%\Code\ed.local\
-doskey ed-s=cd %USERPROFILE%\Syllabi\ed\ $T start http://localhost:4000/ed/ $T code . $T jekyll serve --incremental
+doskey ed-s=cd %USERPROFILE%\Syllabi\ed\ $T start http://localhost:4000/ed/ $T code . $T jekyll serve --unpublished
 
 rem Mulimedia-applicaties
+doskey mapps=cd %USERPROFILE%\Code\mapps.local\
+doskey mapps-s=cd %USERPROFILE%\Syllabi\mapps\ $T start http://localhost:4000/mapps/ $T code . $T jekyll serve --unpublished
+
 doskey mma=cd %USERPROFILE%\Code\mma.local\
-doskey mma-s=cd %USERPROFILE%\Syllabi\mma\ $T start http://localhost:4000/mma/ $T code . $T jekyll serve --incremental
+doskey mma-s=cd %USERPROFILE%\Syllabi\mma\ $T start http://localhost:4000/mma/ $T code . $T jekyll serve --unpublished
 
 rem New Media Design & Development II
 doskey nmdad2=cd %USERPROFILE%\Code\nmdad2.local\
-doskey nmdad2-s=cd %USERPROFILE%\Syllabi\nmdad2\ $T start http://localhost:4000/nmdad2/ $T code . $T jekyll serve --incremental
+doskey nmdad2-s=cd %USERPROFILE%\Syllabi\nmdad2\ $T start http://localhost:4000/nmdad2/ $T code . $T jekyll serve --unpublished
 
 rem New Media Design & Development III
 doskey nmdad3=cd %USERPROFILE%\Code\nmdad3.local\
-doskey nmdad3-s=cd %USERPROFILE%\Syllabi\nmdad3\ $T start http://localhost:4000/nmdad3/ $T code . $T jekyll serve --incremental
+doskey nmdad3-s=cd %USERPROFILE%\Syllabi\nmdad3\ $T start http://localhost:4000/nmdad3/ $T code . $T jekyll serve --unpublished
 
 rem Webdesign I & II
 doskey webd=cd %USERPROFILE%\Code\webd.local\
-doskey webd-s=cd %USERPROFILE%\Syllabi\webd\ $T start http://localhost:4000/webd/ $T code . $T jekyll serve --incremental
+doskey webd-s=cd %USERPROFILE%\Syllabi\webd\ $T start http://localhost:4000/webd/ $T code . $T jekyll serve --unpublished

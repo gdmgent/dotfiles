@@ -39,15 +39,24 @@ alias vup="vagrant up --provision"
 
 # Artestead
 alias artestead-c="cd ~/Code/artestead/"
-alias artestead-s="cd ~/Syllabi/artestead-doc/ && open http://localhost:4000/artestead/ && cjs"
+alias artestead-s="cd ~/Syllabi/artestead-doc/ && open http://localhost:4000/artestead/ && cjsu"
 
 # Dotfiles
 alias dotfiles-c="cd ~/Code/dotfiles/"
-alias dotfiles-s="cd ~/Syllabi/dotfiles-doc/ && open http://localhost:4000/dotfiles/ && cjs"
+alias dotfiles-s="cd ~/Syllabi/dotfiles-doc/ && open http://localhost:4000/dotfiles/ && cjsu"
+
+# Syllabus
+alias syllabus-s="cd ~/Syllabi/syllabus/ && open http://localhost:4000/syllabus/ && cjsu"
+
+# Web & New Media
+alias wanm-s="cd ~/Syllabi/wanm/ && open http://localhost:4000/wanm/ && cjsu"
+
+# OLODs
+# -----
 
 # Crossmedia Publishing
 alias cmp="cd ~/Code/cmp.local/"
-alias cmp-s="cd ~/Syllabi/cmp/ && open http://localhost:4000/cmp/ && cjs"
+alias cmp-s="cd ~/Syllabi/cmp/ && open http://localhost:4000/cmp/ && cjsu"
 
 # Crossmedia Publishing I, II & III
 alias cmp1="cd ~/Code/cmp1.local/"
@@ -56,20 +65,23 @@ alias cmp3="cd ~/Code/cmp3.local/"
 
 # E-design
 alias ed="cd ~/Code/ed.local/"
-alias ed-s="cd ~/Syllabi/ed/ && open http://localhost:4000/ed && cjs"
+alias ed-s="cd ~/Syllabi/ed/ && open http://localhost:4000/ed && cjsu"
 
 # Mulimedia-applicaties
+alias mapps="cd ~/Code/mapps.local/"
+alias mapps-s="cd ~/Syllabi/mapps/ && open http://localhost:4000/mapps/ && cjs"
+
 alias mma="cd ~/Code/mma.local/"
-alias mma-s="cd ~/Syllabi/mma/ && open http://localhost:4000/mma/ && cjs"
+alias mma-s="cd ~/Syllabi/mma/ && open http://localhost:4000/mma/ && cjsu"
 
 # New Media Design & Development II
 alias nmdad2="cd ~/Code/nmdad2.local/"
-alias nmdad2-s="cd ~/Syllabi/nmdad2/ && open http://localhost:4000/nmdad2/ && cjs"
+alias nmdad2-s="cd ~/Syllabi/nmdad2/ && open http://localhost:4000/nmdad2/ && cjsu"
 
 # New Media Design & Development III
 alias nmdad3="cd ~/Code/nmdad3.local/"
-alias nmdad3-s="cd ~/Syllabi/nmdad3/ && open http://localhost:4000/nmdad3/ && cjs"
+alias nmdad3-s="cd ~/Syllabi/nmdad3/ && open http://localhost:4000/nmdad3/ && cjsu"
 
 # Webdesign I & II
 alias webd="cd ~/Code/webd.local/"
-alias webd-s="cd ~/Syllabi/webd/ && open http://localhost:4000/webd/ && cjs"
+alias webd-s="cd ~/Syllabi/webd/ && open http://localhost:4000/webd/ && cjsu"
