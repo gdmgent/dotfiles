@@ -11,6 +11,7 @@ doskey jsd=jekyll serve --watch --drafts
 doskey jsf=jekyll serve --watch --future
 doskey jsi=jekyll serve --watch --incremental
 doskey jsu=jekyll serve --watch --unpublished
+doskey sts=git status
 doskey wip=git commit -a -m [WIP] $T git push
 
 doskey ..=cd ..

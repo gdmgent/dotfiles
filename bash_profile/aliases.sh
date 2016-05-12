@@ -11,6 +11,7 @@ alias jsd="jekyll serve --watch --drafts"
 alias jsf="jekyll serve --watch --future"
 alias jsi="jekyll serve --watch --incremental"
 alias jsu="jekyll serve --watch --unpublished"
+alias sts="git status"
 alias wip="git commit -a -m [WIP] && git push"
 
 alias ..="cd .."
