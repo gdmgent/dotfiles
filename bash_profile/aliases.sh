@@ -1,22 +1,9 @@
 # Add BASH aliases
 alias artisan="php artisan"
-alias cjs="code . && js"
-alias cjsd="code . && jsd"
-alias cjsf="code . && jsf"
-alias cjsi="code . && jsi"
-alias cjsu="code . && jsu"
 alias console="php app/console"
-alias js="jekyll serve --watch"
-alias jsd="jekyll serve --watch --drafts"
-alias jsf="jekyll serve --watch --future"
-alias jsi="jekyll serve --watch --incremental"
-alias jsu="jekyll serve --watch --unpublished"
-alias sts="git status"
-alias wip="git commit -a -m [WIP] && git push"
 
 alias ..="cd .."
 alias ...="cd ../.."
-
 alias c="cd ~/Code/"
 alias h="cd ~"
 alias s="cd ~/Syllabi/"
@@ -24,6 +11,25 @@ alias s="cd ~/Syllabi/"
 alias ll="ls -la"
 
 alias hosts="sudo nano /etc/hosts"
+
+# Git
+alias add="git add ."
+alias pull="git pull"
+alias push="git push"
+alias sts="git status"
+alias wip="git commit -a -m [WIP] && git push"
+
+# Jekyll
+alias cjs="code . && js"
+alias cjsd="code . && jsd"
+alias cjsf="code . && jsf"
+alias cjsi="code . && jsi"
+alias cjsu="code . && jsu"
+alias js="jekyll serve --watch"
+alias jsd="jekyll serve --watch --drafts"
+alias jsf="jekyll serve --watch --future"
+alias jsi="jekyll serve --watch --incremental"
+alias jsu="jekyll serve --watch --unpublished"
 
 # Vagrant
 alias vd="vagrant destroy"
@@ -37,20 +43,6 @@ alias vss="vagrant ssh"
 alias vsu="vagrant suspend"
 alias vu="vagrant up"
 alias vup="vagrant up --provision"
-
-# Artestead
-alias artestead-c="cd ~/Code/artestead/"
-alias artestead-s="cd ~/Syllabi/artestead-doc/ && open http://localhost:4000/artestead/ && cjsu"
-
-# Dotfiles
-alias dotfiles-c="cd ~/Code/dotfiles/"
-alias dotfiles-s="cd ~/Syllabi/dotfiles-doc/ && open http://localhost:4000/dotfiles/ && cjsu"
-
-# Syllabus
-alias syllabus-s="cd ~/Syllabi/syllabus/ && open http://localhost:4000/syllabus/ && cjsu"
-
-# Web & New Media
-alias wanm-s="cd ~/Syllabi/wanm/ && open http://localhost:4000/wanm/ && cjsu"
 
 # OLODs
 # -----
@@ -86,3 +78,20 @@ alias nmdad3-s="cd ~/Syllabi/nmdad3/ && open http://localhost:4000/nmdad3/ && cj
 # Webdesign I & II
 alias webd="cd ~/Code/webd.local/"
 alias webd-s="cd ~/Syllabi/webd/ && open http://localhost:4000/webd/ && cjsu"
+
+# Syllabi
+# -------
+
+# Artestead
+alias artestead-c="cd ~/Code/artestead/"
+alias artestead-s="cd ~/Syllabi/artestead-doc/ && open http://localhost:4000/artestead/ && cjsu"
+
+# Dotfiles
+alias dotfiles-c="cd ~/Code/dotfiles/"
+alias dotfiles-s="cd ~/Syllabi/dotfiles-doc/ && open http://localhost:4000/dotfiles/ && cjsu"
+
+# Syllabus
+alias syllabus-s="cd ~/Syllabi/syllabus/ && open http://localhost:4000/syllabus/ && cjsu"
+
+# Web & New Media
+alias wanm-s="cd ~/Syllabi/wanm/ && open http://localhost:4000/wanm/ && cjsu"
