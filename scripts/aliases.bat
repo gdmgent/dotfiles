@@ -32,6 +32,9 @@ doskey jsi=jekyll serve --watch --incremental
 doskey jsu=jekyll serve --watch --unpublished
 
 rem Vagrant
+doskey vbl=vagrant box list
+doskey vbr=vagrant box remove laravel/homestead --box-version
+doskey vbu=vagrant box update
 doskey vd=vagrant destroy
 doskey vg=vagrant global-status
 doskey vgp=vagrant global-status --prune

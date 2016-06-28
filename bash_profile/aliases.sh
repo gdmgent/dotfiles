@@ -32,6 +32,9 @@ alias jsi="jekyll serve --watch --incremental"
 alias jsu="jekyll serve --watch --unpublished"
 
 # Vagrant
+alias vbl="vagrant box list"
+alias vbr="vagrant box remove laravel/homestead --box-version"
+alias vbu="vagrant box update"
 alias vd="vagrant destroy"
 alias vg="vagrant global-status"
 alias vgp="vagrant global-status --prune"
