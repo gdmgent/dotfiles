@@ -1,4 +1,5 @@
 @echo off
-rem vagrant plugin install vagrant-hostsupdater & composer config --global repositories.artestead vcs https://github.com/gdmgent/artestead.git && composer g require gdmgent/artestead
-rem vagrant plugin install vagrant-hostsupdater && composer g require gdmgent/artestead
-vagrant plugin install vagrant-hostsupdater && cgr gdmgent/artestead
+call vagrant plugin install vagrant-hostsupdater
+rem call composer config --global repositories.artestead vcs https://github.com/gdmgent/artestead.git && composer g require gdmgent/artestead
+rem call composer g require gdmgent/artestead
+call cgr gdmgent/artestead
