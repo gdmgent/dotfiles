@@ -1,3 +1,3 @@
 # Add Composer vendor application path
-export PATH=~/.composer/vendor/bin:$PATH
+export PATH=$PATH:~/.composer/vendor/bin
 unalias cgr
