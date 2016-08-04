@@ -1,4 +1,4 @@
 #!/bin/sh
-rem Remove local Artestead and Vagrant
+echo "Remove local Artestead and Vagrant"
 vagrant destroy
-rm -rfi .gitignore .vagrant *.yaml Vagrantfile *.sh composer.* vendor
+rm -rfi .gitignore .vagrant/ *.yaml Vagrantfile *.sh composer.* vendor/
