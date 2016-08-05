@@ -41,6 +41,7 @@ doskey vgp=vagrant global-status --prune
 doskey vh=vagrant halt
 doskey vp=vagrant provision
 doskey vr=vagrant reload
+doskey vrp=vagrant reload --provision
 doskey vs=vagrant status
 doskey vss=vagrant ssh
 doskey vsu=vagrant suspend
