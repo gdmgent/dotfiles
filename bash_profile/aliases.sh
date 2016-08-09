@@ -1,6 +1,6 @@
 # Add BASH aliases
 alias artisan="php artisan"
-alias console="php app/console"
+alias console="php bin/console"
 
 alias ..="cd .."
 alias ...="cd ../.."

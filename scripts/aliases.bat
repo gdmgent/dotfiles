@@ -1,6 +1,6 @@
 @echo off
 doskey artisan=php artisan $*
-doskey console=php app/console $*
+doskey console=php bin/console $*
 
 doskey ..=cd ..
 doskey ...=cd ..\..
