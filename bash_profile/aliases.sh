@@ -1,6 +1,5 @@
 # Add BASH aliases
-alias artisan="php artisan"
-alias console="php bin/console"
+alias dotfiles="cat ~/Code/dotfiles/VERSION"
 
 alias ..="cd .."
 alias ...="cd ../.."
@@ -99,3 +98,55 @@ alias syllabus-s="cd ~/Syllabi/syllabus/ && open http://localhost:4000/syllabus/
 
 # Web & New Media
 alias wanm-s="cd ~/Syllabi/wanm/ && open http://localhost:4000/wanm/ && cjsu"
+
+function artisan() {
+    if [ -f artisan ]
+    then
+        php artisan "$@"
+    else
+        echo "Laravel Artisan is not available from this directory!"
+    fi
+}
+
+function behat() {
+    if [ -f bin/behat ]
+    then
+        php bin/behat "$@"
+    else
+        if [ -f vendor/bin/behat ]
+        then
+            php vendor/bin/behat "$@"
+        else
+            command phpunit "$@"
+        fi
+    fi
+}
+
+function console() {
+    if [ -f bin/console ]
+    then
+        php bin/console "$@"
+    else
+        if [ -f app/console ]
+        then
+            php app/console "$@"
+        else
+            echo "Symfony Console is not available from this directory!"
+        fi
+    fi
+}
+
+function phpunit() {
+    if [ -f bin/phpunit ]
+    then
+        php bin/phpunit "$@"
+    else
+        if [ -f vendor/bin/phpunit ]
+        then
+            php vendor/bin/phpunit "$@"
+        else
+            command phpunit "$@"
+        fi
+    fi
+}
+

@@ -1,4 +1,6 @@
 @echo off
+doskey dotfiles=cat %USERPROFILE%\Code\dotfiles\VERSION"
+
 doskey artisan=php artisan $*
 doskey console=php bin/console $*
 
