@@ -36,12 +36,12 @@ doskey jsi=if not exist _config.yml ( echo There is no _config.yml in this direc
 doskey jsu=if not exist _config.yml ( echo There is no _config.yml in this directory! ) else ( jekyll serve --watch --unpublished $* )
 
 rem Vagrant
-doskey vbl=if not exist Vagrantfile ( echo There is no Vagrantfile in this directory! ) else ( vagrant box list $* )
-doskey vbr=if not exist Vagrantfile ( echo There is no Vagrantfile in this directory! ) else ( vagrant box remove laravel/homestead --box-version $* )
-doskey vbu=if not exist Vagrantfile ( echo There is no Vagrantfile in this directory! ) else ( vagrant box update $* )
+doskey vbl=vagrant box list $*
+doskey vbr=vagrant box remove laravel/homestead --box-version $*
+doskey vbu=vagrant box update $*
 doskey vd=if not exist Vagrantfile ( echo There is no Vagrantfile in this directory! ) else ( vagrant destroy $* )
-doskey vg=if not exist Vagrantfile ( echo There is no Vagrantfile in this directory! ) else ( vagrant global-status $* )
-doskey vgp=if not exist Vagrantfile ( echo There is no Vagrantfile in this directory! ) else ( vagrant global-status --prune $* )
+doskey vg=vagrant global-status $*
+doskey vgp=vagrant global-status --prune $*
 doskey vh=if not exist Vagrantfile ( echo There is no Vagrantfile in this directory! ) else ( vagrant halt $* )
 doskey vp=if not exist Vagrantfile ( echo There is no Vagrantfile in this directory! ) else ( vagrant provision $* )
 doskey vr=if not exist Vagrantfile ( echo There is no Vagrantfile in this directory! ) else ( vagrant reload $* )

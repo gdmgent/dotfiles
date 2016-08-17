@@ -31,12 +31,12 @@ alias jsi="[ ! -f _config.yml ] && echo There is no _config.yml in this director
 alias jsu="[ ! -f _config.yml ] && echo There is no _config.yml in this directory! || jekyll serve --watch --unpublished "
 
 # Vagrant
-alias vbl="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant box list "
-alias vbr="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant box remove laravel/homestead --box-version "
-alias vbu="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant box update "
+alias vbl="vagrant box list "
+alias vbr="vagrant box remove laravel/homestead --box-version "
+alias vbu="vagrant box update "
 alias vd="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant destroy "
-alias vg="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant global-status "
-alias vgp="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant global-status --prune "
+alias vg="vagrant global-status "
+alias vgp="vagrant global-status --prune "
 alias vh="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant halt "
 alias vp="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant provision "
 alias vr="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant reload "
