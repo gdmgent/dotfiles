@@ -24,28 +24,28 @@ alias cjsd="code . && jsd"
 alias cjsf="code . && jsf"
 alias cjsi="code . && jsi"
 alias cjsu="code . && jsu"
-alias js="[ ! -f _config.yml ] && echo There is no _config.yml in this directory! || jekyll serve --watch"
-alias jsd="[ ! -f _config.yml ] && echo There is no _config.yml in this directory! || jekyll serve --watch --drafts"
-alias jsf="[ ! -f _config.yml ] && echo There is no _config.yml in this directory! || jekyll serve --watch --future"
-alias jsi="[ ! -f _config.yml ] && echo There is no _config.yml in this directory! || jekyll serve --watch --incremental"
-alias jsu="[ ! -f _config.yml ] && echo There is no _config.yml in this directory! || jekyll serve --watch --unpublished"
+alias js="[ ! -f _config.yml ] && echo There is no _config.yml in this directory! || jekyll serve --watch "
+alias jsd="[ ! -f _config.yml ] && echo There is no _config.yml in this directory! || jekyll serve --watch --drafts "
+alias jsf="[ ! -f _config.yml ] && echo There is no _config.yml in this directory! || jekyll serve --watch --future "
+alias jsi="[ ! -f _config.yml ] && echo There is no _config.yml in this directory! || jekyll serve --watch --incremental "
+alias jsu="[ ! -f _config.yml ] && echo There is no _config.yml in this directory! || jekyll serve --watch --unpublished "
 
 # Vagrant
-alias vbl="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant box list"
+alias vbl="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant box list "
 alias vbr="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant box remove laravel/homestead --box-version "
-alias vbu="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant box update"
-alias vd="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant destroy"
-alias vg="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant global-status"
-alias vgp="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant global-status --prune"
-alias vh="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant halt"
-alias vp="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant provision"
-alias vr="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant reload"
-alias vrp="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant reload --provision"
-alias vs="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant status"
-alias vss="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant ssh"
-alias vsu="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant suspend"
-alias vu="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant up"
-alias vup="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant up --provision"
+alias vbu="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant box update "
+alias vd="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant destroy "
+alias vg="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant global-status "
+alias vgp="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant global-status --prune "
+alias vh="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant halt "
+alias vp="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant provision "
+alias vr="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant reload "
+alias vrp="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant reload --provision "
+alias vs="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant status "
+alias vss="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant ssh "
+alias vsu="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant suspend "
+alias vu="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant up "
+alias vup="[ ! -f Vagrantfile ] && echo There is no Vagrantfile in this directory! || vagrant up --provision "
 
 # OLODs
 # -----
@@ -78,9 +78,11 @@ alias nmdad2-s="cd ~/Syllabi/nmdad2/ && open http://localhost:4000/nmdad2/ && cj
 alias nmdad3="cd ~/Code/nmdad3.local/"
 alias nmdad3-s="cd ~/Syllabi/nmdad3/ && open http://localhost:4000/nmdad3/ && cjsu"
 
-# Webdesign I & II
-alias webd="cd ~/Code/webd.local/"
-alias webd-s="cd ~/Syllabi/webd/ && open http://localhost:4000/webd/ && cjsu"
+# Webdesign I, II, III & IV
+alias webd1-s="cd ~/Syllabi/webd1/ && open http://localhost:4000/webd1/ && cjsu"
+alias webd2-s="cd ~/Syllabi/webd2/ && open http://localhost:4000/webd2/ && cjsu"
+alias webd3-s="cd ~/Syllabi/webd3/ && open http://localhost:4000/webd3/ && cjsu"
+alias webd4-s="cd ~/Syllabi/webd4/ && open http://localhost:4000/webd4/ && cjsu"
 
 # Syllabi
 # -------
@@ -117,7 +119,7 @@ function behat() {
         then
             php vendor/bin/behat "$@"
         else
-            command phpunit "$@"
+            command behat "$@"
         fi
     fi
 }
