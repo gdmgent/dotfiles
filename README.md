@@ -1,17 +1,17 @@
 Artevelde Dotfiles
 ==================
 
-[Documentation][dotfiles-doc]
+[Documentation][Artevelde Dotfiles]
 
 Tips
 ----
 
- - [Download][font-hack-download] and install [Hack][font-hack] typeface.
+ - [Download][Hack Download] and install [Hack][] typeface.
 
-©2016 [Artevelde University College Ghent][artevelde] [Bachelor of Graphic and Digital Media][gdm]
+©2016 [Artevelde University College Ghent][] [Bachelor of Graphic and Digital Media][]
 
-[artevelde]:                http://www.arteveldeuniversitycollege.be
-[gdm]:                      http://www.gdm.ghent
-[dotfiles-doc]:             http://www.gdm.ghent/dotfiles
-[font-hack]:                http://sourcefoundry.org/hack
-[font-hack-download]:       https://github.com/chrissimpkins/Hack/releases
+[Artevelde Dotfiles]:                       http://www.gdm.ghent/dotfiles
+[Artevelde University College Ghent]:       http://www.arteveldeuniversitycollege.be
+[Bachelor of Graphic and Digital Media]:    http://www.gdm.ghent
+[Hack]:                                     http://sourcefoundry.org/hack
+[Hack Download]:                            https://github.com/chrissimpkins/Hack/releases
