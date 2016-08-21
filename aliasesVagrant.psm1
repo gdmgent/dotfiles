@@ -21,7 +21,7 @@ function AliasVagrantBoxUpdate {
 New-Alias -Name vbu -Value AliasVagrantBoxUpdate
 
 function AliasVagrantDestroy {
-    if (TestVagrant) {
+    if (TestVagrantfile) {
         vagrant destroy "$args" 
     }
 }
@@ -38,69 +38,69 @@ function AliasVagrantGlobalStatusPrune {
 New-Alias -Name vgp -Value AliasVagrantGlobalStatusPrune
 
 function AliasVagrantHalt {
-    if (TestVagrant) {
+    if (TestVagrantfile) {
         vagrant halt "$args" 
     }
 }
 New-Alias -Name vh -Value AliasVagrantHalt
 
 function AliasVagrantProvision {
-    if (TestVagrant) {
+    if (TestVagrantfile) {
         vagrant provision "$args" 
     }
 }
 New-Alias -Name vp -Value AliasVagrantProvision
 
 function AliasVagrantReload {
-    if (TestVagrant) {
+    if (TestVagrantfile) {
         vagrant reload "$args" 
     }
 }
 New-Alias -Name vr -Value AliasVagrantReload
 
 function AliasVagrantReloadProvision {
-    if (TestVagrant) {
+    if (TestVagrantfile) {
         vagrant reload --provision "$args" 
     }
 }
 New-Alias -Name vrp -Value AliasVagrantReloadProvision
 
 function AliasVagrantSsh {
-    if (TestVagrant) {
+    if (TestVagrantfile) {
         vagrant ssh "$args" 
     }
 }
 New-Alias -Name vss -Value AliasVagrantSsh
 
 function AliasVagrantStatus {
-    if (TestVagrant) {
+    if (TestVagrantfile) {
         vagrant status "$args" 
     }
 }
 New-Alias -Name vs -Value AliasVagrantStatus
 
 function AliasVagrantSuspend {
-    if (TestVagrant) {
+    if (TestVagrantfile) {
         vagrant suspend "$args" 
     }
 }
 New-Alias -Name vsu -Value AliasVagrantSuspend
 
 function AliasVagrantUp {
-    if (TestVagrant) {
+    if (TestVagrantfile) {
         vagrant up "$args" 
     }
 }
 New-Alias -Name vu -Value AliasVagrantUp
 
 function AliasVagrantUpProvision {
-    if (TestVagrant) {
+    if (TestVagrantfile) {
         vagrant up --provision "$args" 
     }
 }
 New-Alias -Name vup -Value AliasVagrantUpProvision
 
-function TestVagrant {
+function TestVagrantfile {
     $file = "Vagrantfile"
     if (Test-Path $file) {
         return $true

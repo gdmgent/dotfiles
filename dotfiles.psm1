@@ -2,15 +2,46 @@
 
 function SetEnvironment {
     if (TestMacOS) {
-        $PATH = [System.Environment]::GetEnvironmentVariable("PATH")
-        [System.Environment]::SetEnvironmentVariable("PATH", "/usr/local/bin:$PATH")
-    
-        # /Users/olivier/.nvm/versions/node/v4.5.0/bin:/Users/olivier/Code/dotfiles/scripts/sh:/Users/olivier/Library/Android/sdk/tools:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/olivier/.composer/vendor/bin:/Users/olivier/.composer/vendor/bin
-    }
-}
+        $path = @(
+            # first
+            "$HOME/.nvm/versions/node/v4.5.0/bin",
+            "$HOME/Library/Android/sdk/tools",
 
-function PrependPath {
+            # user
+            '/usr/local/bin',
+            '/usr/bin',
+            '/bin',
+
+            # superuser
+            '/usr/local/sbin',
+            '/usr/sbin',
+            '/sbin'
+
+            # last
+            "$HOME/.composer/vendor/bin"
+        )
+
+        # # Write-Output ($path -join ':')
+        # [System.Environment]::SetEnvironmentVariable('PATH', $path -join ':')
+
+        # $PATH = [System.Environment]::GetEnvironmentVariable("PATH")
+        # [System.Environment]::SetEnvironmentVariable("PATH", "/usr/local/bin:$PATH")
     
+        # /Users/olivier/.nvm/versions/node/v4.5.0/bin
+        # /Users/olivier/Code/dotfiles/scripts/sh
+        # /Users/olivier/Library/Android/sdk/tools
+        # /usr/local/sbin
+        # /usr/local/bin
+        # /usr/bin
+        # /bin
+        # /usr/sbin
+        # /sbin
+        # /Users/olivier/.composer/vendor/bin
+        
+    } elseif (TestWindows) {
+        $path = @()
+    }
+    [System.Environment]::SetEnvironmentVariable('PATH', $path -join ':')
 }
 
 # Test if operation system is Apple macOS 
@@ -25,6 +56,7 @@ function TestMacOS {
 # Test if operation system is Microsoft Windows 
 function TestWindows {
     Write-Warning "Not implemented yet!"
+    return $false
 }
 
 # Node Version Manager
@@ -34,12 +66,12 @@ function nvm {
 
 function Dotfiles {
     Param(
-        [String] $install,
-        [String] $i,
-        [String] $remove,
-        [String] $r,
-        [String] $update,
-        [String] $u
+        [string] $install,
+        [string] $i,
+        [string] $remove,
+        [string] $r,
+        [string] $update,
+        [string] $u
     )
     $version = "4.0.0"
     if (TestMacOS) {
@@ -49,7 +81,7 @@ function Dotfiles {
     } else {
         $os = "Linux"
     }
-    Write-Output "Artevelde Dotfiles v$version for $os"
+    Write-Host " Artevelde Dotfiles v$version for $os " -ForegroundColor Black -BackgroundColor DarkYellow
 
     if ($i) {
         $install = $i
@@ -69,28 +101,28 @@ function Dotfiles {
 New-Alias -Name dot -Value Dotfiles
 
 function InstallArtestead {
-    Write-Host "Installing Artestead (Artevelde Laravel Homestead)"
+    Write-Host 'Installing Artestead (Artevelde Laravel Homestead)...'
     vagrant plugin install vagrant-hostsupdater
     # composer g require gdmgent/artestead
     cgr gdmgent/artestead
 }
 
 function InstallBrew {
-    Write-Host "Installing Brew"
+    Write-Host 'Installing Brew...'
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 }
 
 function InstallComposer {
-    Write-Host "Installing Composer"
+    Write-Host "Installing Composer..."
     if (TestMacOS) {
         curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     } else {
-        Write-Error "This is for macOS only."
+        Write-Warning -Message 'This is for macOS only.'
     }
 }
 
 function InstallComposerCgr {
-    Write-Host "Installing CGR (Composer Global Require)"
+    Write-Host 'Installing CGR (Composer Global Require)...'
     if (Get-Command composer -errorAction SilentlyContinue) {
         InstallComposer
     }
@@ -98,7 +130,7 @@ function InstallComposerCgr {
 }
 
 function InstallComposerPrestissimo {
-    Write-Host "Installing Prestissimo"
+    Write-Host 'Installing Prestissimo...'
     if (Get-Command composer -errorAction SilentlyContinue) {
         InstallComposer
     }
@@ -106,19 +138,19 @@ function InstallComposerPrestissimo {
 }
 
 function InstallOhMyZsh {
-    Write-Host "Installing Oh-My-Zsh"
+    Write-Host 'Installing Oh-My-Zsh...'
     brew install zsh
     sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 }
 
 function InstallPhp {
-    Write-Host "Installing PHP 7.0"
+    Write-Host 'Installing PHP 7.0...'
     brew tap homebrew/php
     brew install php70 php70-mcrypt
 }
 
 function RemoveLocalArtestead {
-    Write-Host "Removing Local Artestead"
+    Write-Host 'Removing Local Artestead'
     Get-ChildItem
 }
 
@@ -156,7 +188,7 @@ function UpdateBrew {
 }
 
 function UpdateComposer {
-    Write-Host "Updating Composer and CGR installed packages"
+    Write-Host 'Updating Composer and CGR installed packages'
     if (Get-Command composer -errorAction SilentlyContinue) {
         composer self-update
         composer global update
@@ -176,6 +208,13 @@ function UpdateComposer {
             }
         }
     } else {
-        Write-Warning "Composer is not installed. Run InstallComposer or InstallComposerCgr."
+        Write-Warning -Message 'Composer is not installed. Run InstallComposer or InstallComposerCgr.'
     }
 }
+
+function NodeVersionManager {
+    Write-Host 'Alias for nvm'
+    nvm
+    zie https://github.com/aaronpowell/ps-nvmw
+}
+New-Alias -Name dotnvm -Value NodeVersionManager
