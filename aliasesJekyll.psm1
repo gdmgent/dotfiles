@@ -1,47 +1,54 @@
-# Import-Module aliasesJekyll.psm1
+# Import-Module esJekyll.psm1
 
-function AliasCodeJekyllServe {
+function CodeJekyllServe {
     if (TestJekyll) {
         code .
-        js "$args"
+        JekyllServe $args
     }
 }
-New-Alias -Name cjs -Value AliasCodeJekyllServe
+New-Alias -Name cjs -Value CodeJekyllServe
 
-function AliasCodeJekyllServeUnpublished {
+function CodeJekyllServeUnpublished {
     if (TestJekyll) {
         code .
-        jsu "$args"
+        $directory = (Get-Item -Path '.').Name
+        $uri = "http://127.0.0.1:4000/$directory/"
+        if ($IsOSX) {
+            Invoke-Expression "open $uri"
+        } elseif ($IsWindows) {
+            Invoke-Expression "start $uri"
+        }
+        JekyllServeUnpublished $args
     }
 }
-New-Alias -Name cjsu -Value AliasCodeJekyllServeUnpublished
+New-Alias -Name cjsu -Value CodeJekyllServeUnpublished
 
-function AliasJekyllServe {
+function JekyllServe {
     if (TestJekyll) {
-        jekyll serve --watch "$args"
+        Invoke-Expression "jekyll serve --watch $args"
     }
 }
-New-Alias -Name js -Value AliasJekyllServe
+New-Alias -Name js -Value JekyllServe
 
-function AliasJekyllServeDrafts {
-    AliasJekyllServe --drafts "args"
+function JekyllServeDrafts {
+    JekyllServe --drafts $args
 }
-New-Alias -Name jsd -Value AliasJekyllServeDrafts
+New-Alias -Name jsd -Value JekyllServeDrafts
 
-function AliasJekyllServeFuture {
-    AliasJekyllServe --future "args"
+function JekyllServeFuture {
+    JekyllServe --future $args
 }
-New-Alias -Name jsf -Value AliasJekyllServeFuture
+New-Alias -Name jsf -Value JekyllServeFuture
 
-function AliasJekyllServeIncremental {
-    AliasJekyllServe --incremental "args"
+function JekyllServeIncremental {
+    JekyllServe --incremental $args
 }
-New-Alias -Name jsi -Value AliasJekyllServeIncremental
+New-Alias -Name jsi -Value JekyllServeIncremental
 
-function AliasJekyllServeUnpublished {
-    AliasJekyllServe --unpublished "args"
+function JekyllServeUnpublished {
+    JekyllServe $args
 }
-New-Alias -Name jsu -Value AliasJekyllServeUnpublished
+New-Alias -Name jsu -Value JekyllServeUnpublished
 
 function TestJekyll {
     $file = "_config.yml"

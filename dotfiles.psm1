@@ -46,8 +46,8 @@ function SetEnvironment {
 
         # [System.Environment]::SetEnvironmentVariable('Path', $path -join ';')
     }
-    
 }
+SetEnvironment
 
 # Node Version Manager
 function nvm {
@@ -73,7 +73,7 @@ function Dotfiles {
     } else {
         $os = 'unknown operation system'
     }
-    Write-Host " Artevelde Dotfiles v$version on $os " -ForegroundColor Black -BackgroundColor DarkYellow
+    Write-Host " Artevelde Dotfiles v$version on PowerShell for $os " -ForegroundColor Black -BackgroundColor DarkYellow
 
     if ($i) {
         $install = $i
@@ -200,9 +200,11 @@ function UpdateBundler {
 
 function UpdateBrew {
     Write-Host 'Updating Homebrew...'
-    brew update
-    brew upgrade
-    brew cleanup
+    if ($IsOSX -and (Get-Command brew -errorAction SilentlyContinue)) {
+        brew update
+        brew upgrade
+        brew cleanup
+    }
 }
 
 function UpdateComposer {

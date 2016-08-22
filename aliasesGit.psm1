@@ -1,27 +1,37 @@
 # Import-Module aliasesGit.psm1
 
-function AliasGitAdd {
+function GitAdd {
     git add .
 }
-New-Alias -Name add -Value AliasGitAdd
+New-Alias -Name add -Value GitAdd
 
-function AliasGitPull {
+function GitCheckoutGitHubPages {
+    git checkout gh-pages
+}
+New-Alias -Name pages -Value GitCheckoutGitHubPages
+
+function GitCheckoutMaster {
+    git checkout master
+}
+New-Alias -Name master -Value GitCheckoutMaster
+
+function GitPull {
     git pull
 }
-New-Alias -Name pull -Value AliasGitPull
+New-Alias -Name pull -Value GitPull
 
-function AliasGitPush {
+function GitPush {
     git push
 }
-New-Alias -Name push -Value AliasGitPush
+New-Alias -Name push -Value GitPush
 
-function AliasGitStatus {
+function GitPushWorkInProgress {
+    git commit -a -m [WIP]
+    GitPush
+}
+New-Alias -Name wip -Value GitPushWorkInProgress
+
+function GitStatus {
     git status
 }
-New-Alias -Name sts -Value AliasGitStatus
-
-function AliasGitWorkInProgress {
-    git commit -a -m [WIP]
-    push
-}
-New-Alias -Name wip -Value AliasGitWorkInProgress
+New-Alias -Name sts -Value GitStatus

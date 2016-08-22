@@ -27,7 +27,15 @@ function GoToPathHome([string] $directory) {
 New-Alias -Name ~ -Value GoToPathHome
 
 function GoToPathSyllabi([string] $directory) {
-    GoToPath $HOME/Syllabi $directory
+    $path = "$HOME/Syllabi"
+    $location = "$path/$directory";
+    if (Test-Path $location) {
+        Set-Location $location
+    } else {
+        Write-Warning -Message "Cannot find syllabus '$directory' because it does not exist."
+        Write-Host 'Available syllabi:'
+        Get-ChildItem $path -Directory -Name | Where-Object {$_ -match '^((\d{4}|utl|mod)_)'} | Write-Host -ForegroundColor DarkGray
+    }
 }
 New-Alias -Name s -Value GoToPathSyllabi
 

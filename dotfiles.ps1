@@ -15,9 +15,8 @@ if (Get-Command php -errorAction SilentlyContinue) {
 if (Get-Command vagrant -errorAction SilentlyContinue) {
     Import-Module ./aliasesVagrant.psm1
 }
-
 Pop-Location
-SetEnvironment
+
 Set-Location $HOME
 Clear-Host
 
