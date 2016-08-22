@@ -13,10 +13,10 @@ function ProxySettings ([string] $state) {
         }
     }
 
-    if (TestMacOS) {
+    if ($IsOSX) {
         Write-Host "Proxy settings for macOS"
 
-    } elseif (TestWindows) {
+    } elseif ($IsWindows) {
         Write-Host "Proxy settings for Windows"
 
     } else {

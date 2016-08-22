@@ -18,7 +18,7 @@ if (Get-Command vagrant -errorAction SilentlyContinue) {
 
 Pop-Location
 SetEnvironment
-
-# Clear-Host
-
+Set-Location $HOME
+Clear-Host
+Pause 1
 Dot

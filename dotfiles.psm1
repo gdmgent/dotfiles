@@ -1,7 +1,7 @@
 # import: . ./dotfiles.ps1
 
 function SetEnvironment {
-    if (TestMacOS) {
+    if ($IsOSX) {
         $path = @(
             # first
             "$HOME/.nvm/versions/node/v4.5.0/bin",
@@ -37,26 +37,11 @@ function SetEnvironment {
         # /usr/sbin
         # /sbin
         # /Users/olivier/.composer/vendor/bin
-        
-    } elseif (TestWindows) {
+        [System.Environment]::SetEnvironmentVariable('PATH', $path -join ':')
+    } elseif ($IsWindows) {
         $path = @()
     }
-    [System.Environment]::SetEnvironmentVariable('PATH', $path -join ':')
-}
-
-# Test if operation system is Apple macOS 
-function TestMacOS {
-    if (Get-Command sw_vers -errorAction SilentlyContinue) {
-        $os = sw_vers -productName
-        return ($os -eq "macOS" -or $os -eq "Mac OS X")
-    }
-    return $false
-}
-
-# Test if operation system is Microsoft Windows 
-function TestWindows {
-    Write-Warning "Not implemented yet!"
-    return $false
+    
 }
 
 # Node Version Manager
@@ -73,15 +58,17 @@ function Dotfiles {
         [string] $update,
         [string] $u
     )
-    $version = "4.0.0"
-    if (TestMacOS) {
-        $os = "macOS"
-    } elseif (TestWindows) {
-        $os = "Windows"
+    $version = '4.0.0'
+    if ($IsOSX) {
+        $os = 'macOS'
+    } elseif ($IsWindows) {
+        $os = 'Windows'
+    } elseif ($IsLinux) {
+        $os = 'Linux'
     } else {
-        $os = "Linux"
+        $os = 'unknown operation system'
     }
-    Write-Host " Artevelde Dotfiles v$version for $os " -ForegroundColor Black -BackgroundColor DarkYellow
+    Write-Host " Artevelde Dotfiles v$version on $os " -ForegroundColor Black -BackgroundColor DarkYellow
 
     if ($i) {
         $install = $i
@@ -89,11 +76,11 @@ function Dotfiles {
 
     if ($install) {
         switch ($install) {
-            "test" {
-                Write-Host "test"
+            'test' {
+                Write-Host 'test'
             }
             Default {
-                Write-Host "$intall is not installable"
+                Write-Host "$install is not installable"
             }
         }
     }
@@ -112,9 +99,13 @@ function InstallBrew {
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 }
 
+function InstallBundler {
+
+}
+
 function InstallComposer {
-    Write-Host "Installing Composer..."
-    if (TestMacOS) {
+    Write-Host 'Installing Composer...'
+    if ($IsOSX) {
         curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     } else {
         Write-Warning -Message 'This is for macOS only.'
@@ -139,14 +130,22 @@ function InstallComposerPrestissimo {
 
 function InstallOhMyZsh {
     Write-Host 'Installing Oh-My-Zsh...'
-    brew install zsh
-    sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    if ($IsOSX) {
+        brew install zsh
+        sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    } else {
+        Write-Warning -Message 'This is for macOS only.'
+    }
 }
 
 function InstallPhp {
     Write-Host 'Installing PHP 7.0...'
-    brew tap homebrew/php
-    brew install php70 php70-mcrypt
+    if ($IsOSX) {
+        brew tap homebrew/php
+        brew install php70 php70-mcrypt
+    } else {
+        Write-Warning -Message 'This is for macOS only.'
+    }
 }
 
 function RemoveLocalArtestead {
@@ -155,40 +154,54 @@ function RemoveLocalArtestead {
 }
 
 function RemoveAndroidStudio {
-    rm -Rf /Applications/Android\ Studio.app
-    rm -Rf ~/Library/Preferences/AndroidStudio*
-    rm ~/Library/Preferences/com.google.android.studio.plist
-    rm -Rf ~/Library/Application\ Support/AndroidStudio*
-    rm -Rf ~/Library/Logs/AndroidStudio*
-    rm -Rf ~/Library/Caches/AndroidStudio*
+    # rm -Rf /Applications/Android\ Studio.app
+    # rm -Rf ~/Library/Preferences/AndroidStudio*
+    # rm ~/Library/Preferences/com.google.android.studio.plist
+    # rm -Rf ~/Library/Application\ Support/AndroidStudio*
+    # rm -Rf ~/Library/Logs/AndroidStudio*
+    # rm -Rf ~/Library/Caches/AndroidStudio*
 
-    # Projects
-    rm -Rf ~/AndroidStudioProjects
+    # # Projects
+    # rm -Rf ~/AndroidStudioProjects
 
-    # Gradle
-    rm -Rf ~/.gradle
+    # # Gradle
+    # rm -Rf ~/.gradle
 
-    # Android Virtual Devices
-    rm -Rf ~/.android
+    # # Android Virtual Devices
+    # rm -Rf ~/.android
 
-    # Android SDK
-    rm -Rf ~/Library/Android*
+    # # Android SDK
+    # rm -Rf ~/Library/Android*
 }
 
 function RemoveBrew {
-    Write-Host "Removing Homebrew"
+    Write-Host 'Removing Homebrew...'
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
 }
 
+function UpdateBundler {
+    $file = 'Gemfile'
+    if ((Test-Path $file)) {
+        if (Get-Command bundler -errorAction SilentlyContinue) {
+            bundler update
+            gem cleanup
+        } else {
+            Write-Warning -Message 'Bundler Ruby Gem is not installed. Run InstallBundler.'
+        }
+    } else {
+        Write-Warning -Message "Cannot run Bundler in this directory because a '$file' is required."
+    }
+}
+
 function UpdateBrew {
-    Write-Host "Updating Homebrew"
+    Write-Host 'Updating Homebrew...'
     brew update
     brew upgrade
     brew cleanup
 }
 
 function UpdateComposer {
-    Write-Host 'Updating Composer and CGR installed packages'
+    Write-Host 'Updating Composer and CGR installed packages...'
     if (Get-Command composer -errorAction SilentlyContinue) {
         composer self-update
         composer global update
@@ -212,9 +225,14 @@ function UpdateComposer {
     }
 }
 
-function NodeVersionManager {
-    Write-Host 'Alias for nvm'
-    nvm
-    zie https://github.com/aaronpowell/ps-nvmw
+# function NodeVersionManager {
+#     Write-Host 'Alias for nvm'
+#     nvm
+#     zie https://github.com/aaronpowell/ps-nvmw
+# }
+# New-Alias -Name dotnvm -Value NodeVersionManager
+
+function ShowDotCommands {
+    Get-Command "$args" | Where-Object {$_.Source -eq 'dotfiles'}
+    Get-Alias  "$args" | Where-Object {$_.Source -eq 'dotfiles' -or $_.Source -like 'aliases*'}
 }
-New-Alias -Name dotnvm -Value NodeVersionManager

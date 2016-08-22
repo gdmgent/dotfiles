@@ -12,9 +12,9 @@ New-Alias -Name ~ -Value AliasHome -Description "Go to '~' and optional subfolde
 
 function AliasHosts {
     if (Get-Command code -errorAction SilentlyContinue) {
-        if (TestMacOS) {
+        if ($IsOSX) {
             sudo code /etc/hosts
-        } elseif (TestWindows) {
+        } elseif (*isWindows) {
             code /Windows/System32/drivers/etc/hosts 
         }
     } else {
@@ -28,12 +28,12 @@ function AliasSyllabi([string] $directory) {
 New-Alias -Name s -Value AliasSyllabi
 
 function AliasUpOneDirectory([string] $directory) {
-    GoToPath ".." "$directory"
+    GoToPath '..' "$directory"
 }
 New-Alias -Name .. -Value AliasUpOneDirectory
 
 function AliasUpTwoDirectories([string] $directory) {
-    GoToPath "../.." "$directory"
+    GoToPath '../..' "$directory"
 }
 New-Alias -Name ... -Value AliasUpTwoDirectories
 
