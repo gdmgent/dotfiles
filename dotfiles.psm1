@@ -24,7 +24,7 @@ function SetEnvironment {
         # # Write-Output ($path -join ':')
         # [System.Environment]::SetEnvironmentVariable('PATH', $path -join ':')
 
-        # $PATH = [System.Environment]::GetEnvironmentVariable("PATH")
+        # $PATH = [System.Environment]::GetEnvironmentVariable('PATH')
         # [System.Environment]::SetEnvironmentVariable("PATH", "/usr/local/bin:$PATH")
     
         # /Users/olivier/.nvm/versions/node/v4.5.0/bin
@@ -39,7 +39,12 @@ function SetEnvironment {
         # /Users/olivier/.composer/vendor/bin
         [System.Environment]::SetEnvironmentVariable('PATH', $path -join ':')
     } elseif ($IsWindows) {
-        $path = @()
+        $path = @(
+            "$HOME\AppData\Roaming\Composer\vendor\bin",
+            'C:\php'
+        )
+
+        # [System.Environment]::SetEnvironmentVariable('Path', $path -join ';')
     }
     
 }
@@ -149,7 +154,7 @@ function InstallPhp {
 }
 
 function RemoveLocalArtestead {
-    Write-Host 'Removing Local Artestead'
+    Write-Host 'Removing Local Artestead...'
     Get-ChildItem
 }
 
@@ -235,4 +240,20 @@ function UpdateComposer {
 function ShowDotCommands {
     Get-Command "$args" | Where-Object {$_.Source -eq 'dotfiles'}
     Get-Alias  "$args" | Where-Object {$_.Source -eq 'dotfiles' -or $_.Source -like 'aliases*'}
+}
+
+function UpdateSyllabi {
+    Push-Location
+    GoToPathSyllabi
+    $directories = Get-ChildItem -Directory -Name | Where-Object {$_ -match '^((\d{4}|utl|mod)_)'}
+
+    foreach ($directory in $directories) {
+        Push-Location $directory
+        if (Test-Path .git) {
+            Write-Host " $directory " -BackgroundColor Blue -ForegroundColor White
+            git pull | Write-Host -ForegroundColor DarkGray
+        }
+        Pop-Location
+    }
+    Pop-Location
 }

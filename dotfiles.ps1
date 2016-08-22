@@ -20,5 +20,5 @@ Pop-Location
 SetEnvironment
 Set-Location $HOME
 Clear-Host
-Pause 1
+
 Dot
