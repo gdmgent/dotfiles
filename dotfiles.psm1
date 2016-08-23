@@ -259,3 +259,12 @@ function UpdateSyllabi {
     }
     Pop-Location
 }
+
+function CloneSyllabus {
+    Param(
+        [string]
+        $syllabus
+    )
+    s
+    git clone https://github.com/gdmgent/$syllabus
+}

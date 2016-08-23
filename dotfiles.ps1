@@ -18,6 +18,6 @@ if (Get-Command vagrant -errorAction SilentlyContinue) {
 Pop-Location
 
 Set-Location $HOME
-Clear-Host
+# Clear-Host
 
 Dot
