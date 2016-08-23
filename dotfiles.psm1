@@ -55,15 +55,7 @@ function nvm {
 }
 
 function Dotfiles {
-    Param(
-        [string] $install,
-        [string] $i,
-        [string] $remove,
-        [string] $r,
-        [string] $update,
-        [string] $u
-    )
-    $version = '4.0.0'
+    $version = '4.0.0-alpha1'
     if ($IsOSX) {
         $os = 'macOS'
     } elseif ($IsWindows) {
@@ -73,22 +65,8 @@ function Dotfiles {
     } else {
         $os = 'unknown operation system'
     }
-    Write-Host " Artevelde Dotfiles v$version on PowerShell for $os " -ForegroundColor Black -BackgroundColor DarkYellow
-
-    if ($i) {
-        $install = $i
-    }
-
-    if ($install) {
-        switch ($install) {
-            'test' {
-                Write-Host 'test'
-            }
-            Default {
-                Write-Host "$install is not installable"
-            }
-        }
-    }
+    Write-Host " Artevelde Dotfiles v$version " -ForegroundColor Black -BackgroundColor DarkYellow -NoNewline
+    Write-Host " on PowerShell for $os" -ForegroundColor DarkGray
 }
 New-Alias -Name dot -Value Dotfiles
 
