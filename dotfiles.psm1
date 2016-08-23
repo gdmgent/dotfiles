@@ -4,7 +4,6 @@ function SetEnvironment {
     if ($IsOSX) {
         $path = @(
             # first
-            "$HOME/.nvm/versions/node/v4.5.0/bin",
             "$HOME/Library/Android/sdk/tools",
 
             # user
@@ -111,6 +110,24 @@ function InstallComposerPrestissimo {
     composer global require hirak/prestissimo
 }
 
+function InstallNode {
+    Write-Host 'Installing Node.js...'
+    if ($IsOSX) {
+        brew install homebrew/versions/node4-lts
+        npm -g up
+    } elseif ($IsWindows) {
+        
+    }
+}
+
+function UseNode4 {
+    $env:PATH = @("$HOME/.nvm/versions/node/v4.5.0/bin", $env:PATH) -join ':'
+
+}
+function UseNode6 {
+    $env:PATH = @("$HOME/.nvm/versions/node/v6.4.0/bin", $env:PATH) -join ':'
+}
+
 function InstallOhMyZsh {
     Write-Host 'Installing Oh-My-Zsh...'
     if ($IsOSX) {
@@ -179,6 +196,7 @@ function UpdateBundler {
 function UpdateBrew {
     Write-Host 'Updating Homebrew...'
     if ($IsOSX -and (Get-Command brew -errorAction SilentlyContinue)) {
+        sudo chown -R $(whoami):admin /usr/local
         brew update
         brew upgrade
         brew cleanup
@@ -209,13 +227,6 @@ function UpdateComposer {
         Write-Warning -Message 'Composer is not installed. Run InstallComposer or InstallComposerCgr.'
     }
 }
-
-# function NodeVersionManager {
-#     Write-Host 'Alias for nvm'
-#     nvm
-#     zie https://github.com/aaronpowell/ps-nvmw
-# }
-# New-Alias -Name dotnvm -Value NodeVersionManager
 
 function ShowDotCommands {
     Get-Command "$args" | Where-Object {$_.Source -eq 'dotfiles'}

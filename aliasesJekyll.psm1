@@ -46,7 +46,7 @@ function JekyllServeIncremental {
 New-Alias -Name jsi -Value JekyllServeIncremental
 
 function JekyllServeUnpublished {
-    JekyllServe $args
+    JekyllServe --unpublished $args
 }
 New-Alias -Name jsu -Value JekyllServeUnpublished
 
