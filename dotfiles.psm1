@@ -49,12 +49,12 @@ function SetEnvironment {
 SetEnvironment
 
 # Node Version Manager
-function nvm {
-    Invoke-Expression "sh -c 'export NVM_DIR=~/.nvm && source $(brew --prefix nvm)/nvm.sh && nvm $args'"
-}
+# function nvm {
+#     Invoke-Expression "sh -c 'export NVM_DIR=~/.nvm && source $(brew --prefix nvm)/nvm.sh && nvm $args'"
+# }
 
 function Dotfiles {
-    $version = '4.0.0-alpha1'
+    $version = '4.0.0-alpha2'
     if ($IsOSX) {
         $os = 'macOS'
     } elseif ($IsWindows) {
@@ -72,30 +72,45 @@ New-Alias -Name dot -Value Dotfiles
 function InstallArtestead {
     Write-Host 'Installing Artestead (Artevelde Laravel Homestead)...'
     vagrant plugin install vagrant-hostsupdater
-    # composer g require gdmgent/artestead
     cgr gdmgent/artestead
 }
 
 function InstallBrew {
-    Write-Host 'Installing Brew...'
-    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    Write-Host 'Installing Homebrew...'
+    sh -c 'ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
+}
+
+function InstallRuby {
+    Write-Host 'Using Homebrew to install Ruby...'
+    sh -c 'brew install ruby'
+    Write-Host 'Installed version of Ruby: ' -NoNewline
+    ruby --version
+    
+    Write-Host 'Installed version of Gem: ' -NoNewline
+    gem --version
 }
 
 function InstallBundler {
-
+    Write-Host 'Using Ruby Gem to install the Bundler Gem...'
+    gem install bundler
+    
+    Write-Host 'Installed version of Bundler: ' -NoNewline
+    bundler --version
 }
 
 function InstallComposer {
-    Write-Host 'Installing Composer...'
     if ($IsOSX) {
-        curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+        Write-Host 'Using PHP to install Composer...'
+        sh -c 'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer'
+        Write-Host 'Installed version of Composer: ' -NoNewline
+        composer --version
     } else {
         Write-Warning -Message 'This is for macOS only.'
     }
 }
 
 function InstallComposerCgr {
-    Write-Host 'Installing CGR (Composer Global Require)...'
+    Write-Host 'Using Composer to install CGR (Composer Global Require)...'
     if (Get-Command composer -errorAction SilentlyContinue) {
         InstallComposer
     }
@@ -103,51 +118,61 @@ function InstallComposerCgr {
 }
 
 function InstallComposerPrestissimo {
-    Write-Host 'Installing Prestissimo...'
+    Write-Host 'Using Composer to install Prestissimo...'
     if (Get-Command composer -errorAction SilentlyContinue) {
         InstallComposer
     }
     composer global require hirak/prestissimo
 }
 
-function InstallNode {
-    Write-Host 'Installing Node.js...'
+function InstallGit {
+    Write-Host 'Using Homebrew to install Git...'
+    sh -c 'brew install git'
+    Write-Host 'Installed version of Git: ' -NoNewline
+    git --version
+}
+
+function InstallNvm {
+    Write-Host 'Installing Node Version Manager...'
     if ($IsOSX) {
-        brew install homebrew/versions/node4-lts
-        npm -g up
+        sh -c 'brew install nvm'
     } elseif ($IsWindows) {
         
     }
 }
-
-function UseNodeLTS {
+New-Alias -Name node -Value Node
+function UseNode4 {
     UseNode -Version 4.5.0
 }
 
-function UseNodeLatest {
+function UseNode6 {
     UseNode -Version 6.4.0
 }
 
 function UseNode([string] $Version) {
     $env:PATH = @("$HOME/.nvm/versions/node/v$Version/bin", $env:PATH) -join ':'
-    Set-Alias -Name node -Value (Get-Command -Name node -Type Application | Select-Object -First 1).Source
+    Set-Alias -Name node -Value $(Get-Command -Name node -Type Application | Select-Object -First 1).Source -Scope Global
 }
 
 function InstallOhMyZsh {
-    Write-Host 'Installing Oh-My-Zsh...'
     if ($IsOSX) {
-        brew install zsh
-        sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+        Write-Host 'Using Homebrew to install Zsh...'
+        sh -c 'brew install zsh'
+        Write-Host 'Installed version of Zsh: ' -NoNewline
+        zsh --version
+        Write-Host 'Using Bash to install Oh-My-Zsh...'
+        sh -c '$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)'
     } else {
         Write-Warning -Message 'This is for macOS only.'
     }
 }
 
 function InstallPhp {
-    Write-Host 'Installing PHP 7.0...'
     if ($IsOSX) {
-        brew tap homebrew/php
-        brew install php70 php70-mcrypt
+        Write-Host 'Using Homebrew to install PHP 7.0...'
+        sh -c 'brew tap homebrew/php && brew install php70 php70-mcrypt'
+        Write-Host 'Installed version of PHP: ' -NoNewline
+        php -v
     } else {
         Write-Warning -Message 'This is for macOS only.'
     }
@@ -179,9 +204,9 @@ function RemoveAndroidStudio {
     # rm -Rf ~/Library/Android*
 }
 
-function RemoveBrew {
-    Write-Host 'Removing Homebrew...'
-    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
+function UninstallBrew {
+    Write-Host 'Using Ruby to uninstall Homebrew...'
+    sh -c 'ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"'
 }
 
 function UpdateBundler {
@@ -201,10 +226,8 @@ function UpdateBundler {
 function UpdateBrew {
     Write-Host 'Updating Homebrew...'
     if ($IsOSX -and (Get-Command brew -errorAction SilentlyContinue)) {
-        sudo chown -R $(whoami):admin /usr/local
-        brew update
-        brew upgrade
-        brew cleanup
+        sh -c 'sudo chown -R $(whoami):admin /usr/local'
+        sh -c 'brew update && brew upgrade && brew cleanup'
     }
 }
 

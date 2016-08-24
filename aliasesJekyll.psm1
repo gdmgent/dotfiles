@@ -1,7 +1,7 @@
 # Import-Module esJekyll.psm1
 
 function CodeJekyllServe {
-    if (TestJekyll) {
+    if (IsJekyllSite) {
         code .
         JekyllServe $args
     }
@@ -9,7 +9,7 @@ function CodeJekyllServe {
 New-Alias -Name cjs -Value CodeJekyllServe
 
 function CodeJekyllServeUnpublished {
-    if (TestJekyll) {
+    if (IsJekyllSite) {
         code .
         $directory = (Get-Item -Path '.').Name
         $uri = "http://127.0.0.1:4000/$directory/"
@@ -24,7 +24,7 @@ function CodeJekyllServeUnpublished {
 New-Alias -Name cjsu -Value CodeJekyllServeUnpublished
 
 function JekyllServe {
-    if (TestJekyll) {
+    if (IsJekyllSite) {
         Invoke-Expression "jekyll serve --watch $args"
     }
 }
@@ -50,7 +50,7 @@ function JekyllServeUnpublished {
 }
 New-Alias -Name jsu -Value JekyllServeUnpublished
 
-function TestJekyll {
+function IsJekyllSite {
     $file = "_config.yml"
     if (Test-Path $file) {
         return $true
