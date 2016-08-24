@@ -120,12 +120,17 @@ function InstallNode {
     }
 }
 
-function UseNode4 {
-    $env:PATH = @("$HOME/.nvm/versions/node/v4.5.0/bin", $env:PATH) -join ':'
-
+function UseNodeLTS {
+    UseNode -Version 4.5.0
 }
-function UseNode6 {
-    $env:PATH = @("$HOME/.nvm/versions/node/v6.4.0/bin", $env:PATH) -join ':'
+
+function UseNodeLatest {
+    UseNode -Version 6.4.0
+}
+
+function UseNode([string] $Version) {
+    $env:PATH = @("$HOME/.nvm/versions/node/v$Version/bin", $env:PATH) -join ':'
+    Set-Alias -Name node -Value (Get-Command -Name node -Type Application | Select-Object -First 1).Source
 }
 
 function InstallOhMyZsh {

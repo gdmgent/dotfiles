@@ -1,104 +1,104 @@
-# Import-Module aliasesPath.psm1
+# Import-Module esPath.psm1
 
-function AliasVagrantAliases {
+function VagrantAliases {
     Get-Alias -Name v*
 }
-New-Alias -Name v -Value AliasVagrantAliases
+New-Alias -Name v -Value VagrantAliases
 
-function AliasVagrantBoxList {
+function VagrantBoxList {
     vagrant box list "$args"
 }
-New-Alias -Name vbl -Value AliasVagrantBoxList
+New-Alias -Name vbl -Value VagrantBoxList
 
-function AliasVagrantBoxRemove {
+function VagrantBoxRemove {
     vagrant box remove laravel/homestead --box-version "$args"
 }
-New-Alias -Name vbr -Value AliasVagrantBoxRemove
+New-Alias -Name vbr -Value VagrantBoxRemove
 
-function AliasVagrantBoxUpdate {
+function VagrantBoxUpdate {
     vagrant box update "$args"
 }
-New-Alias -Name vbu -Value AliasVagrantBoxUpdate
+New-Alias -Name vbu -Value VagrantBoxUpdate
 
-function AliasVagrantDestroy {
+function VagrantDestroy {
     if (TestVagrantfile) {
         vagrant destroy "$args" 
     }
 }
-New-Alias -Name vd -Value AliasVagrantDestroy
+New-Alias -Name vd -Value VagrantDestroy
 
-function AliasVagrantGlobalStatus {
+function VagrantGlobalStatus {
     vagrant global-status "$args"
 }
-New-Alias -Name vg -Value AliasVagrantGlobalStatus
+New-Alias -Name vg -Value VagrantGlobalStatus
 
-function AliasVagrantGlobalStatusPrune {
+function VagrantGlobalStatusPrune {
     vagrant global-status --prune "$args"
 }
-New-Alias -Name vgp -Value AliasVagrantGlobalStatusPrune
+New-Alias -Name vgp -Value VagrantGlobalStatusPrune
 
-function AliasVagrantHalt {
+function VagrantHalt {
     if (TestVagrantfile) {
         vagrant halt "$args" 
     }
 }
-New-Alias -Name vh -Value AliasVagrantHalt
+New-Alias -Name vh -Value VagrantHalt
 
-function AliasVagrantProvision {
+function VagrantProvision {
     if (TestVagrantfile) {
         vagrant provision "$args" 
     }
 }
-New-Alias -Name vp -Value AliasVagrantProvision
+New-Alias -Name vp -Value VagrantProvision
 
-function AliasVagrantReload {
+function VagrantReload {
     if (TestVagrantfile) {
         vagrant reload "$args" 
     }
 }
-New-Alias -Name vr -Value AliasVagrantReload
+New-Alias -Name vr -Value VagrantReload
 
-function AliasVagrantReloadProvision {
+function VagrantReloadProvision {
     if (TestVagrantfile) {
         vagrant reload --provision "$args" 
     }
 }
-New-Alias -Name vrp -Value AliasVagrantReloadProvision
+New-Alias -Name vrp -Value VagrantReloadProvision
 
-function AliasVagrantSsh {
+function VagrantSsh {
     if (TestVagrantfile) {
         vagrant ssh "$args" 
     }
 }
-New-Alias -Name vss -Value AliasVagrantSsh
+New-Alias -Name vss -Value VagrantSsh
 
-function AliasVagrantStatus {
+function VagrantStatus {
     if (TestVagrantfile) {
         vagrant status "$args" 
     }
 }
-New-Alias -Name vs -Value AliasVagrantStatus
+New-Alias -Name vs -Value VagrantStatus
 
-function AliasVagrantSuspend {
+function VagrantSuspend {
     if (TestVagrantfile) {
         vagrant suspend "$args" 
     }
 }
-New-Alias -Name vsu -Value AliasVagrantSuspend
+New-Alias -Name vsu -Value VagrantSuspend
 
-function AliasVagrantUp {
+function VagrantUp {
     if (TestVagrantfile) {
         vagrant up "$args" 
     }
 }
-New-Alias -Name vu -Value AliasVagrantUp
+New-Alias -Name vu -Value VagrantUp
 
-function AliasVagrantUpProvision {
+function VagrantUpProvision {
     if (TestVagrantfile) {
         vagrant up --provision "$args" 
     }
 }
-New-Alias -Name vup -Value AliasVagrantUpProvision
+New-Alias -Name vup -Value VagrantUpProvision
 
 function TestVagrantfile {
     $file = "Vagrantfile"
