@@ -76,8 +76,10 @@ function InstallArtestead {
 }
 
 function InstallBrew {
-    Write-Host 'Installing Homebrew...'
+    Write-Host 'Using Ruby to install Homebrew...'
     sh -c 'ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
+    Write-Host 'Installed version of Homebrew: ' -NoNewline
+    brew --version
 }
 
 function InstallRuby {
@@ -85,7 +87,6 @@ function InstallRuby {
     sh -c 'brew install ruby'
     Write-Host 'Installed version of Ruby: ' -NoNewline
     ruby --version
-    
     Write-Host 'Installed version of Gem: ' -NoNewline
     gem --version
 }
@@ -133,9 +134,11 @@ function InstallGit {
 }
 
 function InstallNvm {
-    Write-Host 'Installing Node Version Manager...'
     if ($IsOSX) {
+        Write-Host 'Using Homebrew to install Node Version Manager...'
         sh -c 'brew install nvm'
+        Write-Host 'Installed version of NVM: ' -NoNewline
+        nvm --version
     } elseif ($IsWindows) {
         
     }
@@ -179,8 +182,14 @@ function InstallPhp {
 }
 
 function RemoveLocalArtestead {
-    Write-Host 'Removing Local Artestead...'
-    Get-ChildItem
+    $file = 'Artestead.yaml'
+    if (Test-Path $file) {
+        Write-Host 'Removing Local Artestead...'
+        Get-Command artestead
+    } else {
+        Write-Warning -Message "This is not an Artestead project. Could not find '$file' in this directory."
+    }
+
 }
 
 function RemoveAndroidStudio {
@@ -211,7 +220,7 @@ function UninstallBrew {
 
 function UpdateBundler {
     $file = 'Gemfile'
-    if ((Test-Path $file)) {
+    if (Test-Path $file) {
         if (Get-Command bundler -errorAction SilentlyContinue) {
             bundler update
             gem cleanup
