@@ -1,6 +1,7 @@
 Push-Location (Split-Path $MyInvocation.MyCommand.Path)
 
 Import-Module ./dotfiles.psm1
+InitConfig
 Import-Module ./aliasesPath.psm1
 Import-Module ./proxySettings.psm1
 if (Get-Command git -errorAction SilentlyContinue) {
@@ -18,6 +19,8 @@ if (Get-Command vagrant -errorAction SilentlyContinue) {
 Pop-Location
 
 Set-Location $HOME
-Clear-Host
+
+
+# Clear-Host
 
 Dot

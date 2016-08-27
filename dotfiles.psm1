@@ -1,6 +1,41 @@
 # import: . ./dotfiles.ps1
 
+function InitConfig {
+    $Global:DotfilesPath = "$HOME/.dotfiles/config.json"
+    if (Test-Path $Global:DotfilesPath) {
+        Write-Host 'Reading config file...'
+        $Global:DotfilesConfig = Get-Content -Raw -Path $Global:DotfilesPath | ConvertFrom-Json
+    } else {
+        Write-Host 'Creating a new config file...'
+        $Global:DotfilesConfig = New-Object -TypeName psobject
+        SaveConfig
+    }
+    WriteConfig -Name aa -Value x
+}
+
+function ReadConfig([string] $Name) {
+    if (Get-Member -InputObject $Global:DotfilesConfig -Name $Name -MemberType NoteProperty) {
+        Write-Host $Global:DotfilesConfig.$Name
+    } else {
+        Write-Error -Message "The property '$Name' does not exist in the Dotfiles Config."
+    }
+}
+
+function SaveConfig {
+    ConvertTo-Json -InputObject $Global:DotfilesConfig | Sort-Object -Property name | Out-File $Global:DotfilesPath
+}
+
+function WriteConfig([string] $Name, [string] $Value) {
+    if (Get-Member -InputObject $Global:DotfilesConfig -Name $Name -MemberType NoteProperty) {
+        $Global:DotfilesConfig.$Name = $Value
+    } else {
+        Add-Member -InputObject $Global:DotfilesConfig -NotePropertyName $Name -NotePropertyValue $Value
+    }
+    SaveConfig
+}
+
 function SetEnvironment {
+    Write-Host $dotfilesConfig
     if ($IsOSX) {
         $path = @(
             # first
