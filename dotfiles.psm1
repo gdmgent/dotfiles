@@ -1,16 +1,15 @@
 # import: . ./dotfiles.ps1
 
 function InitConfig {
-    $Global:DotfilesPath = "$HOME/.dotfiles/config.json"
-    if (Test-Path $Global:DotfilesPath) {
+    $Global:DotfilesConfigPath = "$HOME/.dotfiles/config.json"
+    if (Test-Path $Global:DotfilesConfigPath) {
         Write-Host 'Reading config file...'
-        $Global:DotfilesConfig = Get-Content -Raw -Path $Global:DotfilesPath | ConvertFrom-Json
+        $Global:DotfilesConfig = Get-Content -Raw -Path $Global:DotfilesConfigPath | ConvertFrom-Json
     } else {
         Write-Host 'Creating a new config file...'
-        $Global:DotfilesConfig = New-Object -TypeName psobject
+        $Global:DotfilesConfig = New-Object -TypeName PSObject
         SaveConfig
     }
-    WriteConfig -Name aa -Value x
 }
 
 function ReadConfig([string] $Name) {
@@ -22,7 +21,7 @@ function ReadConfig([string] $Name) {
 }
 
 function SaveConfig {
-    ConvertTo-Json -InputObject $Global:DotfilesConfig | Sort-Object -Property name | Out-File $Global:DotfilesPath
+    ConvertTo-Json -InputObject $Global:DotfilesConfig | Sort-Object -Property Name | Out-File $Global:DotfilesConfigPath
 }
 
 function WriteConfig([string] $Name, [string] $Value) {
@@ -35,9 +34,8 @@ function WriteConfig([string] $Name, [string] $Value) {
 }
 
 function SetEnvironment {
-    Write-Host $dotfilesConfig
     if ($IsOSX) {
-        $path = @(
+        $Path = @(
             # first
             "$HOME/Library/Android/sdk/tools",
 
@@ -54,31 +52,14 @@ function SetEnvironment {
             # last
             "$HOME/.composer/vendor/bin"
         )
-
-        # # Write-Output ($path -join ':')
-        # [System.Environment]::SetEnvironmentVariable('PATH', $path -join ':')
-
-        # $PATH = [System.Environment]::GetEnvironmentVariable('PATH')
-        # [System.Environment]::SetEnvironmentVariable("PATH", "/usr/local/bin:$PATH")
-    
-        # /Users/olivier/.nvm/versions/node/v4.5.0/bin
-        # /Users/olivier/Code/dotfiles/scripts/sh
-        # /Users/olivier/Library/Android/sdk/tools
-        # /usr/local/sbin
-        # /usr/local/bin
-        # /usr/bin
-        # /bin
-        # /usr/sbin
-        # /sbin
-        # /Users/olivier/.composer/vendor/bin
-        [System.Environment]::SetEnvironmentVariable('PATH', $path -join ':')
+        [System.Environment]::SetEnvironmentVariable('PATH', $Path -join ':')
     } elseif ($IsWindows) {
-        $path = @(
+        $Path = @(
             "$HOME\AppData\Roaming\Composer\vendor\bin",
             'C:\php'
         )
 
-        # [System.Environment]::SetEnvironmentVariable('Path', $path -join ';')
+        # [System.Environment]::SetEnvironmentVariable('Path', $Path -join ';')
     }
 }
 SetEnvironment
@@ -89,7 +70,7 @@ SetEnvironment
 # }
 
 function Dotfiles {
-    $version = '4.0.0-alpha2'
+    $DotfilesVersion = Get-Content "${Global:DotfilesInstallPath}/VERSION" | select -First 1 -Skip 1
     if ($IsOSX) {
         $os = 'macOS'
     } elseif ($IsWindows) {
@@ -99,8 +80,9 @@ function Dotfiles {
     } else {
         $os = 'unknown operation system'
     }
-    Write-Host " Artevelde Dotfiles v$version " -ForegroundColor Black -BackgroundColor DarkYellow -NoNewline
-    Write-Host " on PowerShell for $os" -ForegroundColor DarkGray
+    Write-Host " Artevelde Dotfiles $DotfilesVersion " -ForegroundColor Black -BackgroundColor DarkYellow -NoNewline
+    $PSVersion = $PSVersionTable.GitCommitId # $PSVersionTable.PSVersion.ToString()
+    Write-Host " on PowerShell $PSVersion for $os" -ForegroundColor DarkGray
 }
 New-Alias -Name dot -Value Dotfiles
 

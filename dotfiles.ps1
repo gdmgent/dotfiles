@@ -1,26 +1,27 @@
-Push-Location (Split-Path $MyInvocation.MyCommand.Path)
+$Global:DotfilesInstallPath = Split-Path $MyInvocation.MyCommand.Path
+
+Push-Location $Global:DotfilesInstallPath
 
 Import-Module ./dotfiles.psm1
 InitConfig
-Import-Module ./aliasesPath.psm1
-Import-Module ./proxySettings.psm1
+Import-Module ./dotfiles.path.psm1
+Import-Module ./dotfiles.proxysettings.psm1
 if (Get-Command git -errorAction SilentlyContinue) {
-    Import-Module ./aliasesGit.psm1
+    Import-Module ./dotfiles.git.psm1
 }
 if (Get-Command jekyll -errorAction SilentlyContinue) {
-    Import-Module ./aliasesJekyll.psm1
+    Import-Module ./dotfiles.jekyll.psm1
 }
 if (Get-Command php -errorAction SilentlyContinue) {
-    Import-Module ./aliasesPhp.psm1
+    Import-Module ./dotfiles.php.psm1
 }
 if (Get-Command vagrant -errorAction SilentlyContinue) {
-    Import-Module ./aliasesVagrant.psm1
+    Import-Module ./dotfiles.vagrant.psm1
 }
 Pop-Location
 
 Set-Location $HOME
 
-
-# Clear-Host
+Clear-Host
 
 Dot
