@@ -14,9 +14,9 @@ function InitConfig {
 
 function ReadConfig([string] $Name) {
     if (Get-Member -InputObject $Global:DotfilesConfig -Name $Name -MemberType NoteProperty) {
-        Write-Host $Global:DotfilesConfig.$Name
+        return $Global:DotfilesConfig.$Name
     } else {
-        Write-Error -Message "The property '$Name' does not exist in the Dotfiles Config."
+        return $null
     }
 }
 

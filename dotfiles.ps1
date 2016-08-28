@@ -21,7 +21,7 @@ if (Get-Command vagrant -errorAction SilentlyContinue) {
 Pop-Location
 
 Set-Location $HOME
-
+InitProxy
 Clear-Host
 
 Dot

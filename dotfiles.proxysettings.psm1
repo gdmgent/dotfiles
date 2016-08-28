@@ -1,52 +1,50 @@
-function SettingProxy () {
+function InitProxy() {
+    $State = ReadConfig -Name Proxy
+    switch ($State) {
+        'on' {
+            TurnProxyOn
+        }
+        'off' {
+            TurnProxyOff
+        }
+        Default {
+            ShowProxy
+        }
+    }
+}
+
+function ShowProxy {
+    $State = ReadConfig -Name Proxy
+    Write-Host 'Proxyserver settings are currently ' -NoNewline
+    switch ($State) {
+        'on' {
+            Write-Host $State -ForegroundColor Green -NoNewline
+        }
+        'off' {
+            Write-Host $State -ForegroundColor Red -NoNewline
+        }
+        Default {
+            Write-Host $State -ForegroundColor Blue -NoNewline
+        }
+    }
+    Write-Host '.'
+}
+
+function SetProxy {
     param(
         [ValidateSet('on', 'off')]
         [string]
         $State
     )
-    $flag = "$HOME/.proxy"
+    $flag = ReadConfig -Name Proxy
     Write-Host ' Artevelde University College Ghent proxyserver settings. ' -BackgroundColor Blue -ForegroundColor White
 
     if (!$State) {
-        Write-Host 'Proxyserver settings are ' -NoNewline
-        if (Test-Path $flag) {
-            Write-Host 'on.' -ForegroundColor Green
-        } else {
-            Write-Host 'off.' -ForegroundColor Red
-        }
-        return
-    }
-
-    $proxyVariables = @('HTTP_PROXY', 'HTTPS_PROXY', 'FTP_PROXY')
-    $noProxyVariables = @('NO_PROXY')
-    if ($State.Equals('on')) {
-        $proxy = 'http://proxy.arteveldehs.be:8080'
-        $noProxy = 'localhost,0.0.0.0,127.0.0.1,.local'
-        New-Item -Path $flag -Type File -Value 'Artevelde Dotfiles: this file flags that proxyserver settings should be applied' -Force | Out-Null
-
-        foreach ($variable in $proxyVariables) {
-            foreach ($var in @($variable.ToUpper(), $variable.ToLower())) {
-                Set-Item -Path env:$var -Value $proxy
-            }
-        }
-        foreach ($variable in $noProxyVariables) {
-            foreach ($var in @($variable.ToUpper(), $variable.ToLower())) {
-                Set-Item -Path env:$var -Value $noproxy
-            }
-        }
-
-        Write-Host 'Proxyserver settings are now ' -NoNewline
-        Write-Host 'on.' -ForegroundColor Green
-
+        ShowProxy
     } else {
-        foreach ($variable in ($proxyVariables + $noProxyVariables)) {
-            foreach ($var in @($variable.ToUpper(), $variable.ToLower())) {
-                Remove-Item -Path env:$var
-            }
-        }
-        Remove-Item -Path $flag
-        Write-Host 'Proxyserver settings are now ' -NoNewline
-        Write-Host 'off.' -ForegroundColor Red
+        WriteConfig -Name Proxy -Value $State
+        InitProxy
+        ShowProxy
     }
 
 # system_profiler SPAirPortDataType | awk -F':' '/Current Network Information:/ {
@@ -57,4 +55,33 @@ function SettingProxy () {
 # }'
 
 }
-New-Alias -Name proxy -Value SettingProxy
+New-Alias -Name proxy -Value SetProxy
+
+function TurnProxyOn {
+    $proxyVariables = @('HTTP_PROXY', 'HTTPS_PROXY', 'FTP_PROXY')
+    $noProxyVariables = @('NO_PROXY')
+    $proxy = 'http://proxy.arteveldehs.be:8080'
+    $noProxy = 'localhost,0.0.0.0,127.0.0.1,.local'
+    foreach ($variable in $proxyVariables) {
+        foreach ($var in @($variable.ToUpper(), $variable.ToLower())) {
+            Set-Item -Path env:$var -Value $proxy
+        }
+    }
+    foreach ($variable in $noProxyVariables) {
+        foreach ($var in @($variable.ToUpper(), $variable.ToLower())) {
+            Set-Item -Path env:$var -Value $noproxy
+        }
+    }
+}
+
+function TurnProxyOff {
+    $proxyVariables = @('HTTP_PROXY', 'HTTPS_PROXY', 'FTP_PROXY')
+    $noProxyVariables = @('NO_PROXY')
+        foreach ($variable in ($proxyVariables + $noProxyVariables)) {
+        foreach ($var in @($variable.ToUpper(), $variable.ToLower())) {
+            if (Test-Path env:$var) {
+                Remove-Item -Path env:$var
+            }
+        }
+    }
+}
