@@ -7,6 +7,7 @@ function InitConfig {
         $Global:DotfilesConfig = Get-Content -Raw -Path $Global:DotfilesConfigPath | ConvertFrom-Json
     } else {
         Write-Host 'Creating a new config file...'
+        New-Item -Path $Global:DotfilesConfigPath -Force
         $Global:DotfilesConfig = New-Object -TypeName PSObject
         SaveConfig
     }
@@ -21,7 +22,7 @@ function ReadConfig([string] $Name) {
 }
 
 function SaveConfig {
-    ConvertTo-Json -InputObject $Global:DotfilesConfig | Sort-Object -Property Name | Out-File $Global:DotfilesConfigPath
+    ConvertTo-Json -InputObject $Global:DotfilesConfig | Out-File $Global:DotfilesConfigPath
 }
 
 function WriteConfig([string] $Name, [string] $Value) {
@@ -64,10 +65,7 @@ function SetEnvironment {
 }
 SetEnvironment
 
-# Node Version Manager
-# function nvm {
-#     Invoke-Expression "sh -c 'export NVM_DIR=~/.nvm && source $(brew --prefix nvm)/nvm.sh && nvm $args'"
-# }
+
 
 function Dotfiles {
     $DotfilesVersion = Get-Content "${Global:DotfilesInstallPath}/VERSION" | select -First 1 -Skip 1
@@ -159,19 +157,6 @@ function InstallNvm {
     } elseif ($IsWindows) {
         
     }
-}
-New-Alias -Name node -Value Node
-function UseNode4 {
-    UseNode -Version 4.5.0
-}
-
-function UseNode6 {
-    UseNode -Version 6.4.0
-}
-
-function UseNode([string] $Version) {
-    $env:PATH = @("$HOME/.nvm/versions/node/v$Version/bin", $env:PATH) -join ':'
-    Set-Alias -Name node -Value $(Get-Command -Name node -Type Application | Select-Object -First 1).Source -Scope Global
 }
 
 function InstallOhMyZsh {

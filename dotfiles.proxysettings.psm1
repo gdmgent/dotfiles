@@ -24,7 +24,7 @@ function ShowProxy {
             Write-Host $State -ForegroundColor Red -NoNewline
         }
         Default {
-            Write-Host $State -ForegroundColor Blue -NoNewline
+            Write-Host "unrecognized ($State)" -ForegroundColor Blue -NoNewline
         }
     }
     Write-Host '.'
