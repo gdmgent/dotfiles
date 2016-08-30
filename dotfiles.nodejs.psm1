@@ -12,7 +12,9 @@ function nvm {
 function InitNode {
     if ($IsOSX) {
         $Version = ReadConfig -Name Node
-        UseNode -Version $Version
+        if ($Version) {
+            UseNode -Version $Version
+        }
     }
 }
 
