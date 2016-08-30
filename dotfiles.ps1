@@ -10,6 +10,8 @@ Import-Module ./dotfiles.path.psm1
 Import-Module ./dotfiles.proxysettings.psm1
 InitProxy
 
+Import-Module ./dotfiles.proxy.ps1
+
 Import-Module ./dotfiles.nodejs.psm1
 InitNode
 
