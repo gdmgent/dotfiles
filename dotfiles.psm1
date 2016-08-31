@@ -1,14 +1,16 @@
 # import: . ./dotfiles.ps1
 
+Set-Variable -Name DotfilesConfigPath -Value (Join-Path -Path $Home -ChildPath '.dotfiles' | Join-Path -ChildPath 'config.json') -Option Constant -Scope Global
+Set-Variable -Name DotfilesVersion -Value (Get-Content (Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'VERSION') | Select-Object -First 1 -Skip 1) -Option Constant -Scope Global
+
 function InitConfig {
-    $Global:DotfilesConfigPath = "$HOME/.dotfiles/config.json"
     if (Test-Path $Global:DotfilesConfigPath) {
         Write-Host 'Reading config file...'
-        $Global:DotfilesConfig = Get-Content -Raw -Path $Global:DotfilesConfigPath | ConvertFrom-Json
+        Set-Variable -Name DotfilesConfig -Value (Get-Content -Raw -Path $Global:DotfilesConfigPath | ConvertFrom-Json) -Scope Global
     } else {
         Write-Host 'Creating a new config file...'
         New-Item -Path $Global:DotfilesConfigPath -Force
-        $Global:DotfilesConfig = New-Object -TypeName PSObject
+        Set-Variable -Name DotfilesConfig -Value (New-Object -TypeName PSObject) -Scope Global
         SaveConfig
     }
 }
@@ -65,10 +67,7 @@ function SetEnvironment {
 }
 SetEnvironment
 
-
-
 function Dotfiles {
-    $DotfilesVersion = Get-Content "${Global:DotfilesInstallPath}/VERSION" | select -First 1 -Skip 1
     if ($IsOSX) {
         $os = 'macOS'
     } elseif ($IsWindows) {
@@ -78,7 +77,7 @@ function Dotfiles {
     } else {
         $os = 'unknown operation system'
     }
-    Write-Host " Artevelde Dotfiles $DotfilesVersion " -ForegroundColor Black -BackgroundColor DarkYellow -NoNewline
+    Write-Host " Artevelde Dotfiles $Global:DotfilesVersion " -ForegroundColor Black -BackgroundColor DarkYellow -NoNewline
     $PSVersion = $PSVersionTable.GitCommitId # $PSVersionTable.PSVersion.ToString()
     Write-Host " on PowerShell $PSVersion for $os" -ForegroundColor DarkGray
 }
@@ -86,8 +85,12 @@ New-Alias -Name dot -Value Dotfiles
 
 function InstallArtestead {
     Write-Host 'Installing Artestead (Artevelde Laravel Homestead)...'
-    vagrant plugin install vagrant-hostsupdater
-    cgr gdmgent/artestead
+    if (Get-Command vagrant -errorAction SilentlyContinue) {
+        vagrant plugin install vagrant-hostsupdater
+    }
+    if (Get-Command cgr -errorAction SilentlyContinue) {
+        cgr gdmgent/artestead
+    }
 }
 
 function InstallBrew {
@@ -191,7 +194,6 @@ function RemoveLocalArtestead {
     } else {
         Write-Warning -Message "This is not an Artestead project. Could not find '$file' in this directory."
     }
-
 }
 
 function RemoveAndroidStudio {

@@ -1,4 +1,4 @@
-$Global:DotfilesInstallPath = Split-Path $MyInvocation.MyCommand.Path
+Set-Variable -Name DotfilesInstallPath -Value (Split-Path $MyInvocation.MyCommand.Path) -Option Constant -Scope Global
 
 Push-Location $Global:DotfilesInstallPath
 

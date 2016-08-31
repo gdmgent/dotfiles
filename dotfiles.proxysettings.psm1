@@ -1,3 +1,9 @@
+Set-Variable -Name ProxyKeys -Value @('HTTP_PROXY', 'HTTPS_PROXY', 'FTP_PROXY') -Option Constant -Scope Global
+Set-Variable -Name ProxyValues -Value 'http://proxy.arteveldehs.be:8080' -Option Constant -Scope Global
+Set-Variable -Name NoProxyKeys -Value @('NO_PROXY') -Option Constant -Scope Global
+Set-Variable -Name NoProxyValues -Value 'localhost,0.0.0.0,127.0.0.1,.local' -Option Constant -Scope Global
+
+
 function InitProxy() {
     $State = ReadConfig -Name Proxy
     switch ($State) {
@@ -46,41 +52,27 @@ function SetProxy {
         InitProxy
         ShowProxy
     }
-
-# system_profiler SPAirPortDataType | awk -F':' '/Current Network Information:/ {
-#     getline
-#     sub(/^ */, "")
-#     sub(/:$/, "")
-#     print
-# }'
-
 }
 New-Alias -Name proxy -Value SetProxy
 
 function TurnProxyOn {
-    $proxyVariables = @('HTTP_PROXY', 'HTTPS_PROXY', 'FTP_PROXY')
-    $noProxyVariables = @('NO_PROXY')
-    $proxy = 'http://proxy.arteveldehs.be:8080'
-    $noProxy = 'localhost,0.0.0.0,127.0.0.1,.local'
-    foreach ($variable in $proxyVariables) {
-        foreach ($var in @($variable.ToUpper(), $variable.ToLower())) {
-            Set-Item -Path env:$var -Value $proxy
+    foreach ($Key in $Global:ProxyKeys) {
+        foreach ($Variable in @($Key.ToUpper(), $Key.ToLower())) {
+            Set-Item -Path env:$Variable -Value $Global:ProxyValues
         }
     }
-    foreach ($variable in $noProxyVariables) {
-        foreach ($var in @($variable.ToUpper(), $variable.ToLower())) {
-            Set-Item -Path env:$var -Value $noproxy
+    foreach ($Key in $Global:NoProxyKeys) {
+        foreach ($Variable in @($Key.ToUpper(), $Key.ToLower())) {
+            Set-Item -Path env:$Variable -Value $Global:NoProxyValues
         }
     }
 }
 
 function TurnProxyOff {
-    $proxyVariables = @('HTTP_PROXY', 'HTTPS_PROXY', 'FTP_PROXY')
-    $noProxyVariables = @('NO_PROXY')
-        foreach ($variable in ($proxyVariables + $noProxyVariables)) {
-        foreach ($var in @($variable.ToUpper(), $variable.ToLower())) {
-            if (Test-Path env:$var) {
-                Remove-Item -Path env:$var
+    foreach ($Key in ($Global:ProxyKeys + $Global:NoProxyKeys)) {
+        foreach ($Variable in @($Key.ToUpper(), $Key.ToLower())) {
+            if (Test-Path env:$Variable) {
+                Remove-Item -Path env:$Variable
             }
         }
     }
