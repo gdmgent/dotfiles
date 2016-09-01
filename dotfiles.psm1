@@ -38,23 +38,31 @@ function WriteConfig([string] $Name, [string] $Value) {
 
 function SetEnvironment {
     if ($IsOSX) {
-        $Path = @(
-            # first
-            "$HOME/Library/Android/sdk/tools",
+        $Path = @()
 
-            # user
+        # First
+        $AndroidSdkPath = "$HOME/Library/Android/sdk/tools"
+        if (Test-Path $AndroidSdkPath) {
+            $Path += $AndroidSdkPath
+        }
+
+        # User Paths
+        $Path += @(
             '/usr/local/bin',
             '/usr/bin',
-            '/bin',
+            '/bin'
+        )
 
-            # superuser
+        # Superuser Paths
+        $Path += @(
             '/usr/local/sbin',
             '/usr/sbin',
             '/sbin'
-
-            # last
-            "$HOME/.composer/vendor/bin"
         )
+
+        # Last
+        $Path += "$HOME/.composer/vendor/bin"
+
         [System.Environment]::SetEnvironmentVariable('PATH', $Path -join ':')
     } elseif ($IsWindows) {
         $Path = @(
@@ -245,6 +253,10 @@ function UpdateBrew {
 }
 
 function UpdateComposer {
+    Param(
+        [switch]
+        $Force
+    )
     Write-Host 'Updating Composer and CGR installed packages...'
     if (Get-Command composer -errorAction SilentlyContinue) {
         composer self-update
@@ -259,7 +271,7 @@ function UpdateComposer {
             $packages["symfony"]      = "symfony/symfony-installer"
             $packages["wp"]           = "wp-cli/wp-cli"
             foreach ($package in $packages.GetEnumerator()) {
-                if (Get-Command $package.Key -errorAction SilentlyContinue) {
+                if ($Force -or (Get-Command $package.Key -errorAction SilentlyContinue)) {
                     cgr $package.Value
                 }
             }
@@ -297,4 +309,8 @@ function CloneSyllabus {
     )
     s
     git clone https://github.com/gdmgent/$syllabus
+}
+
+function X {
+    exit
 }
