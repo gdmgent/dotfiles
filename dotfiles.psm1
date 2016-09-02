@@ -3,6 +3,9 @@
 Set-Variable -Name DotfilesConfigPath -Value (Join-Path -Path $Home -ChildPath '.dotfiles' | Join-Path -ChildPath 'config.json') -Option Constant -Scope Global
 Set-Variable -Name DotfilesVersion -Value (Get-Content (Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'VERSION') | Select-Object -First 1 -Skip 1) -Option Constant -Scope Global
 
+
+# Config Functions
+
 function InitConfig {
     if (Test-Path $Global:DotfilesConfigPath) {
         Write-Host 'Reading config file...'
@@ -91,6 +94,8 @@ function Dotfiles {
 }
 New-Alias -Name dot -Value Dotfiles
 
+# Install Functions
+
 function InstallArtestead {
     Write-Host 'Installing Artestead (Artevelde Laravel Homestead)...'
     if (Get-Command vagrant -errorAction SilentlyContinue) {
@@ -108,14 +113,6 @@ function InstallBrew {
     brew --version
 }
 
-function InstallRuby {
-    Write-Host 'Using Homebrew to install Ruby...'
-    sh -c 'brew install ruby'
-    Write-Host 'Installed version of Ruby: ' -NoNewline
-    ruby --version
-    Write-Host 'Installed version of Gem: ' -NoNewline
-    gem --version
-}
 
 function InstallBundler {
     Write-Host 'Using Ruby Gem to install the Bundler Gem...'
@@ -153,10 +150,26 @@ function InstallComposerPrestissimo {
 }
 
 function InstallGit {
-    Write-Host 'Using Homebrew to install Git...'
-    sh -c 'brew install git'
-    Write-Host 'Installed version of Git: ' -NoNewline
-    git --version
+    if ($IsOSX) {
+        Write-Host 'Using Homebrew to install Git...'
+        sh -c 'brew install git'
+        Write-Host 'Installed version of Git: ' -NoNewline
+        git --version
+    } elseif ($IsWindows) {
+        cmd.exe /C start https://git-scm.com/download/win
+    }
+}
+
+function InstallGitIgnoreGlobal {
+    if (Get-Command git -errorAction SilentlyContinue) {
+        InstallGit
+    }
+    Write-Host 'Installing GitIgnore Global...'
+    $GitIgnoreSource = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath 'gitignore_global'
+    $GitIgnoreDestination = Join-Path -Path $HOME -ChildPath '.gitignore_global'
+    if (Test-Path $GitIgnoreSource) {
+        Copy-Item -Path $GitIgnoreSource -Destination $GitIgnoreDestination
+    }
 }
 
 function InstallNvm {
@@ -192,6 +205,15 @@ function InstallPhp {
     } else {
         Write-Warning -Message 'This is for macOS only.'
     }
+}
+
+function InstallRuby {
+    Write-Host 'Using Homebrew to install Ruby...'
+    sh -c 'brew install ruby'
+    Write-Host 'Installed version of Ruby: ' -NoNewline
+    ruby --version
+    Write-Host 'Installed version of Gem: ' -NoNewline
+    gem --version
 }
 
 function RemoveLocalArtestead {
@@ -262,14 +284,14 @@ function UpdateComposer {
         composer self-update
         composer global update
         if (Get-Command cgr -errorAction SilentlyContinue) {
-            $packages = @{}
-            $packages["drush"]        = "drush/drush"
-            $packages["php-cs-fixer"] = "friendsofphp/php-cs-fixer"
-            $packages["artestead"]    = "gdmgent/artestead"
-            $packages["laravel"]      = "laravel/installer"
-            $packages["psysh"]        = "psy/psysh"
-            $packages["symfony"]      = "symfony/symfony-installer"
-            $packages["wp"]           = "wp-cli/wp-cli"
+            $packages                 = @{}
+            $packages['drush']        = 'drush/drush'
+            $packages['php-cs-fixer'] = 'friendsofphp/php-cs-fixer'
+            $packages['artestead']    = 'gdmgent/artestead'
+            $packages['laravel']      = 'laravel/installer'
+            $packages['psysh']        = 'psy/psysh'
+            $packages['symfony']      = 'symfony/symfony-installer'
+            $packages['wp']           = 'wp-cli/wp-cli'
             foreach ($package in $packages.GetEnumerator()) {
                 if ($Force -or (Get-Command $package.Key -errorAction SilentlyContinue)) {
                     cgr $package.Value
@@ -282,14 +304,14 @@ function UpdateComposer {
 }
 
 function ShowDotCommands {
-    Get-Command "$args" | Where-Object {$_.Source -eq 'dotfiles'}
-    Get-Alias  "$args" | Where-Object {$_.Source -eq 'dotfiles' -or $_.Source -like 'aliases*'}
+    Get-Command "$args" | Where-Object { $_.Source -eq 'dotfiles' }
+    Get-Alias  "$args" | Where-Object { $_.Source -eq 'dotfiles' -or $_.Source -like 'aliases*' }
 }
 
 function UpdateSyllabi {
     Push-Location
     GoToPathSyllabi
-    $directories = Get-ChildItem -Directory -Name | Where-Object {$_ -match '^((\d{4}|utl|mod)_)'}
+    $directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)' }
 
     foreach ($directory in $directories) {
         Push-Location $directory
