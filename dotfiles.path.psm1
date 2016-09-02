@@ -34,7 +34,7 @@ function GoToPathSyllabi([string] $directory) {
     } else {
         Write-Warning -Message "Cannot find syllabus '$directory' because it does not exist."
         Write-Host 'Available syllabi:'
-        Get-ChildItem $path -Directory -Name | Where-Object {$_ -match '^((\d{4}|utl|mod)_)'} | Write-Host -ForegroundColor DarkGray
+        Get-ChildItem -Path $path -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)' } | Write-Host -ForegroundColor DarkGray
     }
 }
 New-Alias -Name s -Value GoToPathSyllabi
@@ -43,8 +43,8 @@ function OpenHostsFile {
     if (Get-Command code -errorAction SilentlyContinue) {
         if ($IsOSX) {
             sudo code /etc/hosts
-        } elseif (*isWindows) {
-            code /Windows/System32/drivers/etc/hosts 
+        } elseif ($IsWindows) {
+            code C:\Windows\System32\drivers\etc\hosts
         }
     } else {
         Write-Warning -Message "Please install Visual Studio Code and install the 'code' command in PATH."
