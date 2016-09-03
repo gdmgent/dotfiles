@@ -3,7 +3,6 @@
 Set-Variable -Name DotfilesConfigPath -Value (Join-Path -Path $Home -ChildPath '.dotfiles' | Join-Path -ChildPath 'config.json') -Option Constant -Scope Global
 Set-Variable -Name DotfilesVersion -Value (Get-Content (Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'VERSION') | Select-Object -First 1 -Skip 1) -Option Constant -Scope Global
 
-
 # Config Functions
 
 function InitConfig {
@@ -198,16 +197,17 @@ function InstallNvm {
         Write-Host 'Installed version of NVM: ' -NoNewline
         nvm --version
     } elseif ($IsWindows) {
-        Write-Host 'Downloading Node Version Manager...'
-        $Version = '1.1.1'
+        $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/coreybutler/nvm-windows/releases?per_page=1
+        $Version = $Response.name
+        Write-Host "Downloading Node Version Manager $Version..."
         $Urn = 'nvm-setup.zip'
-        $Uri = "https://github.com/coreybutler/nvm-windows/releases/download/$Version/$Urn"
+        $Uri = ($Response.assets | Where-Object { $_.name.Equals($Urn) }).browser_download_url
         $InstallerArchive = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerArchive
         if (Test-Path $InstallerArchive) {
             Write-Host 'Running Node Version Manager installer...'
             Expand-Archive -Path $InstallerArchive -DestinationPath $env:TEMP -Force
-            $InstallerFile = Join-Path -Path $env:TEMP -ChildPath 'nvm-setup.exe'
+            $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn.Replace('zip', 'exe')
             if (Test-Path $InstallerFile) {
                 Remove-Item -Path $InstallerArchive
                 Invoke-Expression $InstallerFile
@@ -236,10 +236,10 @@ function InstallPhp {
         sh -c 'brew tap homebrew/php && brew install php70 php70-mcrypt'
     } elseif ($IsWindows) {
         Write-Host 'Downloading PHP 7.0...'
-        $Version = '7.0.10'
-        $Urn = "php-$Version-nts-Win32-VC14-x64.zip"
-        $Uri = "http://windows.php.net/downloads/releases/$Urn"
-        $OutFile = Join-Path -Path $env:TEMP -ChildPath $Urn
+        $Url = 'http://windows.php.net/download'
+        $RelativeUrl = ((Invoke-WebRequest –Uri $Url).Links | Where-Object { $_.href -match '/downloads/releases/php-7.0.\d+-nts-Win32-VC14-x64.zip' } | Select-Object -First 1).href
+        $Uri = "$UrlRelativeUrl"
+        $OutFile = Join-Path -Path $env:TEMP -ChildPath 'php.zip'
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
         if (Test-Path $OutFile) {
             $DestinationPath = 'C:\php'
@@ -306,6 +306,15 @@ function InstallRuby {
         }
     } else {
         Write-Warning -Message 'Ruby is not correctly installed.'
+    }
+}
+
+function InstallVisualStudioCode {
+    if ($IsOSX) {
+        $Path = '/usr/local/Cellar/openssl/1.0.2h_1/lib'
+        $Destination = '/usr/local/lib'
+        Copy-Item -Path $Path/libcrypto.dylib -Destination $Destination/libcrypto.1.0.0.dylib
+        Copy-Item -Path $Path/libssl.dylib -Destination $Destination/libssl.1.0.0.dylib
     }
 }
 
