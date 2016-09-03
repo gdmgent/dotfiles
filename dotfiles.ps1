@@ -1,7 +1,9 @@
 Set-Variable -Name DotfilesInstallPath -Value (Split-Path $MyInvocation.MyCommand.Path) -Option Constant -Scope Global
 
 Push-Location $Global:DotfilesInstallPath
-git pull
+if (Get-Command git -errorAction SilentlyContinue) {
+    git pull
+}
 
 Import-Module ./dotfiles.psm1
 InitConfig
