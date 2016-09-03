@@ -1,6 +1,7 @@
 Set-Variable -Name DotfilesInstallPath -Value (Split-Path $MyInvocation.MyCommand.Path) -Option Constant -Scope Global
 
 Push-Location $Global:DotfilesInstallPath
+git pull
 
 Import-Module ./dotfiles.psm1
 InitConfig
@@ -35,6 +36,6 @@ Pop-Location
 
 Set-Location $HOME
 
-# Clear-Host
+Clear-Host
 
 Dot
