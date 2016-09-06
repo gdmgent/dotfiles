@@ -381,9 +381,15 @@ function UpdateBundler {
 }
 
 function UpdateBrew {
+    Param(
+        [switch]
+        $Force
+    )
     Write-Host 'Updating Homebrew...'
     if ($IsOSX -and (Get-Command brew -errorAction SilentlyContinue)) {
-        sh -c 'sudo chown -R $(whoami):admin /usr/local'
+        if ($Force) {
+            sh -c 'sudo chown -R $(whoami):admin /usr/local'
+        }
         sh -c 'brew update && brew upgrade && brew cleanup'
     }
 }
