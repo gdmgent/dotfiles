@@ -24,9 +24,9 @@ function InitNode {
 function UseNode4 {
     $NodeVersion = 4
     if ($IsOSX) {
-        $Version = (Get-ChildItem $NodeJsPath).Name | Where-Object { $_ -match "v$NodeVersion.\d.\d" } | Sort-Object -Descending | Select-Object -First 1 
+        $Version = (Get-ChildItem $NodeJsPath).Name | Where-Object { $_ -match "v$NodeVersion.\d.\d" } | Sort-Object -Descending | Select-Object -First 1
     } elseif ($IsWindows) {
-        $Version = nvm.exe list | Select-String -Pattern "$NodeVersion.\d.\d" -AllMatches | % { ($_.Matches).Value } | Sort-Object -Descending
+        $Version = nvm.exe list | Select-String -Pattern "$NodeVersion.\d.\d" -AllMatches | % { ($_.Matches).Value } | Sort-Object -Descending | Select-Object -First 1
     }
     if ($Version) {
         UseNode -Version $Version
@@ -36,9 +36,9 @@ function UseNode4 {
 function UseNode6 {
     $NodeVersion = 6
     if ($IsOSX) {
-        $Version = (Get-ChildItem $NodeJsPath).Name | Where-Object { $_ -match "v$NodeVersion.\d.\d" } | Sort-Object -Descending | Select-Object -First 1 
+        $Version = (Get-ChildItem $NodeJsPath).Name | Where-Object { $_ -match "v$NodeVersion.\d.\d" } | Sort-Object -Descending | Select-Object -First 1
     } elseif ($IsWindows) {
-        $Version = nvm.exe list | Select-String -Pattern "$NodeVersion.\d.\d" -AllMatches | ForEach-Object { ($_.Matches).Value } | Sort-Object -Descending
+        $Version = nvm.exe list | Select-String -Pattern "$NodeVersion.\d.\d" -AllMatches | ForEach-Object { ($_.Matches).Value } | Sort-Object -Descending | Select-Object -First 1
     }
     if ($Version) {
         UseNode -Version $Version
