@@ -11,12 +11,12 @@ New-Alias -Name cjs -Value CodeJekyllServe
 function CodeJekyllServeUnpublished {
     if (IsJekyllSite) {
         code .
-        $directory = (Get-Item -Path '.').Name
-        $uri = "http://127.0.0.1:4000/$directory/"
+        $Directory = (Get-Item -Path '.').Name
+        $Uri = "http://127.0.0.1:4000/$Directory/"
         if ($IsOSX) {
-            Invoke-Expression "open $uri"
+            Invoke-Expression "open $Uri"
         } elseif ($IsWindows) {
-            Invoke-Expression "start $uri"
+            Invoke-Expression "start $Uri"
         }
         JekyllServeUnpublished $args
     }
@@ -51,10 +51,10 @@ function JekyllServeUnpublished {
 New-Alias -Name jsu -Value JekyllServeUnpublished
 
 function IsJekyllSite {
-    $file = "_config.yml"
-    if (Test-Path $file) {
+    $File = "_config.yml"
+    if (Test-Path $File) {
         return $true
     } else {
-        Write-Warning -Message "Cannot run Jekyll in this directory because a '$file' is required."
+        Write-Warning -Message "Cannot run Jekyll in this directory because a '$File' is required."
     }
 }

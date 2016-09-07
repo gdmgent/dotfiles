@@ -275,7 +275,7 @@ function InstallRuby {
         sh -c 'brew install ruby'
     } elseif ($IsWindows) {
         Write-Host 'Downloading Ruby installer...'
-        $Version = '2.3.1'
+        $Version = '2.2.5'
         $Urn = "rubyinstaller-$Version-x64.exe"
         $Uri = "http://dl.bintray.com/oneclick/rubyinstaller/$Urn"
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
@@ -319,8 +319,8 @@ function InstallVisualStudioCode {
 }
 
 function RemoveLocalArtestead {
-    $file = 'Artestead.yaml'
-    if (Test-Path $file) {
+    $File = 'Artestead.yaml'
+    if (Test-Path $File) {
         Write-Host 'Removing Local Artestead...'
         if (Test-Path Vagrantfile) {
             vagrant destroy
@@ -331,34 +331,33 @@ function RemoveLocalArtestead {
         Remove-Item -Path *.sh
         Remove-Item -Path composer.*
         Remove-Item -Path vendor -Recurse
-        Remove-Item -Path $file
+        Remove-Item -Path $File
     } else {
-        Write-Warning -Message "This is not an Artestead project. Could not find '$file' in this directory."
+        Write-Warning -Message "This is not an Artestead project. Could not find '$File' in this directory."
     }
 }
 
 function RemoveAndroidStudio {
     if ($IsOSX) {
-        
+        # rm -Rf /Applications/Android\ Studio.app
+        # rm -Rf ~/Library/Preferences/AndroidStudio*
+        # rm ~/Library/Preferences/com.google.android.studio.plist
+        # rm -Rf ~/Library/Application\ Support/AndroidStudio*
+        # rm -Rf ~/Library/Logs/AndroidStudio*
+        # rm -Rf ~/Library/Caches/AndroidStudio*
+
+        # # Projects
+        # rm -Rf ~/AndroidStudioProjects
+
+        # # Gradle
+        # rm -Rf ~/.gradle
+
+        # # Android Virtual Devices
+        # rm -Rf ~/.android
+
+        # # Android SDK
+        # rm -Rf ~/Library/Android*
     }
-    # rm -Rf /Applications/Android\ Studio.app
-    # rm -Rf ~/Library/Preferences/AndroidStudio*
-    # rm ~/Library/Preferences/com.google.android.studio.plist
-    # rm -Rf ~/Library/Application\ Support/AndroidStudio*
-    # rm -Rf ~/Library/Logs/AndroidStudio*
-    # rm -Rf ~/Library/Caches/AndroidStudio*
-
-    # # Projects
-    # rm -Rf ~/AndroidStudioProjects
-
-    # # Gradle
-    # rm -Rf ~/.gradle
-
-    # # Android Virtual Devices
-    # rm -Rf ~/.android
-
-    # # Android SDK
-    # rm -Rf ~/Library/Android*
 }
 
 function UninstallBrew {
@@ -367,8 +366,8 @@ function UninstallBrew {
 }
 
 function UpdateBundler {
-    $file = 'Gemfile'
-    if (Test-Path $file) {
+    $File = 'Gemfile'
+    if (Test-Path $File) {
         if (Get-Command bundler -errorAction SilentlyContinue) {
             bundler update
             gem cleanup
@@ -376,7 +375,7 @@ function UpdateBundler {
             Write-Warning -Message 'Bundler Ruby Gem is not installed. Run InstallBundler.'
         }
     } else {
-        Write-Warning -Message "Cannot run Bundler in this directory because a '$file' is required."
+        Write-Warning -Message "Cannot run Bundler in this directory because a '$File' is required."
     }
 }
 
@@ -404,17 +403,17 @@ function UpdateComposer {
         composer self-update
         composer global update
         if (Get-Command cgr -errorAction SilentlyContinue) {
-            $packages                 = @{}
-            $packages['drush']        = 'drush/drush'
-            $packages['php-cs-fixer'] = 'friendsofphp/php-cs-fixer'
-            $packages['artestead']    = 'gdmgent/artestead'
-            $packages['laravel']      = 'laravel/installer'
-            $packages['psysh']        = 'psy/psysh'
-            $packages['symfony']      = 'symfony/symfony-installer'
-            $packages['wp']           = 'wp-cli/wp-cli'
-            foreach ($package in $packages.GetEnumerator()) {
-                if ($Force -or (Get-Command $package.Key -errorAction SilentlyContinue)) {
-                    cgr $package.Value
+            $Packages                 = @{}
+            $Packages['drush']        = 'drush/drush'
+            $Packages['php-cs-fixer'] = 'friendsofphp/php-cs-fixer'
+            $Packages['artestead']    = 'gdmgent/artestead'
+            $Packages['laravel']      = 'laravel/installer'
+            $Packages['psysh']        = 'psy/psysh'
+            $Packages['symfony']      = 'symfony/symfony-installer'
+            $Packages['wp']           = 'wp-cli/wp-cli'
+            foreach ($Package in $Packages.GetEnumerator()) {
+                if ($Force -or (Get-Command $Package.Key -errorAction SilentlyContinue)) {
+                    cgr $Package.Value
                 }
             }
         }
@@ -431,12 +430,12 @@ function ShowDotCommands {
 function UpdateSyllabi {
     Push-Location
     GoToPathSyllabi
-    $directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)' }
+    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)' }
 
-    foreach ($directory in $directories) {
-        Push-Location $directory
+    foreach ($Directory in $Directories) {
+        Push-Location $Directory
         if (Test-Path .git) {
-            Write-Host " $directory " -BackgroundColor Blue -ForegroundColor White
+            Write-Host " $Directory " -BackgroundColor Blue -ForegroundColor White
             git pull | Write-Host -ForegroundColor DarkGray
         }
         Pop-Location
@@ -447,10 +446,10 @@ function UpdateSyllabi {
 function CloneSyllabus {
     Param(
         [string]
-        $syllabus
+        $Syllabus
     )
-    s
-    git clone https://github.com/gdmgent/$syllabus
+    GoToPathSyllabi
+    git clone https://github.com/gdmgent/$Syllabus
 }
 
 function X {

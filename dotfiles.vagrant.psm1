@@ -101,10 +101,10 @@ function VagrantUpProvision {
 New-Alias -Name vup -Value VagrantUpProvision
 
 function HasVagrantfile {
-    $file = "Vagrantfile"
-    if (Test-Path $file) {
+    $File = "Vagrantfile"
+    if (Test-Path $File) {
         return $true
     } else {
-        Write-Warning -Message "Cannot run Vagrant in this directory because a '$file' is required."
+        Write-Warning -Message "Cannot run Vagrant in this directory because a '$File' is required."
     }
 }

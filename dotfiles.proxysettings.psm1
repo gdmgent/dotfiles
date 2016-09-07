@@ -3,7 +3,6 @@ Set-Variable -Name ProxyValues -Value 'http://proxy.arteveldehs.be:8080' -Option
 Set-Variable -Name NoProxyKeys -Value @('NO_PROXY') -Option Constant -Scope Global
 Set-Variable -Name NoProxyValues -Value 'localhost,0.0.0.0,127.0.0.1,.local' -Option Constant -Scope Global
 
-
 function InitProxy() {
     $State = ReadConfig -Name Proxy
     switch ($State) {
@@ -37,7 +36,7 @@ function ShowProxy {
 }
 
 function SetProxy {
-    param(
+    Param(
         [ValidateSet('on', 'off')]
         [string]
         $State

@@ -5,36 +5,36 @@ function GetLongList {
 }
 New-Alias -Name ll -Value GetLongList
 
-function GoToPath ([string] $path, [string] $directory) {
-    $location = "$path/$directory";
-    if (Test-Path $location) {
-        Set-Location $location
+function GoToPath ([string] $Path, [string] $Directory) {
+    $Location = "$Path/$Directory";
+    if (Test-Path $Location) {
+        Set-Location $Location
     } else {
-        Write-Warning -Message "Cannot find path '$location' because it does not exist."
+        Write-Warning -Message "Cannot find path '$Location' because it does not exist."
         Write-Host 'Available directories:'
-        Get-ChildItem -Name $path | Write-Host -ForegroundColor DarkGray
+        Get-ChildItem -Name $Path | Write-Host -ForegroundColor DarkGray
     }
 }
 
-function GoToPathCode([string] $directory) {
-    GoToPath $HOME/Code $directory
+function GoToPathCode ([string] $Directory) {
+    GoToPath $HOME/Code $Directory
 }
 New-Alias -Name c -Value GoToPathCode
 
-function GoToPathHome([string] $directory) {
-    GoToPath $HOME $directory
+function GoToPathHome ([string] $Directory) {
+    GoToPath $HOME $Directory
 }
 New-Alias -Name ~ -Value GoToPathHome
 
-function GoToPathSyllabi([string] $directory) {
-    $path = "$HOME/Syllabi"
-    $location = "$path/$directory";
-    if (Test-Path $location) {
-        Set-Location $location
+function GoToPathSyllabi ([string] $Directory) {
+    $Path = "$HOME/Syllabi"
+    $Location = "$Path/$Directory";
+    if (Test-Path $Location) {
+        Set-Location $Location
     } else {
-        Write-Warning -Message "Cannot find syllabus '$directory' because it does not exist."
+        Write-Warning -Message "Cannot find syllabus '$Directory' because it does not exist."
         Write-Host 'Available syllabi:'
-        Get-ChildItem -Path $path -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)' } | Write-Host -ForegroundColor DarkGray
+        Get-ChildItem -Path $Path -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)' } | Write-Host -ForegroundColor DarkGray
     }
 }
 New-Alias -Name s -Value GoToPathSyllabi
@@ -52,12 +52,12 @@ function OpenHostsFile {
 }
 New-Alias -Name hosts -Value OpenHostsFile
 
-function UpOneDirectory([string] $directory) {
-    GoToPath .. $directory
+function UpOneDirectory ([string] $Directory) {
+    GoToPath .. $Directory
 }
 New-Alias -Name .. -Value UpOneDirectory
 
-function UpTwoDirectories([string] $directory) {
-    GoToPath ../.. $directory
+function UpTwoDirectories ([string] $Directory) {
+    GoToPath ../.. $Directory
 }
 New-Alias -Name ... -Value UpTwoDirectories
