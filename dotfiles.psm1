@@ -269,6 +269,38 @@ function InstallPhp {
     }
 }
 
+# @TODO
+function InstallPowerShell {
+    $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/powershell/powershell/releases?per_page=1
+    $Version = $Response.tag_name
+    Write-Host $Version
+    if ($IsOSX) {
+        $OS = '.pkg$'
+        $Uri = ($Response.assets | Where-Object { $_.name -matches $OS }).browser_download_url
+        $Urn = 'powershell.pkg'
+        $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
+        Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
+
+        Remove-Item -Path $InstallerFile
+    } elseif ($IsWindows) {
+        $OS = 'win10-x64.zip$'
+        $Uri = ($Response.assets | Where-Object { $_.name -matches $OS }).browser_download_url
+        $Urn = 'powershell-win10-x64.zip'
+        $InstallerFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
+        Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
+
+        Remove-Item -Path $InstallerFile
+    } elseif ($IsLinux) {
+        $OS = 'ubuntu1.16.04.1_amd64.deb$'
+        $Uri = ($Response.assets | Where-Object { $_.name -matches $OS }).browser_download_url
+        $Urn = 'powershell-ubuntu1.16.04.1_amd64.deb'
+        $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
+        Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
+
+        Remove-Item -Path $InstallerFile
+    }
+}
+
 function InstallRuby {
     if ($IsOSX) {
         Write-Host 'Using Homebrew to install Ruby...'
