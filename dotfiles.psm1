@@ -274,10 +274,11 @@ function InstallRuby {
         Write-Host 'Using Homebrew to install Ruby...'
         sh -c 'brew install ruby'
     } elseif ($IsWindows) {
+        $Url = 'http://rubyinstaller.org/downloads/'
         Write-Host 'Downloading Ruby installer...'
-        $Version = '2.2.5'
-        $Urn = "rubyinstaller-$Version-x64.exe"
-        $Uri = "http://dl.bintray.com/oneclick/rubyinstaller/$Urn"
+        $Version = '2.2.\d+' # Jekyll is not compatible with newer versions of Ruby
+        $Uri = ((Invoke-WebRequest –Uri $Url).Links | Where-Object { $_.href -match "rubyinstaller-$Version-x64.exe$" } | Select-Object -First 1).href
+        $Urn = "rubyinstaller.exe"
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path $InstallerFile) {
@@ -286,9 +287,9 @@ function InstallRuby {
             Remove-Item $InstallerFile
         }
         Write-Host 'Downloading Ruby DevKit installer...'
-        $Version = '4.7.2-20130224-1432'
-        $Urn = "DevKit-mingw64-64-$Version-sfx.exe"
-        $Uri = "http://dl.bintray.com/oneclick/rubyinstaller/$Urn"
+        $Version = 'mingw64-64'
+        $Uri = ((Invoke-WebRequest –Uri $Url).Links | Where-Object { $_.href -match "DevKit-$Version-(\S+)-sfx.exe$" } | Select-Object -First 1).href
+        $Urn = "DevKit-sfx.exe"
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path $InstallerFile) {
