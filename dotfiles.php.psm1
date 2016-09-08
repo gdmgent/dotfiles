@@ -1,4 +1,4 @@
-# Import-Module aliasesPhp.psm1
+# Import-Module ./dotfiles.php.psm1
 
 function Behat {
     if (Test-Path bin/behat) {

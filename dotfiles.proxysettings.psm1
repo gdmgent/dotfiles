@@ -1,8 +1,13 @@
+# Import-Module ./dotfiles.proxysettings.psm1
+
+Set-Variable -Name InternetSettingsRegKey -Value 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings'
 Set-Variable -Name ProxyKeys -Value @('HTTP_PROXY', 'HTTPS_PROXY', 'FTP_PROXY') -Option Constant -Scope Global
 Set-Variable -Name ProxyValues -Value 'http://proxy.arteveldehs.be:8080' -Option Constant -Scope Global
 Set-Variable -Name NoProxyKeys -Value @('NO_PROXY') -Option Constant -Scope Global
 Set-Variable -Name NoProxyValues -Value 'localhost,0.0.0.0,127.0.0.1,.local' -Option Constant -Scope Global
 
+#Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name 'Path'
+# Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Name Test -Value $null
 function InitProxy() {
     $State = ReadConfig -Name Proxy
     switch ($State) {
@@ -57,22 +62,32 @@ New-Alias -Name proxy -Value SetProxy
 function TurnProxyOn {
     foreach ($Key in $Global:ProxyKeys) {
         foreach ($Variable in @($Key.ToUpper(), $Key.ToLower())) {
-            Set-Item -Path env:$Variable -Value $Global:ProxyValues
+            Set-Item -Path Env:$Variable -Value $Global:ProxyValues
         }
     }
     foreach ($Key in $Global:NoProxyKeys) {
         foreach ($Variable in @($Key.ToUpper(), $Key.ToLower())) {
-            Set-Item -Path env:$Variable -Value $Global:NoProxyValues
+            Set-Item -Path Env:$Variable -Value $Global:NoProxyValues
         }
+    }
+    if ($IsWindows) {
+        $CurrentProxyServer = Get-ItemProperty -Path $InternetSettingsRegKey -Name ProxyServer -ErrorAction SilentlyContinue
+        Set-ItemProperty -Path $InternetSettingsRegKey -Name ProxyEnable -Value 1
+        Set-ItemProperty -Path $InternetSettingsRegKey -Name ProxyServer -Value $Global:ProxyValues
     }
 }
 
 function TurnProxyOff {
     foreach ($Key in ($Global:ProxyKeys + $Global:NoProxyKeys)) {
         foreach ($Variable in @($Key.ToUpper(), $Key.ToLower())) {
-            if (Test-Path env:$Variable) {
-                Remove-Item -Path env:$Variable
+            if (Test-Path Env:$Variable) {
+                Remove-Item -Path Env:$Variable
             }
         }
+    }
+    if ($IsWindows) {
+        $CurrentProxyServer = Get-ItemProperty -Path $InternetSettingsRegKey -Name ProxyServer -ErrorAction SilentlyContinue
+        Set-ItemProperty    -Path $InternetSettingsRegKey -Name ProxyEnable -value 0
+        Remove-ItemProperty -Path $InternetSettingsRegKey -Name ProxyServer
     }
 }

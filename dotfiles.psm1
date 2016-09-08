@@ -1,4 +1,4 @@
-# import: . ./dotfiles.ps1
+# Import-Module ./dotfiles.psm1
 
 Set-Variable -Name DotfilesConfigPath -Value (Join-Path -Path $Home -ChildPath '.dotfiles' | Join-Path -ChildPath 'config.json') -Option Constant -Scope Global
 Set-Variable -Name DotfilesVersion -Value (Get-Content (Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'VERSION') | Select-Object -First 1 -Skip 1) -Option Constant -Scope Global
@@ -67,12 +67,13 @@ function SetEnvironment {
 
         [System.Environment]::SetEnvironmentVariable('PATH', $Path -join ':')
     } elseif ($IsWindows) {
-        $Path = @(
+        $Path = [System.Environment]::GetEnvironmentVariable('Path') -split ';'
+        $Path += @(
             "$HOME\AppData\Roaming\Composer\vendor\bin",
             'C:\php'
         )
 
-        # [System.Environment]::SetEnvironmentVariable('Path', $Path -join ';')
+        [System.Environment]::SetEnvironmentVariable('Path', $Path -join ';')
     }
 }
 SetEnvironment

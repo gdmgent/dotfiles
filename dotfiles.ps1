@@ -2,9 +2,7 @@ Set-Variable -Name DotfilesInstallPath -Value (Split-Path $MyInvocation.MyComman
 
 Push-Location $Global:DotfilesInstallPath
 
-if (Get-Command git -errorAction SilentlyContinue) {
-    git pull
-}
+
 Import-Module ./dotfiles.psm1;InitConfig
 Import-Module ./dotfiles.path.psm1
 Import-Module ./dotfiles.proxysettings.psm1; InitProxy
@@ -22,7 +20,9 @@ if (Get-Command php -errorAction SilentlyContinue) {
 if (Get-Command vagrant -errorAction SilentlyContinue) {
     Import-Module ./dotfiles.vagrant.psm1
 }
-
+if (Get-Command git -errorAction SilentlyContinue) {
+    git pull
+}
 Pop-Location
 
 Set-Location $HOME

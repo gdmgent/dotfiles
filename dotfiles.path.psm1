@@ -1,4 +1,4 @@
-# Import-Module aliasesVagrant.psm1
+# Import-Module ./dotfiles.path.psm1
 
 function GetLongList {
     Get-ChildItem -Force "$args"

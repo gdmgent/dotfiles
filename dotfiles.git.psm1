@@ -1,4 +1,4 @@
-# Import-Module aliasesGit.psm1
+# Import-Module ./dotfiles.git.psm1
 
 function GitAdd {
     git add .

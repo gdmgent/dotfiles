@@ -1,3 +1,5 @@
+# Import-Module ./dotfiles.nodejs.psm1
+
 if ($IsOSX) {
     New-Alias -Name node -Value Node -Scope Global
     Set-Variable -Name NodeJsPath -Value "$HOME/.nvm/versions/node/" -Option Constant -Scope Global
