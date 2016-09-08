@@ -38,6 +38,6 @@ Pop-Location
 
 Set-Location $HOME
 
-Clear-Host
+# Clear-Host
 
-Dot
+Dotfiles

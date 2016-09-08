@@ -79,17 +79,17 @@ SetEnvironment
 
 function Dotfiles {
     if ($IsOSX) {
-        $os = 'macOS'
+        $OS = 'macOS'
     } elseif ($IsWindows) {
-        $os = 'Windows'
+        $OS = 'Windows'
     } elseif ($IsLinux) {
-        $os = 'Linux'
+        $OS = 'Linux'
     } else {
-        $os = 'unknown operation system'
+        $OS = 'unknown operation system'
     }
     Write-Host " Artevelde Dotfiles $Global:DotfilesVersion " -ForegroundColor Black -BackgroundColor DarkYellow -NoNewline
     $PSVersion = $PSVersionTable.GitCommitId # $PSVersionTable.PSVersion.ToString()
-    Write-Host " on PowerShell $PSVersion for $os" -ForegroundColor DarkGray
+    Write-Host " on PowerShell $PSVersion for $OS" -ForegroundColor DarkGray
 }
 New-Alias -Name dot -Value Dotfiles
 
@@ -276,7 +276,7 @@ function InstallPowerShell {
     Write-Host $Version
     if ($IsOSX) {
         $OS = '.pkg$'
-        $Uri = ($Response.assets | Where-Object { $_.name -matches $OS }).browser_download_url
+        $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
         $Urn = 'powershell.pkg'
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
@@ -284,7 +284,7 @@ function InstallPowerShell {
         Remove-Item -Path $InstallerFile
     } elseif ($IsWindows) {
         $OS = 'win10-x64.zip$'
-        $Uri = ($Response.assets | Where-Object { $_.name -matches $OS }).browser_download_url
+        $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
         $Urn = 'powershell-win10-x64.zip'
         $InstallerFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
@@ -292,7 +292,7 @@ function InstallPowerShell {
         Remove-Item -Path $InstallerFile
     } elseif ($IsLinux) {
         $OS = 'ubuntu1.16.04.1_amd64.deb$'
-        $Uri = ($Response.assets | Where-Object { $_.name -matches $OS }).browser_download_url
+        $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
         $Urn = 'powershell-ubuntu1.16.04.1_amd64.deb'
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
