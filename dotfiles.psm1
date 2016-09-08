@@ -105,13 +105,13 @@ function InstallArtestead {
     }
 }
 
+# @TODO installer does not work
 function InstallBrew {
     Write-Host 'Using Ruby to install Homebrew...'
     sh -c 'ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
     Write-Host 'Installed version of Homebrew: ' -NoNewline
     brew --version
 }
-
 
 function InstallBundler {
     Write-Host 'Using Ruby Gem to install the Bundler Gem...'

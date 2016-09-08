@@ -11,13 +11,6 @@ New-Alias -Name cjs -Value CodeJekyllServe
 function CodeJekyllServeUnpublished {
     if (IsJekyllSite) {
         code .
-        $Directory = (Get-Item -Path '.').Name
-        $Uri = "http://127.0.0.1:4000/$Directory/"
-        if ($IsOSX) {
-            Invoke-Expression "open $Uri"
-        } elseif ($IsWindows) {
-            Invoke-Expression "start $Uri"
-        }
         JekyllServeUnpublished $args
     }
 }
@@ -25,6 +18,13 @@ New-Alias -Name cjsu -Value CodeJekyllServeUnpublished
 
 function JekyllServe {
     if (IsJekyllSite) {
+        $Directory = (Get-Item -Path '.').Name
+        $Uri = "http://127.0.0.1:4000/$Directory/"
+        if ($IsOSX) {
+            Invoke-Expression "open $Uri"
+        } elseif ($IsWindows) {
+            Invoke-Expression "cmd.exe /C 'start $Uri'"
+        }
         Invoke-Expression "jekyll serve --watch $args"
     }
 }
