@@ -21,9 +21,9 @@ function JekyllServe {
         $Directory = (Get-Item -Path '.').Name
         $Uri = "http://127.0.0.1:4000/$Directory/"
         if ($IsOSX) {
-            Invoke-Expression "open $Uri"
+            Invoke-Expression "open $Uri".Replace('utl_', '')
         } elseif ($IsWindows) {
-            Invoke-Expression "cmd.exe /C 'start $Uri'"
+            Invoke-Expression "cmd.exe /C 'start $Uri'".Replace('utl_', '')
         }
         Invoke-Expression "jekyll serve --watch $args"
     }
