@@ -106,28 +106,38 @@ function InstallArtestead {
     }
 }
 
-# @TODO installer does not work
 function InstallBrew {
     Write-Host 'Using Ruby to install Homebrew...'
-    sh -c 'ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"'
-    Write-Host 'Installed version of Homebrew: ' -NoNewline
-    brew --version
+    sh -c 'ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\"'
+    if (Get-Command brew -errorAction SilentlyContinue) {
+        Write-Host 'Installed version of Homebrew: ' -NoNewline
+        brew --version
+    } else {
+        Write-Warning -Message 'Homebrew was not installed.'
+    }
 }
 
 function InstallBundler {
     Write-Host 'Using Ruby Gem to install the Bundler Gem...'
     gem install bundler
-    
-    Write-Host 'Installed version of Bundler: ' -NoNewline
-    bundler --version
+    if (Get-Command bundler -errorAction SilentlyContinue) {
+        Write-Host 'Installed version of Bundler: ' -NoNewline
+        bundler --version
+    } else {
+        Write-Warning -Message 'Bundler was not installed.'
+    }
 }
 
 function InstallComposer {
     if ($IsOSX) {
         Write-Host 'Using PHP to install Composer...'
         sh -c 'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer'
-        Write-Host 'Installed version of Composer: ' -NoNewline
-        composer --version
+        if (Get-Command bundler -errorAction SilentlyContinue) {
+            Write-Host 'Installed version of Composer: ' -NoNewline
+            composer --version
+        } else {
+            Write-Warning -Message 'Composer was not installed.'
+        }
     } elseif ($IsWindows) {
         Write-Host 'Downloading Composer installer...'
         $Urn = 'Composer-Setup.exe'
@@ -145,25 +155,32 @@ function InstallComposer {
 function InstallComposerCgr {
     Write-Host 'Using Composer to install CGR (Composer Global Require)...'
     if (Get-Command composer -errorAction SilentlyContinue) {
+        composer global require consolidation/cgr
+    } else {
         InstallComposer
     }
-    composer global require consolidation/cgr
+    
 }
 
 function InstallComposerPrestissimo {
     Write-Host 'Using Composer to install Prestissimo...'
     if (Get-Command composer -errorAction SilentlyContinue) {
+        composer global require hirak/prestissimo
+    } else {
         InstallComposer
     }
-    composer global require hirak/prestissimo
 }
 
 function InstallGit {
     if ($IsOSX) {
         Write-Host 'Using Homebrew to install Git...'
         sh -c 'brew install git'
-        Write-Host 'Installed version of Git: ' -NoNewline
-        git --version
+        if (Get-Command git -errorAction SilentlyContinue) {
+            Write-Host 'Installed version of Git: ' -NoNewline
+            git --version
+        } else {
+            Write-Warning -Message 'Git was not installed.'
+        }
     } elseif ($IsWindows) {
         Write-Host 'Downloading Git installer...'
         $Version = 'v2.9.2.windows.1'
@@ -406,7 +423,7 @@ function RemoveAndroidStudio {
 
 function UninstallBrew {
     Write-Host 'Using Ruby to uninstall Homebrew...'
-    sh -c 'ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"'
+    sh -c 'ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)\"'
 }
 
 function UninstallRuby {
