@@ -236,9 +236,9 @@ function InstallPhp {
         sh -c 'brew tap homebrew/php && brew install php70 php70-mcrypt'
     } elseif ($IsWindows) {
         Write-Host 'Downloading PHP 7.0...'
-        $Url = 'http://windows.php.net/download'
-        $RelativeUrl = ((Invoke-WebRequest –Uri $Url).Links | Where-Object { $_.href -match '/downloads/releases/php-7.0.\d+-nts-Win32-VC14-x64.zip' } | Select-Object -First 1).href
-        $Uri = "$UrlRelativeUrl"
+        $Url = 'http://windows.php.net'
+        $RelativeUrl = ((Invoke-WebRequest -Uri "$Url/download").Links | Where-Object { $_.href -match '/php-7.0.\d+-nts-Win32-VC14-x64.zip$' } | Select-Object -First 1).href
+        $Uri = "$Url$RelativeUrl"
         $OutFile = Join-Path -Path $env:TEMP -ChildPath 'php.zip'
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
         if (Test-Path $OutFile) {
@@ -309,25 +309,34 @@ function InstallRuby {
         $Url = 'http://rubyinstaller.org/downloads/'
         Write-Host 'Downloading Ruby installer...'
         $Version = '2.2.\d+' # Jekyll is not compatible with newer versions of Ruby
-        $Uri = ((Invoke-WebRequest –Uri $Url).Links | Where-Object { $_.href -match "rubyinstaller-$Version-x64.exe$" } | Select-Object -First 1).href
-        $Urn = "rubyinstaller.exe"
+        $DirectoryName = 'Ruby22-x64'
+        $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "rubyinstaller-$Version-x64.exe$" } | Select-Object -First 1).href
+        $Urn = "$DirectoryName.exe"
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path $InstallerFile) {
             Write-Host 'Running Ruby installer...'
+            Write-Host " - 'English', [OK]"
+            Write-Host " - 'I accept the License', [Next>]"
+            Write-Host " - 'C:\$DirectoryName', 'Add Ruby executables to your PATH', [Install]"
+            Write-Host ' - [Finish]'
             Invoke-Expression $InstallerFile
             Remove-Item $InstallerFile
         }
         Write-Host 'Downloading Ruby DevKit installer...'
         $Version = 'mingw64-64'
-        $Uri = ((Invoke-WebRequest –Uri $Url).Links | Where-Object { $_.href -match "DevKit-$Version-(\S+)-sfx.exe$" } | Select-Object -First 1).href
-        $Urn = "DevKit-sfx.exe"
+        $DirectoryName = 'DevKit'
+        $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "DevKit-$Version-(\S+)-sfx.exe$" } | Select-Object -First 1).href
+        $Urn = "$DirectoryName-DevKit.exe"
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path $InstallerFile) {
             Write-Host 'Running Ruby DevKit installer...'
-            Invoke-Expression $InstallerFile
+            Invoke-Expression "$InstallerFile -o'C:\$DirectoryName' -y"
             Remove-Item $InstallerFile
+            Set-Location C:\$DirectoryName
+            ruby dk.rb init
+            ruby dk.rb install
         }
     }
     if (Get-Command ruby -errorAction SilentlyContinue) {
@@ -344,6 +353,7 @@ function InstallRuby {
 
 function InstallVisualStudioCode {
     if ($IsOSX) {
+        # Fixes a PowerShell extension in Visual Studio Code
         $Path = '/usr/local/Cellar/openssl/1.0.2h_1/lib'
         $Destination = '/usr/local/lib'
         Copy-Item -Path $Path/libcrypto.dylib -Destination $Destination/libcrypto.1.0.0.dylib
@@ -396,6 +406,19 @@ function RemoveAndroidStudio {
 function UninstallBrew {
     Write-Host 'Using Ruby to uninstall Homebrew...'
     sh -c 'ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"'
+}
+
+function UninstallRuby {
+    if ($IsOSX) {
+        Write-Host 'Using Homebrew to uninstall Ruby...'
+        if (Get-Command brew -errorAction SilentlyContinue) {
+            brew uninstall ruby
+        }
+    } elseif ($IsWindows) {
+        Write-Host 'Uninstalling Ruby...'
+        Remove-Item -Recurse -Force C:\DevKit
+        Remove-Item -Recurse -Force C:\Ruby22-x64
+    }
 }
 
 function UpdateBundler {
@@ -455,7 +478,7 @@ function UpdateComposer {
     }
 }
 
-function ShowDotCommands {
+function SearchDotfilesCommands {
     Get-Command "$args" | Where-Object { $_.Source -eq 'dotfiles' }
     Get-Alias  "$args" | Where-Object { $_.Source -eq 'dotfiles' -or $_.Source -like 'aliases*' }
 }
@@ -478,11 +501,20 @@ function UpdateSyllabi {
 
 function CloneSyllabus {
     Param(
+        [Parameter(Mandatory=$true)]
         [string]
-        $Syllabus
+        $Name,
+        [string]
+        $DestinationName
     )
     GoToPathSyllabi
-    git clone https://github.com/gdmgent/$Syllabus
+    git clone https://github.com/gdmgent/$Name $DestinationName
+    if ($DestinationName) {
+        GoToPathSyllabi $DestinationName
+    } else {
+        GoToPathSyllabi $Name
+    }
+    GitCheckoutGitHubPages
 }
 
 function X {
