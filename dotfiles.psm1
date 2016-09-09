@@ -98,10 +98,10 @@ New-Alias -Name dot -Value Dotfiles
 
 function InstallArtestead {
     Write-Host 'Installing Artestead (Artevelde Laravel Homestead)...'
-    if (Get-Command vagrant -errorAction SilentlyContinue) {
+    if (Get-Command vagrant -ErrorAction SilentlyContinue) {
         vagrant plugin install vagrant-hostsupdater
     }
-    if (Get-Command cgr -errorAction SilentlyContinue) {
+    if (Get-Command cgr -ErrorAction SilentlyContinue) {
         cgr gdmgent/artestead
     }
 }
@@ -109,7 +109,7 @@ function InstallArtestead {
 function InstallBrew {
     Write-Host 'Using Ruby to install Homebrew...'
     sh -c 'ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\"'
-    if (Get-Command brew -errorAction SilentlyContinue) {
+    if (Get-Command brew -ErrorAction SilentlyContinue) {
         Write-Host 'Installed version of Homebrew: ' -NoNewline
         brew --version
     } else {
@@ -120,7 +120,7 @@ function InstallBrew {
 function InstallBundler {
     Write-Host 'Using Ruby Gem to install the Bundler Gem...'
     gem install bundler
-    if (Get-Command bundler -errorAction SilentlyContinue) {
+    if (Get-Command bundler -ErrorAction SilentlyContinue) {
         Write-Host 'Installed version of Bundler: ' -NoNewline
         bundler --version
     } else {
@@ -132,7 +132,7 @@ function InstallComposer {
     if ($IsOSX) {
         Write-Host 'Using PHP to install Composer...'
         sh -c 'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer'
-        if (Get-Command bundler -errorAction SilentlyContinue) {
+        if (Get-Command bundler -ErrorAction SilentlyContinue) {
             Write-Host 'Installed version of Composer: ' -NoNewline
             composer --version
         } else {
@@ -154,7 +154,7 @@ function InstallComposer {
 
 function InstallComposerCgr {
     Write-Host 'Using Composer to install CGR (Composer Global Require)...'
-    if (Get-Command composer -errorAction SilentlyContinue) {
+    if (Get-Command composer -ErrorAction SilentlyContinue) {
         composer global require consolidation/cgr
     } else {
         InstallComposer
@@ -164,7 +164,7 @@ function InstallComposerCgr {
 
 function InstallComposerPrestissimo {
     Write-Host 'Using Composer to install Prestissimo...'
-    if (Get-Command composer -errorAction SilentlyContinue) {
+    if (Get-Command composer -ErrorAction SilentlyContinue) {
         composer global require hirak/prestissimo
     } else {
         InstallComposer
@@ -196,7 +196,7 @@ function InstallGit {
             Remove-Item $InstallerFile
         }
     }
-    if (Get-Command git -errorAction SilentlyContinue) {
+    if (Get-Command git -ErrorAction SilentlyContinue) {
             Write-Host 'Installed version of Git: ' -NoNewline
             git --version
     } else {
@@ -205,7 +205,7 @@ function InstallGit {
 }
 
 function InstallGitIgnoreGlobal {
-    if (Get-Command git -errorAction SilentlyContinue) {
+    if (Get-Command git -ErrorAction SilentlyContinue) {
         InstallGit
     }
     Write-Host 'Installing GitIgnore Global...'
@@ -289,7 +289,7 @@ function InstallPhp {
             Set-Content -Path (Join-Path -Path $DestinationPath -ChildPath 'php.ini') -Value $ConfigFile
         }
     }
-    if (Get-Command php -errorAction SilentlyContinue) {
+    if (Get-Command php -ErrorAction SilentlyContinue) {
         Write-Host 'Installed version of PHP: ' -NoNewline
         php -v
     }
@@ -365,10 +365,10 @@ function InstallRuby {
             ruby dk.rb install
         }
     }
-    if (Get-Command ruby -errorAction SilentlyContinue) {
+    if (Get-Command ruby -ErrorAction SilentlyContinue) {
         Write-Host 'Installed version of Ruby: ' -NoNewline
         ruby --version
-        if (Get-Command gem -errorAction SilentlyContinue) {
+        if (Get-Command gem -ErrorAction SilentlyContinue) {
             Write-Host 'Installed version of Gem: ' -NoNewline
             gem --version
         }
@@ -437,7 +437,7 @@ function UninstallBrew {
 function UninstallRuby {
     if ($IsOSX) {
         Write-Host 'Using Homebrew to uninstall Ruby...'
-        if (Get-Command brew -errorAction SilentlyContinue) {
+        if (Get-Command brew -ErrorAction SilentlyContinue) {
             brew uninstall ruby
         }
     } elseif ($IsWindows) {
@@ -450,7 +450,7 @@ function UninstallRuby {
 function UpdateBundler {
     $File = 'Gemfile'
     if (Test-Path $File) {
-        if (Get-Command bundler -errorAction SilentlyContinue) {
+        if (Get-Command bundler -ErrorAction SilentlyContinue) {
             bundler update
             gem cleanup
         } else {
@@ -467,7 +467,7 @@ function UpdateBrew {
         $Force
     )
     Write-Host 'Updating Homebrew...'
-    if ($IsOSX -and (Get-Command brew -errorAction SilentlyContinue)) {
+    if ($IsOSX -and (Get-Command brew -ErrorAction SilentlyContinue)) {
         if ($Force) {
             sh -c 'sudo chown -R $(whoami):admin /usr/local'
         }
@@ -481,10 +481,10 @@ function UpdateComposer {
         $Force
     )
     Write-Host 'Updating Composer and CGR installed packages...'
-    if (Get-Command composer -errorAction SilentlyContinue) {
+    if (Get-Command composer -ErrorAction SilentlyContinue) {
         composer self-update
         composer global update
-        if (Get-Command cgr -errorAction SilentlyContinue) {
+        if (Get-Command cgr -ErrorAction SilentlyContinue) {
             $Packages                 = @{}
             $Packages['drush']        = 'drush/drush'
             $Packages['php-cs-fixer'] = 'friendsofphp/php-cs-fixer'
@@ -494,7 +494,7 @@ function UpdateComposer {
             $Packages['symfony']      = 'symfony/symfony-installer'
             $Packages['wp']           = 'wp-cli/wp-cli'
             foreach ($Package in $Packages.GetEnumerator()) {
-                if ($Force -or (Get-Command $Package.Key -errorAction SilentlyContinue)) {
+                if ($Force -or (Get-Command $Package.Key -ErrorAction SilentlyContinue)) {
                     cgr $Package.Value
                 }
             }

@@ -5,7 +5,7 @@ function Behat {
         php bin/behat "$args"
     } elseif (Test-Path vendor/bin/behat) {
         php vendor/bin/behat "$args"
-    } elseif (Get-Command behat -errorAction SilentlyContinue) {
+    } elseif (Get-Command behat -ErrorAction SilentlyContinue) {
         behat "$args"
     } else {
         Write-Warning -Message "Behat is not available from this directory, nor is it installed globally."
@@ -27,7 +27,7 @@ function PHPUnit {
         php bin/phpunit "$args"
     } elseif (Test-Path vendor/bin/phpunit) {
         php vendor/bin/phpunit "$args"
-    } elseif (Get-Command phpunit -errorAction SilentlyContinue) {
+    } elseif (Get-Command phpunit -ErrorAction SilentlyContinue) {
         phpunit "$args"
     } else {
         Write-Warning -Message "PHPUnit is not available from this directory, nor is it installed globally."

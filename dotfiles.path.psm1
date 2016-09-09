@@ -40,7 +40,7 @@ function GoToPathSyllabi ([string] $Directory) {
 New-Alias -Name s -Value GoToPathSyllabi
 
 function OpenHostsFile {
-    if (Get-Command code -errorAction SilentlyContinue) {
+    if (Get-Command code -ErrorAction SilentlyContinue) {
         if ($IsOSX) {
             sudo code /etc/hosts
         } elseif ($IsWindows) {
