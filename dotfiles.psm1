@@ -175,12 +175,7 @@ function InstallGit {
     if ($IsOSX) {
         Write-Host 'Using Homebrew to install Git...'
         sh -c 'brew install git'
-        if (Get-Command git -errorAction SilentlyContinue) {
-            Write-Host 'Installed version of Git: ' -NoNewline
-            git --version
-        } else {
-            Write-Warning -Message 'Git was not installed.'
-        }
+       
     } elseif ($IsWindows) {
         Write-Host 'Downloading Git installer...'
         $Version = 'v2.9.2.windows.1'
@@ -190,9 +185,22 @@ function InstallGit {
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path $InstallerFile) {
             Write-Host 'Running Git installer...'
+            Write-Host ' - [Next >]'
+            Write-Host ' - [Next >]'
+            Write-Host " - 'Use Git from the Windows Command Prompt', [Next >]"
+            Write-Host " - 'Checkout Windows-style, commit Unix-style line endings', [Next >]"
+            Write-Host " - Use Windows' default console window, [Next >]"
+            Write-Host ' - [Install]'
+            Write-Host ' - [Finish]'
             Invoke-Expression $InstallerFile
             Remove-Item $InstallerFile
         }
+    }
+    if (Get-Command git -errorAction SilentlyContinue) {
+            Write-Host 'Installed version of Git: ' -NoNewline
+            git --version
+    } else {
+        Write-Warning -Message 'Git was not installed.'
     }
 }
 
