@@ -10,8 +10,8 @@ Tips
 
 ©2016 [Artevelde University College Ghent][] [Bachelor of Graphic and Digital Media][]
 
-[Artevelde Dotfiles]:                       http://www.gdm.ghent/dotfiles
+[Artevelde Dotfiles]:                       http://www.gdm.gent/dotfiles
 [Artevelde University College Ghent]:       http://www.arteveldeuniversitycollege.be
-[Bachelor of Graphic and Digital Media]:    http://www.gdm.ghent
+[Bachelor of Graphic and Digital Media]:    http://www.gdm.gent
 [Hack]:                                     http://sourcefoundry.org/hack
 [Hack Download]:                            https://github.com/chrissimpkins/Hack/releases

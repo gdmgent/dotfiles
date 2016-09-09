@@ -22,7 +22,7 @@ New-Alias -Name vbu -Value VagrantBoxUpdate
 
 function VagrantDestroy {
     if (HasVagrantfile) {
-        vagrant destroy "$args" 
+        vagrant destroy "$args"
     }
 }
 New-Alias -Name vd -Value VagrantDestroy
@@ -39,63 +39,63 @@ New-Alias -Name vgp -Value VagrantGlobalStatusPrune
 
 function VagrantHalt {
     if (HasVagrantfile) {
-        vagrant halt "$args" 
+        vagrant halt "$args"
     }
 }
 New-Alias -Name vh -Value VagrantHalt
 
 function VagrantProvision {
     if (HasVagrantfile) {
-        vagrant provision "$args" 
+        vagrant provision "$args"
     }
 }
 New-Alias -Name vp -Value VagrantProvision
 
 function VagrantReload {
     if (HasVagrantfile) {
-        vagrant reload "$args" 
+        vagrant reload "$args"
     }
 }
 New-Alias -Name vr -Value VagrantReload
 
 function VagrantReloadProvision {
     if (HasVagrantfile) {
-        vagrant reload --provision "$args" 
+        vagrant reload --provision "$args"
     }
 }
 New-Alias -Name vrp -Value VagrantReloadProvision
 
 function VagrantSsh {
     if (HasVagrantfile) {
-        vagrant ssh "$args" 
+        vagrant ssh "$args"
     }
 }
 New-Alias -Name vss -Value VagrantSsh
 
 function VagrantStatus {
     if (HasVagrantfile) {
-        vagrant status "$args" 
+        vagrant status "$args"
     }
 }
 New-Alias -Name vs -Value VagrantStatus
 
 function VagrantSuspend {
     if (HasVagrantfile) {
-        vagrant suspend "$args" 
+        vagrant suspend "$args"
     }
 }
 New-Alias -Name vsu -Value VagrantSuspend
 
 function VagrantUp {
     if (HasVagrantfile) {
-        vagrant up "$args" 
+        vagrant up "$args"
     }
 }
 New-Alias -Name vu -Value VagrantUp
 
 function VagrantUpProvision {
     if (HasVagrantfile) {
-        vagrant up --provision "$args" 
+        vagrant up --provision "$args"
     }
 }
 New-Alias -Name vup -Value VagrantUpProvision

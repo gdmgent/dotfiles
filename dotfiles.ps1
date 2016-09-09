@@ -2,7 +2,6 @@ Set-Variable -Name DotfilesInstallPath -Value (Split-Path $MyInvocation.MyComman
 
 Push-Location $Global:DotfilesInstallPath
 
-
 Import-Module ./dotfiles.psm1;InitConfig
 Import-Module ./dotfiles.path.psm1
 Import-Module ./dotfiles.proxysettings.psm1; InitProxy
@@ -27,6 +26,8 @@ Pop-Location
 
 Set-Location $HOME
 
-Clear-Host
+if (!$Error) {
+    Clear-Host
+}
 
 Dotfiles
