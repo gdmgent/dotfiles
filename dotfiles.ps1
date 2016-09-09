@@ -9,19 +9,19 @@ Import-Module ./dotfiles.proxysettings.psm1; InitProxy
 Import-Module ./dotfiles.nodejs.psm1; InitNode
 if (Get-Command git -ErrorAction SilentlyContinue) {
     Import-Module ./dotfiles.git.psm1
-}
+} else { $Error.Remove($Error[$Error.Count - 1]) }
 if (Get-Command jekyll -ErrorAction SilentlyContinue) {
     Import-Module ./dotfiles.jekyll.psm1
-}
+} else { $Error.Remove($Error[$Error.Count - 1]) }
 if (Get-Command php -ErrorAction SilentlyContinue) {
     Import-Module ./dotfiles.php.psm1
-}
+} else { $Error.Remove($Error[$Error.Count - 1]) }
 if (Get-Command vagrant -ErrorAction SilentlyContinue) {
     Import-Module ./dotfiles.vagrant.psm1
-}
+} else { $Error.Remove($Error[$Error.Count - 1]) }
 if (Get-Command git -ErrorAction SilentlyContinue) {
     git pull
-}
+} else { $Error.Remove($Error[$Error.Count - 1]) }
 Pop-Location
 
 Set-Location $HOME
