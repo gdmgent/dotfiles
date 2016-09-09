@@ -1,5 +1,3 @@
-# Import-Module ./dotfiles.vagrant.psm1
-
 function VagrantAliases {
     Get-Alias -Name v*
 }

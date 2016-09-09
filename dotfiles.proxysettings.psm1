@@ -1,5 +1,3 @@
-# Import-Module ./dotfiles.proxysettings.psm1
-
 Set-Variable -Name NoProxyKeys   -Value @('NO_PROXY') -Option Constant -Scope Global
 Set-Variable -Name NoProxyValues -Value 'localhost,0.0.0.0,127.0.0.1,.local' -Option Constant -Scope Global
 Set-Variable -Name ProxyKeys     -Value @('HTTP_PROXY', 'HTTPS_PROXY', 'FTP_PROXY') -Option Constant -Scope Global

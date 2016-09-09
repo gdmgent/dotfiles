@@ -1,5 +1,3 @@
-# Import-Module ./dotfiles.jekyll.psm1
-
 function CodeJekyllServe {
     if (IsJekyllSite) {
         code .

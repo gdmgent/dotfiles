@@ -2,22 +2,22 @@ Set-Variable -Name DotfilesInstallPath -Value (Split-Path $MyInvocation.MyComman
 
 Push-Location $Global:DotfilesInstallPath
 
-Import-Module ./dotfiles.psm1;InitConfig
-Import-Module ./dotfiles.path.psm1
-Import-Module ./dotfiles.proxysettings.psm1; InitProxy
-# Import-Module ./dotfiles.proxy.ps1
+Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.psm1); InitConfig
+Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.path.psm1)
+Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.proxysettings.psm1); InitProxy
+# Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.proxy.psm1)
 Import-Module ./dotfiles.nodejs.psm1; InitNode
 if (Get-Command git -ErrorAction SilentlyContinue) {
-    Import-Module ./dotfiles.git.psm1
+    Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.git.psm1)
 } else { $Error.Remove($Error[$Error.Count - 1]) }
 if (Get-Command jekyll -ErrorAction SilentlyContinue) {
-    Import-Module ./dotfiles.jekyll.psm1
+    Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.jekyll.psm1)
 } else { $Error.Remove($Error[$Error.Count - 1]) }
 if (Get-Command php -ErrorAction SilentlyContinue) {
-    Import-Module ./dotfiles.php.psm1
+    Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.php.psm1)
 } else { $Error.Remove($Error[$Error.Count - 1]) }
 if (Get-Command vagrant -ErrorAction SilentlyContinue) {
-    Import-Module ./dotfiles.vagrant.psm1
+    Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.vagrant.psm1)
 } else { $Error.Remove($Error[$Error.Count - 1]) }
 if (Get-Command git -ErrorAction SilentlyContinue) {
     git pull

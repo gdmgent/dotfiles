@@ -1,12 +1,10 @@
-# Import-Module ./dotfiles.path.psm1
-
 function GetLongList {
     Get-ChildItem -Force "$args"
 }
 New-Alias -Name ll -Value GetLongList
 
 function GoToPath ([string] $Path, [string] $Directory) {
-    $Location = "$Path/$Directory";
+    $Location = Join-Path -Path $Path -ChildPath $Directory
     if (Test-Path $Location) {
         Set-Location $Location
     } else {
@@ -17,7 +15,7 @@ function GoToPath ([string] $Path, [string] $Directory) {
 }
 
 function GoToPathCode ([string] $Directory) {
-    GoToPath $HOME/Code $Directory
+    GoToPath (Join-Path -Path $HOME -ChildPath Code) $Directory
 }
 New-Alias -Name c -Value GoToPathCode
 
@@ -27,8 +25,8 @@ function GoToPathHome ([string] $Directory) {
 New-Alias -Name ~ -Value GoToPathHome
 
 function GoToPathSyllabi ([string] $Directory) {
-    $Path = "$HOME/Syllabi"
-    $Location = "$Path/$Directory";
+    $Path = Join-Path -Path $HOME -ChildPath Syllabi
+    $Location = Join-Path -Path $Path -ChildPath $Directory
     if (Test-Path $Location) {
         Set-Location $Location
     } else {

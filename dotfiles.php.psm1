@@ -1,5 +1,3 @@
-# Import-Module ./dotfiles.php.psm1
-
 function Behat {
     if (Test-Path bin/behat) {
         php bin/behat "$args"
