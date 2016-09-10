@@ -1,5 +1,5 @@
-Set-Variable -Name DotfilesConfigPath -Value (Join-Path -Path $Home -ChildPath '.dotfiles' | Join-Path -ChildPath 'config.json') -Option Constant -Scope Global
-Set-Variable -Name DotfilesVersion -Value (Get-Content (Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'VERSION') | Select-Object -First 1 -Skip 1) -Option Constant -Scope Global
+Set-Variable -Name DotfilesConfigPath -Value (Join-Path -Path $Home -ChildPath '.dotfiles' | Join-Path -ChildPath 'config.json') -Option Constant -Scope Global -ErrorAction SilentlyContinue
+Set-Variable -Name DotfilesVersion -Value (Get-Content (Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'VERSION') | Select-Object -First 1 -Skip 1) -Option Constant -Scope Global -ErrorAction SilentlyContinue
 
 # Config Functions
 
@@ -169,11 +169,86 @@ function InstallComposerPrestissimo {
     }
 }
 
+function InstallFontFiraCode {
+    Write-Host 'Downloading Fira Code typeface by Nikita Prokopov...'
+    $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/tonsky/FiraCode/releases/latest
+    $Name = 'FiraCode'
+    $Urn = "$Name.zip"
+    $Uri = $Response.assets.browser_download_url
+    if ($IsOSX) {
+        $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
+        Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+        if (Test-Path $OutFile) {
+            Write-Host 'Installing Fira Code typeface...'
+            $DestinationPath = "$HOME/Library/Fonts/"
+            $TempPath = "$env:TMPDIR$Name/"
+            # Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
+            $output = unzip $OutFile **/*.otf -d $TempPath -o
+            Remove-Item -Path $OutFile
+            Move-Item -Path ${TempPath}otf/*.otf -Destination $DestinationPath -Force
+            Remove-Item -Path $TempPath -Recurse -Force
+        }
+    } elseif ($IsWindows) {
+        $OutFile = Join-Path -Path $env:TEMP -ChildPath $Urn
+        Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+    }
+}
+
+function InstallFontHack {
+    Write-Host 'Downloading Hack typeface by Chris Simpkins...'
+    $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/chrissimpkins/Hack/releases/latest
+    $Name = 'Hack'
+    $Urn = "$Name.zip"
+    $Uri = ($Response.assets | Where-Object { $_.name -match '^Hack-(.+)-otf.zip$' }).browser_download_url
+    if ($IsOSX) {
+        $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
+        Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+        if (Test-Path $OutFile) {
+            Write-Host 'Installing Hack typeface...'
+            $DestinationPath = "$HOME/Library/Fonts/"
+            $TempPath = "$env:TMPDIR$Name/"
+            # Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
+            $output = unzip $OutFile *.otf -d $TempPath -o
+            Remove-Item -Path $OutFile
+            Move-Item -Path ${TempPath}*.otf -Destination $DestinationPath -Force
+            Remove-Item -Path $TempPath -Recurse -Force
+        }
+    } elseif ($IsWindows) {
+        $OutFile = Join-Path -Path $env:TEMP -ChildPath $Urn
+        Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+    }
+}
+
+function InstallFontHasklig {
+    Write-Host 'Downloading Hasklig typeface by Ian Tuomi...'
+    $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/i-tu/Hasklig/releases?per_page=1
+    # $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/i-tu/Hasklig/releases/latest
+    $Name = 'Hasklig'
+    $Urn = "$Name.zip"
+    $Uri = $Response.assets.browser_download_url
+    if ($IsOSX) {
+        $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
+        Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+        if (Test-Path $OutFile) {
+            Write-Host 'Installing Hasklig typeface...'
+            $DestinationPath = "$HOME/Library/Fonts/"
+            $TempPath = "$env:TMPDIR$Name/"
+            # Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
+            $output = unzip $OutFile *.otf -d $TempPath -o
+            Remove-Item -Path $OutFile
+            Move-Item -Path ${TempPath}*.otf -Destination $DestinationPath -Force
+            Remove-Item -Path $TempPath -Recurse -Force
+        }
+    } elseif ($IsWindows) {
+        $OutFile = Join-Path -Path $env:TEMP -ChildPath $Urn
+        Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+    }
+}
+
 function InstallGit {
     if ($IsOSX) {
         Write-Host 'Using Homebrew to install Git...'
         sh -c 'brew install git'
-       
     } elseif ($IsWindows) {
         Write-Host 'Downloading Git installer...'
         $Version = 'v2.9.2.windows.1'
@@ -221,7 +296,7 @@ function InstallNvm {
         Write-Host 'Installed version of NVM: ' -NoNewline
         nvm --version
     } elseif ($IsWindows) {
-        $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/coreybutler/nvm-windows/releases?per_page=1
+        $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/coreybutler/nvm-windows/releases/latest
         $Version = $Response.name
         Write-Host "Downloading Node Version Manager $Version..."
         $Urn = 'nvm-setup.zip'
@@ -295,7 +370,7 @@ function InstallPhp {
 
 # @TODO
 function InstallPowerShell {
-    $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/powershell/powershell/releases?per_page=1
+    $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/powershell/powershell/releases/latest
     $Version = $Response.tag_name
     Write-Host $Version
     if ($IsOSX) {
