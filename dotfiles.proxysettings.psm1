@@ -39,8 +39,8 @@ function ShowProxy {
 
 function SetProxy {
     Param(
+        [String]
         [ValidateSet('on', 'off')]
-        [string]
         $State
     )
     $flag = ReadConfig -Name Proxy

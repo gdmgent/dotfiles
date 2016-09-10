@@ -3,6 +3,12 @@ function VagrantAliases {
 }
 New-Alias -Name v -Value VagrantAliases
 
+function VagrantAccount {
+    $Uri = 'https://atlas.hashicorp.com/account/new'
+    OpenWebsite $Uri
+}
+New-Alias -Name va -Value VagrantAccount
+
 function VagrantBoxList {
     vagrant box list "$args"
 }
@@ -42,6 +48,11 @@ function VagrantHalt {
 }
 New-Alias -Name vh -Value VagrantHalt
 
+function VagrantLogin {
+    vagrant login "$args"
+}
+New-Alias -Name vl -Value VagrantLogin
+
 function VagrantProvision {
     if (HasVagrantfile) {
         vagrant provision "$args"
@@ -76,6 +87,18 @@ function VagrantStatus {
     }
 }
 New-Alias -Name vs -Value VagrantStatus
+
+function VagrantShareName {
+    Param(
+        [String]
+        [Parameter(Mandatory=$True)]
+        $Name
+    )
+    if (HasVagrantfile) {
+        vagrant share --name $Name
+    }
+}
+New-Alias -Name vsn -Value VagrantShareName
 
 function VagrantSuspend {
     if (HasVagrantfile) {

@@ -3,7 +3,7 @@ function GetLongList {
 }
 New-Alias -Name ll -Value GetLongList
 
-function GoToPath ([string] $Path, [string] $Directory) {
+function GoToPath ([String] $Path, [String] $Directory) {
     $Location = Join-Path -Path $Path -ChildPath $Directory
     if (Test-Path $Location) {
         Set-Location $Location
@@ -14,17 +14,17 @@ function GoToPath ([string] $Path, [string] $Directory) {
     }
 }
 
-function GoToPathCode ([string] $Directory) {
+function GoToPathCode ([String] $Directory) {
     GoToPath (Join-Path -Path $HOME -ChildPath Code) $Directory
 }
 New-Alias -Name c -Value GoToPathCode
 
-function GoToPathHome ([string] $Directory) {
+function GoToPathHome ([String] $Directory) {
     GoToPath $HOME $Directory
 }
 New-Alias -Name ~ -Value GoToPathHome
 
-function GoToPathSyllabi ([string] $Directory) {
+function GoToPathSyllabi ([String] $Directory) {
     $Path = Join-Path -Path $HOME -ChildPath Syllabi
     $Location = Join-Path -Path $Path -ChildPath $Directory
     if (Test-Path $Location) {
@@ -50,12 +50,12 @@ function OpenHostsFile {
 }
 New-Alias -Name hosts -Value OpenHostsFile
 
-function UpOneDirectory ([string] $Directory) {
+function UpOneDirectory ([String] $Directory) {
     GoToPath .. $Directory
 }
 New-Alias -Name .. -Value UpOneDirectory
 
-function UpTwoDirectories ([string] $Directory) {
+function UpTwoDirectories ([String] $Directory) {
     GoToPath ../.. $Directory
 }
 New-Alias -Name ... -Value UpTwoDirectories

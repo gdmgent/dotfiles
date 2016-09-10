@@ -10,7 +10,7 @@ Write-Host "======================================================="
 Write-Host "1. Retrieve the proxy server from the internet options ..."
 $currentProxyServer = Get-ItemProperty -path $internetSettingsRegKey ProxyServer -ErrorAction SilentlyContinue
 
-if ([string]::IsNullOrEmpty($currentProxyServer)) {
+if ([String]::IsNullOrEmpty($currentProxyServer)) {
     Write-Host "2. Internet options: Proxy is currently disabled"
     Set-ItemProperty -path $internetSettingsRegKey ProxyEnable -value 1
     Set-ItemProperty -path $internetSettingsRegKey ProxyServer -value $proxyServer

@@ -15,7 +15,7 @@ function InitConfig {
     }
 }
 
-function ReadConfig([string] $Name) {
+function ReadConfig([String] $Name) {
     if (Get-Member -InputObject $Global:DotfilesConfig -Name $Name -MemberType NoteProperty) {
         return $Global:DotfilesConfig.$Name
     } else {
@@ -27,7 +27,7 @@ function SaveConfig {
     ConvertTo-Json -InputObject $Global:DotfilesConfig | Out-File $Global:DotfilesConfigPath
 }
 
-function WriteConfig([string] $Name, [string] $Value) {
+function WriteConfig([String] $Name, [String] $Value) {
     if (Get-Member -InputObject $Global:DotfilesConfig -Name $Name -MemberType NoteProperty) {
         $Global:DotfilesConfig.$Name = $Value
     } else {
@@ -460,6 +460,19 @@ function InstallVisualStudioCode {
     }
 }
 
+function OpenWebsite {
+    Param(
+        [String]
+        [Parameter(Mandatory=$True)]
+        $Uri
+    )
+    if ($IsOSX) {
+        Invoke-Expression "open $Uri"
+    } elseif ($IsWindows) {
+        Invoke-Expression "cmd.exe /C 'start $Uri'"
+    }
+}
+
 function RemoveLocalArtestead {
     $File = 'Artestead.yaml'
     if (Test-Path $File) {
@@ -536,7 +549,7 @@ function UpdateBundler {
 
 function UpdateBrew {
     Param(
-        [switch]
+        [Switch]
         $Force
     )
     Write-Host 'Updating Homebrew...'
@@ -550,7 +563,7 @@ function UpdateBrew {
 
 function UpdateComposer {
     Param(
-        [switch]
+        [Switch]
         $Force
     )
     Write-Host 'Updating Composer and CGR installed packages...'
@@ -600,10 +613,10 @@ function UpdateSyllabi {
 
 function CloneSyllabus {
     Param(
-        [Parameter(Mandatory=$true)]
-        [string]
+        [String]
+        [Parameter(Mandatory=$True)]
         $Name,
-        [string]
+        [String]
         $DestinationName
     )
     GoToPathSyllabi

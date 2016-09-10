@@ -45,7 +45,7 @@ function UseNode6 {
     }
 }
 
-function UseNode([string] $Version) {
+function UseNode([String] $Version) {
     if ($IsOSX) {
         $Versions = (Get-ChildItem $NodeJsPath).Name
         switch ($Version) {
