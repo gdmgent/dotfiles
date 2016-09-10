@@ -391,14 +391,14 @@ function RemoveLocalArtestead {
         Write-Host 'Removing Local Artestead...'
         if (Test-Path Vagrantfile) {
             vagrant destroy
-            Remove-Item -Path .vagrant -Recurse
-            Remove-Item -Path Vagrantfile
+            Remove-Item -Path .vagrant -Recurse -Force -ErrorAction SilentlyContinue
+            Remove-Item -Path Vagrantfile -Force -ErrorAction SilentlyContinue
         }
-        Remove-Item -Path .gitignore
-        Remove-Item -Path *.sh
-        Remove-Item -Path composer.*
-        Remove-Item -Path vendor -Recurse
-        Remove-Item -Path $File
+        Remove-Item -Path .gitignore -Force -ErrorAction SilentlyContinue
+        Remove-Item -Path *.sh -Force -ErrorAction SilentlyContinue
+        Remove-Item -Path composer.* -Force -ErrorAction SilentlyContinue
+        Remove-Item -Path vendor -Recurse -Force -ErrorAction SilentlyContinue
+        Remove-Item -Path $File -Force -ErrorAction SilentlyContinue
     } else {
         Write-Warning -Message "This is not an Artestead project. Could not find '$File' in this directory."
     }
