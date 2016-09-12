@@ -182,7 +182,6 @@ function InstallFontFiraCode {
             Write-Host 'Installing Fira Code typeface...'
             $DestinationPath = "$HOME/Library/Fonts/"
             $TempPath = "$env:TMPDIR$Name/"
-            # Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
             $output = unzip $OutFile **/*.otf -d $TempPath -o
             Remove-Item -Path $OutFile
             Move-Item -Path ${TempPath}otf/*.otf -Destination $DestinationPath -Force
@@ -191,6 +190,15 @@ function InstallFontFiraCode {
     } elseif ($IsWindows) {
         $OutFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+        if (Test-Path $OutFile) {
+            Write-Host 'Installing Fira Code typeface...'
+            $DestinationPath = "C:\Windows\Fonts\"
+            $TempPath = "$env:TEMP$Name\"
+            Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
+            Remove-Item -Path $OutFile
+            $Output = Get-ChildItem -Path ${TempPath}otf\*.otf | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
+            Remove-Item -Path $TempPath -Recurse -Force
+        }
     }
 }
 
@@ -207,7 +215,6 @@ function InstallFontHack {
             Write-Host 'Installing Hack typeface...'
             $DestinationPath = "$HOME/Library/Fonts/"
             $TempPath = "$env:TMPDIR$Name/"
-            # Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
             $output = unzip $OutFile *.otf -d $TempPath -o
             Remove-Item -Path $OutFile
             Move-Item -Path ${TempPath}*.otf -Destination $DestinationPath -Force
@@ -216,6 +223,15 @@ function InstallFontHack {
     } elseif ($IsWindows) {
         $OutFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+        if (Test-Path $OutFile) {
+            Write-Host 'Installing Hack typeface...'
+            $DestinationPath = "C:\Windows\Fonts\"
+            $TempPath = "$env:TEMP$Name\"
+            Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
+            Remove-Item -Path $OutFile
+            $Output = Get-ChildItem -Path ${TempPath}*.otf | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
+            Remove-Item -Path $TempPath -Recurse -Force
+        }
     }
 }
 
@@ -233,7 +249,6 @@ function InstallFontHasklig {
             Write-Host 'Installing Hasklig typeface...'
             $DestinationPath = "$HOME/Library/Fonts/"
             $TempPath = "$env:TMPDIR$Name/"
-            # Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
             $output = unzip $OutFile *.otf -d $TempPath -o
             Remove-Item -Path $OutFile
             Move-Item -Path ${TempPath}*.otf -Destination $DestinationPath -Force
@@ -242,6 +257,15 @@ function InstallFontHasklig {
     } elseif ($IsWindows) {
         $OutFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+        if (Test-Path $OutFile) {
+            Write-Host 'Installing Hasklig typeface...'
+            $DestinationPath = "C:\Windows\Fonts\"
+            $TempPath = "$env:TEMP$Name\"
+            Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
+            Remove-Item -Path $OutFile
+            $Output = Get-ChildItem -Path ${TempPath}*.otf | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
+            Remove-Item -Path $TempPath -Recurse -Force
+        }
     }
 }
 
