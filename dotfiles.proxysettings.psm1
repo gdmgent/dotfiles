@@ -127,7 +127,13 @@ function TurnProxyOn {
 
 function OpenProxySettings {
     if ($IsOSX) {
-
+        $command = @'
+tell application \"System Preferences\"
+    activate
+    set the current pane to pane id \"com.apple.preference.network\"
+end tell
+'@
+        osascript -e $command
     } elseif ($IsWindows) {
         OpenUri -Uri 'ms-settings:network-proxy'
     }
