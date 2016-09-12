@@ -91,10 +91,12 @@ New-Alias -Name vs -Value VagrantStatus
 function VagrantShareName {
     Param(
         [String]
-        [Parameter(Mandatory=$True)]
         $Name
     )
     if (HasVagrantfile) {
+        if (!$Name) {
+            $Name = (Get-Item .).Name.Replace('.local', '')
+        }
         vagrant share --name $Name
     }
 }
@@ -121,8 +123,20 @@ function VagrantUpProvision {
 }
 New-Alias -Name vup -Value VagrantUpProvision
 
+function VagrantWebsite {
+    Param(
+        [Switch]
+        $Secure
+    )
+    if (HasVagrantfile) {
+        $Protocol = if ($Secure) { 'https:\\' } else { 'http:\\' }
+        OpenWebsite ($Protocol + (Get-Item .).Name).
+    }
+}
+New-Alias -Name vw -Value VagrantWebsite
+
 function HasVagrantfile {
-    $File = "Vagrantfile"
+    $File = 'Vagrantfile'
     if (Test-Path $File) {
         return $true
     } else {

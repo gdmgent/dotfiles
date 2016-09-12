@@ -284,7 +284,7 @@ function InstallGit {
             Write-Host 'Running Git installer...'
             Write-Host ' - [Next >]'
             Write-Host ' - [Next >]'
-            Write-Host " - 'Use Git from the Windows Command Prompt', [Next >]"
+            Write-Host " - 'Use Git and optional Unix tools from the Windows Command Prompt', [Next >]"
             Write-Host " - 'Checkout Windows-style, commit Unix-style line endings', [Next >]"
             Write-Host " - Use Windows' default console window, [Next >]"
             Write-Host ' - [Install]'
@@ -487,7 +487,7 @@ function InstallVisualStudioCode {
 function OpenWebsite {
     Param(
         [String]
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory=$true)]
         $Uri
     )
     if ($IsOSX) {
@@ -638,7 +638,7 @@ function UpdateSyllabi {
 function CloneSyllabus {
     Param(
         [String]
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory=$true)]
         $Name,
         [String]
         $DestinationName

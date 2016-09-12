@@ -1,7 +1,9 @@
-Set-Variable -Name NoProxyKeys   -Value @('NO_PROXY') -Option Constant -Scope Global
-Set-Variable -Name NoProxyValues -Value 'localhost,0.0.0.0,127.0.0.1,.local' -Option Constant -Scope Global
-Set-Variable -Name ProxyKeys     -Value @('HTTP_PROXY', 'HTTPS_PROXY', 'FTP_PROXY') -Option Constant -Scope Global
-Set-Variable -Name ProxyValues   -Value 'http://proxy.arteveldehs.be:8080' -Option Constant -Scope Global
+Set-Variable -Name NoProxyKeys        -Value @('NO_PROXY') -Option Constant -Scope Global
+Set-Variable -Name NoProxyKeysVagrant -Value @('VAGRANT_NO_PROXY') -Option Constant -Scope Global
+Set-Variable -Name NoProxyValues      -Value 'localhost,0.0.0.0,127.0.0.1,.local,192.168.10.10,192.168.10.20,192.168.10.30' -Option Constant -Scope Global
+Set-Variable -Name ProxyKeys          -Value @('HTTP_PROXY', 'HTTPS_PROXY', 'FTP_PROXY') -Option Constant -Scope Global
+Set-Variable -Name ProxyKeysVagrant   -Value @('VAGRANT_HTTP_PROXY', 'VAGRANT_HTTPS_PROXY', 'VAGRANT_FTP_PROXY') -Option Constant -Scope Global
+Set-Variable -Name ProxyValues        -Value 'http://proxy.arteveldehs.be:8080' -Option Constant -Scope Global
 Set-Variable -Name RegPathInternetSettings -Value 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Option Constant -Scope Global
 Set-Variable -Name RegPathEnvironment      -Value 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Option Constant -Scope Global
 
@@ -76,6 +78,12 @@ function TurnProxyOff {
                 Remove-ItemProperty -Path $Global:RegPathEnvironment -Name $Variable -ErrorAction SilentlyContinue
             }
         }
+        foreach ($Key in ($Global:ProxyKeysVagrant + $Global:NoProxyKeysVagrant)) {
+            foreach ($Variable in @($Key.ToUpper())) {
+                Set-ItemProperty -Path $Global:RegPathEnvironment -Name $Variable -Value $null
+            }
+        }
+        
         $CurrentProxyServer = Get-ItemProperty -Path $Global:RegPathInternetSettings -Name ProxyServer -ErrorAction SilentlyContinue
         Set-ItemProperty    -Path $Global:RegPathInternetSettings -Name ProxyEnable -value 0
         Remove-ItemProperty -Path $Global:RegPathInternetSettings -Name ProxyServer -ErrorAction SilentlyContinue
@@ -95,7 +103,7 @@ function TurnProxyOn {
             }
         }
     } elseif ($IsWindows) {
-        foreach ($Key in $Global:ProxyKeys) {
+        foreach ($Key in $Global:ProxyKeys + $Global:ProxyKeysVagrant) {
             foreach ($Variable in @($Key.ToUpper(), $Key.ToLower())) {
                 Set-Item -Path Env:$Variable -Value $Global:ProxyValues
             }
@@ -103,7 +111,7 @@ function TurnProxyOn {
                 Set-ItemProperty -Path $Global:RegPathEnvironment -Name $Variable -Value $Global:ProxyValues
             }
         }
-        foreach ($Key in $Global:NoProxyKeys) {
+        foreach ($Key in $Global:NoProxyKeys + $Global:NoProxyKeysVagrant) {
             foreach ($Variable in @($Key.ToUpper(), $Key.ToLower())) {
                 Set-Item -Path Env:$Variable -Value $Global:NoProxyValues
             }
