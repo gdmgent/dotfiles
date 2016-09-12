@@ -18,7 +18,7 @@ function JekyllServe {
     if (IsJekyllSite) {
         $Directory = (Get-Item -Path '.').Name
         $Uri = "http://127.0.0.1:4000/$Directory/"
-        OpenWebsite $Uri.Replace('utl_', '')
+        OpenUri -Uri $Uri.Replace('utl_', '')
         Invoke-Expression "jekyll serve --watch $args"
     }
 }

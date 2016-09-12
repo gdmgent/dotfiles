@@ -5,7 +5,7 @@ New-Alias -Name v -Value VagrantAliases
 
 function VagrantAccount {
     $Uri = 'https://atlas.hashicorp.com/account/new'
-    OpenWebsite $Uri
+    OpenUri -Uri $Uri
 }
 New-Alias -Name va -Value VagrantAccount
 
@@ -130,7 +130,7 @@ function VagrantWebsite {
     )
     if (HasVagrantfile) {
         $Protocol = if ($Secure) { 'https:\\' } else { 'http:\\' }
-        OpenWebsite ($Protocol + (Get-Item .).Name).
+        OpenUri -Uri ($Protocol + (Get-Item .).Name)
     }
 }
 New-Alias -Name vw -Value VagrantWebsite

@@ -484,16 +484,16 @@ function InstallVisualStudioCode {
     }
 }
 
-function OpenWebsite {
+function OpenUri {
     Param(
         [String]
         [Parameter(Mandatory=$true)]
         $Uri
     )
     if ($IsOSX) {
-        Invoke-Expression "open $Uri"
+        Invoke-Expression -Command "open $Uri"
     } elseif ($IsWindows) {
-        Invoke-Expression "cmd.exe /C 'start $Uri'"
+        Invoke-Expression -Command "cmd.exe /C 'start $Uri'"
     }
 }
 

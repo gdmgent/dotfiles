@@ -1,6 +1,6 @@
 Set-Variable -Name NoProxyKeys        -Value @('NO_PROXY') -Option Constant -Scope Global
 Set-Variable -Name NoProxyKeysVagrant -Value @('VAGRANT_NO_PROXY') -Option Constant -Scope Global
-Set-Variable -Name NoProxyValues      -Value 'localhost,0.0.0.0,127.0.0.1,.local,192.168.10.10,192.168.10.20,192.168.10.30' -Option Constant -Scope Global
+Set-Variable -Name NoProxyValues      -Value 'localhost,0.0.0.0,127.0.0.1,.local,192.168.10.0/8' -Option Constant -Scope Global
 Set-Variable -Name ProxyKeys          -Value @('HTTP_PROXY', 'HTTPS_PROXY', 'FTP_PROXY') -Option Constant -Scope Global
 Set-Variable -Name ProxyKeysVagrant   -Value @('VAGRANT_HTTP_PROXY', 'VAGRANT_HTTPS_PROXY', 'VAGRANT_FTP_PROXY') -Option Constant -Scope Global
 Set-Variable -Name ProxyValues        -Value 'http://proxy.arteveldehs.be:8080' -Option Constant -Scope Global
@@ -122,5 +122,13 @@ function TurnProxyOn {
         $CurrentProxyServer = Get-ItemProperty -Path $Global:RegPathInternetSettings -Name ProxyServer -ErrorAction SilentlyContinue
         Set-ItemProperty -Path $Global:RegPathInternetSettings -Name ProxyEnable -Value 1
         Set-ItemProperty -Path $Global:RegPathInternetSettings -Name ProxyServer -Value $Global:ProxyValues
+    }
+}
+
+function OpenProxySettings {
+    if ($IsOSX) {
+
+    } elseif ($IsWindows) {
+        OpenUri -Uri 'ms-settings:network-proxy'
     }
 }
