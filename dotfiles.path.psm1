@@ -5,7 +5,7 @@ New-Alias -Name ll -Value GetLongList
 
 function GoToPath ([String] $Path, [String] $Directory) {
     $Location = Join-Path -Path $Path -ChildPath $Directory
-    if (Test-Path $Location) {
+    if (Test-Path -Path $Location) {
         Set-Location $Location
     } else {
         Write-Warning -Message "Cannot find path '$Location' because it does not exist."
@@ -15,7 +15,11 @@ function GoToPath ([String] $Path, [String] $Directory) {
 }
 
 function GoToPathCode ([String] $Directory) {
-    GoToPath (Join-Path -Path $HOME -ChildPath Code) $Directory
+    $Path = Join-Path -Path $HOME -ChildPath Code
+    if (!(Test-Path -Path $Path)) {
+        New-Item -Path $Path -ItemType Directory
+    }
+    GoToPath -Path $Path -Directory $Directory
 }
 New-Alias -Name c -Value GoToPathCode
 
@@ -27,9 +31,12 @@ New-Alias -Name ~ -Value GoToPathHome
 function GoToPathSyllabi ([String] $Directory) {
     $Directory = $Directory.ToLower()
     $Path = Join-Path -Path $HOME -ChildPath Syllabi
+    if (!(Test-Path $Path)) {
+        New-Item -Path $Path -ItemType Directory
+    }
     $Location = Join-Path -Path $Path -ChildPath $Directory
     if (Test-Path $Location) {
-        Set-Location $Location
+        Set-Location -Path $Location
     } else {
         Write-Warning -Message "Cannot find syllabus '$Directory' because it does not exist."
         Write-Host 'Available syllabi:'
@@ -52,11 +59,12 @@ function OpenHostsFile {
 New-Alias -Name hosts -Value OpenHostsFile
 
 function UpOneDirectory ([String] $Directory) {
-    GoToPath .. $Directory
+    GoToPath -Path .. -Directory $Directory
 }
 New-Alias -Name .. -Value UpOneDirectory
 
 function UpTwoDirectories ([String] $Directory) {
-    GoToPath ../.. $Directory
+    $Path = Join-Path -Path .. -ChildPath ..
+    GoToPath -Path $Path -Directory $Directory
 }
 New-Alias -Name ... -Value UpTwoDirectories
