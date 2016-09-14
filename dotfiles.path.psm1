@@ -25,6 +25,7 @@ function GoToPathHome ([String] $Directory) {
 New-Alias -Name ~ -Value GoToPathHome
 
 function GoToPathSyllabi ([String] $Directory) {
+    $Directory = $Directory.ToLower()
     $Path = Join-Path -Path $HOME -ChildPath Syllabi
     $Location = Join-Path -Path $Path -ChildPath $Directory
     if (Test-Path $Location) {

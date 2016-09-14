@@ -643,6 +643,7 @@ function CloneSyllabus {
         [String]
         $DestinationName
     )
+    $DestinationName = $DestinationName.ToLower()
     GoToPathSyllabi
     git clone https://github.com/gdmgent/$Name $DestinationName
     if ($DestinationName) {
