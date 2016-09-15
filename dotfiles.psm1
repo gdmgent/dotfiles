@@ -92,6 +92,19 @@ function Dotfiles {
 }
 New-Alias -Name dot -Value Dotfiles
 
+function FindConnectionListeningOn {
+    Param(
+        [Int16]
+        [Parameter(Mandatory=$true)]
+        $Port
+    )
+    if ($IsOSX) {
+        (netstat -ao | Where-Object { $_ -match 'Proto' -or ($_ -match ":$Port " -and $_ -match 'LISTENING') })
+    } elseif ($IsWindows) {
+        (NETSTAT.EXE -ao | Where-Object { $_ -match 'Proto' -or ($_ -match ":$Port " -and $_ -match 'LISTENING') })
+    }
+}
+
 # Install Functions
 
 function InstallArtestead {
