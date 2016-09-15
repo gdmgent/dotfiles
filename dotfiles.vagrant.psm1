@@ -129,7 +129,7 @@ function VagrantWebsite {
         $Secure
     )
     if (HasVagrantfile) {
-        $Protocol = if ($Secure) { 'https:\\' } else { 'http:\\' }
+        $Protocol = if ($Secure) { 'https://' } else { 'http://' }
         OpenUri -Uri ($Protocol + (Get-Item .).Name)
     }
 }
