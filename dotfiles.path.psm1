@@ -3,48 +3,6 @@ function GetLongList {
 }
 New-Alias -Name ll -Value GetLongList
 
-function GoToPath ([String] $Path, [String] $Directory) {
-    $Location = Join-Path -Path $Path -ChildPath $Directory
-    if (Test-Path -Path $Location) {
-        Set-Location $Location
-    } else {
-        Write-Warning -Message "Cannot find path '$Location' because it does not exist."
-        Write-Host 'Available directories:'
-        Get-ChildItem -Name $Path | Write-Host -ForegroundColor DarkGray
-    }
-}
-
-function GoToPathCode ([String] $Directory) {
-    $Path = Join-Path -Path $HOME -ChildPath Code
-    if (!(Test-Path -Path $Path)) {
-        New-Item -Path $Path -ItemType Directory
-    }
-    GoToPath -Path $Path -Directory $Directory
-}
-New-Alias -Name c -Value GoToPathCode
-
-function GoToPathHome ([String] $Directory) {
-    GoToPath $HOME $Directory
-}
-New-Alias -Name ~ -Value GoToPathHome
-
-function GoToPathSyllabi ([String] $Directory) {
-    $Directory = $Directory.ToLower()
-    $Path = Join-Path -Path $HOME -ChildPath Syllabi
-    if (!(Test-Path $Path)) {
-        New-Item -Path $Path -ItemType Directory
-    }
-    $Location = Join-Path -Path $Path -ChildPath $Directory
-    if (Test-Path $Location) {
-        Set-Location -Path $Location
-    } else {
-        Write-Warning -Message "Cannot find syllabus '$Directory' because it does not exist."
-        Write-Host 'Available syllabi:'
-        Get-ChildItem -Path $Path -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)' } | Write-Host -ForegroundColor DarkGray
-    }
-}
-New-Alias -Name s -Value GoToPathSyllabi
-
 function OpenHostsFile {
     if (Get-Command code -ErrorAction SilentlyContinue) {
         if ($IsOSX) {
@@ -58,13 +16,111 @@ function OpenHostsFile {
 }
 New-Alias -Name hosts -Value OpenHostsFile
 
-function UpOneDirectory ([String] $Directory) {
-    GoToPath -Path .. -Directory $Directory
+function SetLocationPath ([String] $Path, [String] $Directory) {
+    $Location = Join-Path -Path $Path -ChildPath $Directory
+    if (Test-Path -Path $Location) {
+        Set-Location $Location
+    } else {
+        Write-Warning -Message "Cannot find path '$Location' because it does not exist."
+        Write-Host 'Available directories:'
+        Get-ChildItem -Name $Path | Write-Host -ForegroundColor DarkGray
+    }
 }
-New-Alias -Name .. -Value UpOneDirectory
 
-function UpTwoDirectories ([String] $Directory) {
-    $Path = Join-Path -Path .. -ChildPath ..
-    GoToPath -Path $Path -Directory $Directory
+function SetLocationPathCode {
+    [CmdletBinding()]
+    Param()
+    DynamicParam {
+        $Path = Join-Path -Path $HOME -ChildPath Code
+        if (!(Test-Path -Path $Path)) {
+            New-Item -Path $Path -ItemType Directory
+        }
+        $ParameterAttribute = New-Object System.Management.Automation.ParameterAttribute
+        $ParameterAttribute.Position = 1
+        $ValidateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute((Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name))
+        $AttributeCollection = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
+        $AttributeCollection.Add($ParameterAttribute)
+        $AttributeCollection.Add($ValidateSetAttribute)
+        $ParameterName = 'Directory'
+        $RuntimeParameter = New-Object System.Management.Automation.RuntimeDefinedParameter($ParameterName, [String], $AttributeCollection)
+        $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
+        $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
+        return $RuntimeParameterDictionary
+    }
+    Begin {
+        $Directory = $PSBoundParameters[$ParameterName]
+    }
+    Process {
+        SetLocationPath -Path $Path -Directory $Directory
+    }
 }
-New-Alias -Name ... -Value UpTwoDirectories
+New-Alias -Name c -Value SetLocationPathCode
+
+function SetLocationPathHome {
+    [CmdletBinding()]
+    Param()
+    DynamicParam {
+        $Path = $HOME
+        if (!(Test-Path -Path $Path)) {
+            New-Item -Path $Path -ItemType Directory
+        }
+        $ParameterAttribute = New-Object System.Management.Automation.ParameterAttribute
+        $ParameterAttribute.Position = 1
+        $ValidateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute((Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name))
+        $AttributeCollection = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
+        $AttributeCollection.Add($ParameterAttribute)
+        $AttributeCollection.Add($ValidateSetAttribute)
+        $ParameterName = 'Directory'
+        $RuntimeParameter = New-Object System.Management.Automation.RuntimeDefinedParameter($ParameterName, [String], $AttributeCollection)
+        $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
+        $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
+        return $RuntimeParameterDictionary
+    }
+    Begin {
+        $Directory = $PSBoundParameters[$ParameterName]
+    }
+    Process {
+        SetLocationPath -Path $Path -Directory $Directory
+    }
+}
+New-Alias -Name ~ -Value SetLocationPathHome
+
+function SetLocationPathSyllabi {
+    [CmdletBinding()]
+    Param()
+    DynamicParam {
+        $Path = Join-Path -Path $HOME -ChildPath Syllabi
+        if (!(Test-Path -Path $Path)) {
+            New-Item -Path $Path -ItemType Directory
+        }
+        $ParameterAttribute = New-Object System.Management.Automation.ParameterAttribute
+        $ParameterAttribute.Position = 1
+        $ValidateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute((Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name))
+        $AttributeCollection = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
+        $AttributeCollection.Add($ParameterAttribute)
+        $AttributeCollection.Add($ValidateSetAttribute)
+        $ParameterName = 'Directory'
+        $RuntimeParameter = New-Object System.Management.Automation.RuntimeDefinedParameter($ParameterName, [String], $AttributeCollection)
+        $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
+        $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
+        return $RuntimeParameterDictionary
+    }
+    Begin {
+        $Directory = $PSBoundParameters[$ParameterName]
+    }
+    Process {
+        SetLocationPath -Path $Path -Directory $Directory
+    }
+}
+New-Alias -Name s -Value SetLocationPathSyllabi
+
+function SetLocationPathUpOne ([String] $Directory) {
+    SetLocationPath -Path .. -Directory $Directory
+}
+New-Alias -Name .. -Value SetLocationPathUpOne
+
+function SetLocationPathUpTwo ([String] $Directory) {
+    $Path = Join-Path -Path .. -ChildPath ..
+    SetLocationPath -Path $Path -Directory $Directory
+}
+New-Alias -Name ... -Value SetLocationPathUpTwo
