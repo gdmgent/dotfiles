@@ -405,7 +405,6 @@ function InstallPhp {
     }
 }
 
-# @TODO
 function InstallPowerShell {
     $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/powershell/powershell/releases/latest
     $Version = $Response.tag_name
@@ -443,7 +442,7 @@ function InstallPowerShell {
         $Urn = 'powershell-ubuntu1.16.04.1_amd64.deb'
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
-
+        # @TODO implement
         Remove-Item -Path $InstallerFile
     }
 }
