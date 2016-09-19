@@ -414,18 +414,29 @@ function InstallPowerShell {
         $OS = '.pkg$'
         $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
         $Urn = 'powershell.pkg'
-        $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
-        Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
-
-        Remove-Item -Path $InstallerFile
-    } elseif ($IsWindows) {
-        $OS = 'win10-x64.zip$'
-        $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
-        $Urn = 'powershell-win10-x64.zip'
         $InstallerFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
-
-        Remove-Item -Path $InstallerFile
+        if (Test-Path -Path $InstallerFile) {
+            Invoke-Expression -Command $InstallerFile
+            Remove-Item -Path $InstallerFile
+       }
+    } elseif ($IsWindows) {
+        $OS = 'win10-x64.msi$'
+        $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
+        $Urn = 'powershell-win10-x64.msi'
+        $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
+        Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
+        if (Test-Path -Path $InstallerFile) {
+            Write-Host "Installing PowerShell $Version..."
+            Write-Host ' - [Next]'
+            Write-Host " - 'I accept the terms in the License Agreement', [next]"
+            Write-Host " - 'C:\Program Files\PowerShell\', [Next]"
+            Write-Host ' - [Finish]'
+            Write-Host ' - ConEmu > Startup > Tasks > 6 {Shells::PowerShell (Admin)} >'
+            Write-Host '   C:\Program Files\PowerShell\6.0.0.10\powershell.exe -NoLogo'
+            msiexec.exe /i $InstallerFile
+            Remove-Item -Path $InstallerFile
+       }
     } elseif ($IsLinux) {
         $OS = 'ubuntu1.16.04.1_amd64.deb$'
         $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url

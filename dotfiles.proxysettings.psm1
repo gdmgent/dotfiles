@@ -83,10 +83,10 @@ function TurnProxyOff {
                 Set-ItemProperty -Path $Global:RegPathEnvironment -Name $Variable -Value $null
             }
         }
-        
         $CurrentProxyServer = Get-ItemProperty -Path $Global:RegPathInternetSettings -Name ProxyServer -ErrorAction SilentlyContinue
         Set-ItemProperty    -Path $Global:RegPathInternetSettings -Name ProxyEnable -value 0
         Remove-ItemProperty -Path $Global:RegPathInternetSettings -Name ProxyServer -ErrorAction SilentlyContinue
+        # netsh.exe winhttp reset proxy
     }
 }
 
@@ -122,6 +122,7 @@ function TurnProxyOn {
         $CurrentProxyServer = Get-ItemProperty -Path $Global:RegPathInternetSettings -Name ProxyServer -ErrorAction SilentlyContinue
         Set-ItemProperty -Path $Global:RegPathInternetSettings -Name ProxyEnable -Value 1
         Set-ItemProperty -Path $Global:RegPathInternetSettings -Name ProxyServer -Value $Global:ProxyValues
+        # netsh.exe winhttp set proxy proxy-server="http=myproxy;https=sproxy:88" bypass-list="*.foo.com"
     }
 }
 
