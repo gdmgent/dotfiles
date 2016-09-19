@@ -409,7 +409,6 @@ function InstallPhp {
 function InstallPowerShell {
     $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/powershell/powershell/releases/latest
     $Version = $Response.tag_name
-    Write-Host $Version
     if ($IsOSX) {
         $OS = '.pkg$'
         $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
@@ -417,7 +416,8 @@ function InstallPowerShell {
         $InstallerFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path -Path $InstallerFile) {
-            Invoke-Expression -Command $InstallerFile
+            Write-Host "Installing PowerShell $Version..."
+            Invoke-Expression -Command "sudo installer -pkg $InstallerFile -target /"
             Remove-Item -Path $InstallerFile
        }
     } elseif ($IsWindows) {
@@ -581,6 +581,13 @@ function UninstallRuby {
     }
 }
 
+function UpdateBrew {
+    Write-Host 'Updating Homebrew...'
+    if ($IsOSX -and (Get-Command brew -ErrorAction SilentlyContinue)) {
+        sh -c 'brew update && brew upgrade && brew cleanup'
+    }
+}
+
 function UpdateBundler {
     $File = 'Gemfile'
     if (Test-Path $File) {
@@ -592,20 +599,6 @@ function UpdateBundler {
         }
     } else {
         Write-Warning -Message "Cannot run Bundler in this directory because a '$File' is required."
-    }
-}
-
-function UpdateBrew {
-    Param(
-        [Switch]
-        $Force
-    )
-    Write-Host 'Updating Homebrew...'
-    if ($IsOSX -and (Get-Command brew -ErrorAction SilentlyContinue)) {
-        if ($Force) {
-            sh -c 'sudo chown -R $(whoami):admin /usr/local'
-        }
-        sh -c 'brew update && brew upgrade && brew cleanup'
     }
 }
 
