@@ -634,7 +634,7 @@ function SearchDotfilesCommands {
 
 function UpdateSyllabi {
     Push-Location
-    GoToPathSyllabi
+    SetLocationPathSyllabi
     $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)' }
 
     foreach ($Directory in $Directories) {
@@ -657,12 +657,12 @@ function CloneSyllabus {
         $DestinationName
     )
     $DestinationName = $DestinationName.ToLower()
-    GoToPathSyllabi
+    SetLocationPathSyllabi
     git clone https://github.com/gdmgent/$Name $DestinationName
     if ($DestinationName) {
-        GoToPathSyllabi $DestinationName
+        SetLocationPathSyllabi $DestinationName
     } else {
-        GoToPathSyllabi $Name
+        SetLocationPathSyllabi $Name
     }
     GitCheckoutGitHubPages
 }
