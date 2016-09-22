@@ -74,13 +74,6 @@ function VagrantReloadProvision {
 }
 New-Alias -Name vrp -Value VagrantReloadProvision
 
-function VagrantSsh {
-    if (HasVagrantfile) {
-        vagrant ssh "$args"
-    }
-}
-New-Alias -Name vss -Value VagrantSsh
-
 function VagrantStatus {
     if (HasVagrantfile) {
         vagrant status "$args"
@@ -101,6 +94,13 @@ function VagrantShareName {
     }
 }
 New-Alias -Name vsn -Value VagrantShareName
+
+function VagrantSsh {
+    if (HasVagrantfile) {
+        vagrant ssh "$args"
+    }
+}
+New-Alias -Name vss -Value VagrantSsh
 
 function VagrantSuspend {
     if (HasVagrantfile) {
