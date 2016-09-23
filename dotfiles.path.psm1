@@ -35,20 +35,24 @@ function SetLocationPathCode {
         if (!(Test-Path -Path $Path)) {
             New-Item -Path $Path -ItemType Directory
         }
-        $ParameterAttribute = New-Object System.Management.Automation.ParameterAttribute
-        $ParameterAttribute.Position = 1
-        $ValidateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute((Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name))
-        $AttributeCollection = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
-        $AttributeCollection.Add($ParameterAttribute)
-        $AttributeCollection.Add($ValidateSetAttribute)
-        $ParameterName = 'Directory'
-        $RuntimeParameter = New-Object System.Management.Automation.RuntimeDefinedParameter($ParameterName, [String], $AttributeCollection)
-        $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
-        $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
-        return $RuntimeParameterDictionary
+        try {
+            $ParameterAttribute = New-Object System.Management.Automation.ParameterAttribute
+            $ParameterAttribute.Position = 1
+            $ValidateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute((Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name))
+            $AttributeCollection = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
+            $AttributeCollection.Add($ParameterAttribute)
+            $AttributeCollection.Add($ValidateSetAttribute)
+            $ParameterName = 'Directory'
+            $RuntimeParameter = New-Object System.Management.Automation.RuntimeDefinedParameter($ParameterName, [String], $AttributeCollection)
+            $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
+            $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
+            return $RuntimeParameterDictionary
+        } catch {}
     }
     Begin {
-        $Directory = $PSBoundParameters[$ParameterName]
+        try {
+            $Directory = $PSBoundParameters[$ParameterName]
+        } catch {}
     }
     Process {
         SetLocationPath -Path $Path -Directory $Directory
@@ -64,20 +68,24 @@ function SetLocationPathHome {
         if (!(Test-Path -Path $Path)) {
             New-Item -Path $Path -ItemType Directory
         }
-        $ParameterAttribute = New-Object System.Management.Automation.ParameterAttribute
-        $ParameterAttribute.Position = 1
-        $ValidateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute((Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name))
-        $AttributeCollection = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
-        $AttributeCollection.Add($ParameterAttribute)
-        $AttributeCollection.Add($ValidateSetAttribute)
-        $ParameterName = 'Directory'
-        $RuntimeParameter = New-Object System.Management.Automation.RuntimeDefinedParameter($ParameterName, [String], $AttributeCollection)
-        $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
-        $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
-        return $RuntimeParameterDictionary
+        try {
+            $ParameterAttribute = New-Object System.Management.Automation.ParameterAttribute
+            $ParameterAttribute.Position = 1
+            $ValidateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute((Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name))
+            $AttributeCollection = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
+            $AttributeCollection.Add($ParameterAttribute)
+            $AttributeCollection.Add($ValidateSetAttribute)
+            $ParameterName = 'Directory'
+            $RuntimeParameter = New-Object System.Management.Automation.RuntimeDefinedParameter($ParameterName, [String], $AttributeCollection)
+            $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
+            $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
+            return $RuntimeParameterDictionary
+        } catch {}
     }
     Begin {
-        $Directory = $PSBoundParameters[$ParameterName]
+        try {
+            $Directory = $PSBoundParameters[$ParameterName]
+        } catch {}
     }
     Process {
         SetLocationPath -Path $Path -Directory $Directory
@@ -93,20 +101,24 @@ function SetLocationPathSyllabi {
         if (!(Test-Path -Path $Path)) {
             New-Item -Path $Path -ItemType Directory
         }
-        $ParameterAttribute = New-Object System.Management.Automation.ParameterAttribute
-        $ParameterAttribute.Position = 1
-        $ValidateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute((Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name))
-        $AttributeCollection = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
-        $AttributeCollection.Add($ParameterAttribute)
-        $AttributeCollection.Add($ValidateSetAttribute)
-        $ParameterName = 'Directory'
-        $RuntimeParameter = New-Object System.Management.Automation.RuntimeDefinedParameter($ParameterName, [String], $AttributeCollection)
-        $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
-        $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
-        return $RuntimeParameterDictionary
+        try {
+            $ParameterAttribute = New-Object System.Management.Automation.ParameterAttribute
+            $ParameterAttribute.Position = 1
+            $ValidateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute((Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name))
+            $AttributeCollection = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
+            $AttributeCollection.Add($ParameterAttribute)
+            $AttributeCollection.Add($ValidateSetAttribute)
+            $ParameterName = 'Directory'
+            $RuntimeParameter = New-Object System.Management.Automation.RuntimeDefinedParameter($ParameterName, [String], $AttributeCollection)
+            $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
+            $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
+            return $RuntimeParameterDictionary
+        } catch {}
     }
     Begin {
-        $Directory = $PSBoundParameters[$ParameterName]
+        try {
+            $Directory = $PSBoundParameters[$ParameterName]
+        } catch {}
     }
     Process {
         SetLocationPath -Path $Path -Directory $Directory
