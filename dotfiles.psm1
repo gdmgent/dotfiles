@@ -45,6 +45,10 @@ function SetEnvironment {
         if (Test-Path $AndroidSdkPath) {
             $Path += $AndroidSdkPath
         }
+        $DotNetCore = '/usr/local/share/dotnet/dotnet'
+        if (Test-Path $DotNetCore) {
+            $Path += $DotNetCore
+        }
 
         # User Paths
         $Path += @(
@@ -69,8 +73,12 @@ function SetEnvironment {
         $Path += @(
             "$HOME\AppData\Roaming\Composer\vendor\bin",
             'C:\php'
+            
         )
-
+        $DotNetCore = 'C:\Program Files\dotnet'
+        if (Test-Path $DotNetCore) {
+            $Path += $DotNetCore
+        }
         [System.Environment]::SetEnvironmentVariable('Path', $Path -join ';')
     }
 }
