@@ -72,8 +72,8 @@ function SetEnvironment {
         $Path = [System.Environment]::GetEnvironmentVariable('Path') -split ';'
         $Path += @(
             "$HOME\AppData\Roaming\Composer\vendor\bin",
-            'C:\php'
-            
+            'C:\php',
+            'C:\Program Files\PowerShell\6.0.0.10'
         )
         $DotNetCore = 'C:\Program Files\dotnet'
         if (Test-Path $DotNetCore) {
