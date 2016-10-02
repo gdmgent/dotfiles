@@ -1,15 +1,15 @@
-function Behat {
-    if (Test-Path bin/behat) {
-        php bin/behat "$args"
-    } elseif (Test-Path vendor/bin/behat) {
-        php vendor/bin/behat "$args"
-    } elseif (Get-Command behat -ErrorAction SilentlyContinue) {
-        behat "$args"
+function BehatBehat {
+    if (Test-Path ($Path = Join-Path -Path bin -ChildPath behat)) {
+        php $Path "$args"
+    } elseif (Test-Path ($Path = Join-Path -Path vendor -ChildPath $Path)) {
+        php $Path "$args"
+    } elseif (Get-Command behat -Type Application -ErrorAction SilentlyContinue) {
+        Invoke-Expression ((Get-Command -Name behat -Type Application).Source + " $args")
     } else {
         Write-Warning -Message "Behat is not available from this directory, nor is it installed globally."
     }
 }
-New-Alias -Name behat -Value Behat
+New-Alias -Name behat -Value BehatBehat
 
 function LaravelArtisan {
     if (Test-Path artisan) {
@@ -20,26 +20,26 @@ function LaravelArtisan {
 }
 New-Alias -Name artisan -Value LaravelArtisan
 
-function PHPUnit {
-    if (Test-Path bin/phpunit) {
-        php bin/phpunit "$args"
-    } elseif (Test-Path vendor/bin/phpunit) {
-        php vendor/bin/phpunit "$args"
-    } elseif (Get-Command phpunit -ErrorAction SilentlyContinue) {
-        phpunit "$args"
+function PHPUnitPHPUnit {
+    if (Test-Path ($Path = Join-Path -Path bin -ChildPath phpunit)) {
+        php $Path "$args"
+    } elseif (Test-Path ($Path = Join-Path -Path vendor -ChildPath $Path)) {
+        php $Path "$args"
+    } elseif (Get-Command phpunit -Type Application -ErrorAction SilentlyContinue) {
+        Invoke-Expression ((Get-Command -Name phpunit -Type Application).Source + " $args")
     } else {
         Write-Warning -Message "PHPUnit is not available from this directory, nor is it installed globally."
     }
 }
-New-Alias -Name phpunit -Value PHPUnit
+New-Alias -Name phpunit -Value PHPUnitPHPUnit
 
 function SymfonyConsole {
-    if (Test-Path bin/console) {
+    if (Test-Path ($PathBin = Join-Path -Path bin -ChildPath console)) {
         # Symfony 3.*.*
-        php bin/console "$args"
-    } elseif (Test-Path app/console) {
+        php $PathBin "$args"
+    } elseif (Test-Path ($PathApp = Join-Path -Path app -ChildPath console)) {
         # Symfony 2.*.*
-        php app/console "$args"
+        php $PathApp "$args"
     } else {
         Write-Warning -Message "Symfony Console is not available from this directory."
     }
