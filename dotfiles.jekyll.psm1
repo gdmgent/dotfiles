@@ -16,10 +16,10 @@ New-Alias -Name cjsu -Value CodeJekyllServeUnpublished
 
 function JekyllServe {
     if (IsJekyllSite) {
-        $Directory = (Get-Item -Path '.').Name
+        $Directory = (Get-Item -Path .).Name
         $Uri = "http://127.0.0.1:4000/$Directory/"
         OpenUri -Uri $Uri.Replace('utl_', '')
-        Invoke-Expression "jekyll serve --watch $args"
+        Invoke-Expression -Command "jekyll serve --watch $args"
     }
 }
 New-Alias -Name js -Value JekyllServe
@@ -46,7 +46,7 @@ New-Alias -Name jsu -Value JekyllServeUnpublished
 
 function IsJekyllSite {
     $File = "_config.yml"
-    if (Test-Path $File) {
+    if (Test-Path -Path $File) {
         return $true
     } else {
         Write-Warning -Message "Cannot run Jekyll in this directory because a '$File' is required."

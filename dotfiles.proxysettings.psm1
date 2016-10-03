@@ -1,9 +1,9 @@
-Set-Variable -Name NoProxyKeys        -Value @('NO_PROXY') -Option Constant -Scope Global
-Set-Variable -Name NoProxyKeysVagrant -Value @('VAGRANT_NO_PROXY') -Option Constant -Scope Global
-Set-Variable -Name NoProxyValues      -Value 'localhost,0.0.0.0,127.0.0.1,.local,192.168.10.0/8' -Option Constant -Scope Global
-Set-Variable -Name ProxyKeys          -Value @('HTTP_PROXY', 'HTTPS_PROXY', 'FTP_PROXY') -Option Constant -Scope Global
-Set-Variable -Name ProxyKeysVagrant   -Value @('VAGRANT_HTTP_PROXY', 'VAGRANT_HTTPS_PROXY', 'VAGRANT_FTP_PROXY') -Option Constant -Scope Global
-Set-Variable -Name ProxyValues        -Value 'http://proxy.arteveldehs.be:8080' -Option Constant -Scope Global
+Set-Variable -Name NoProxyKeys             -Value @('NO_PROXY') -Option Constant -Scope Global
+Set-Variable -Name NoProxyKeysVagrant      -Value @('VAGRANT_NO_PROXY') -Option Constant -Scope Global
+Set-Variable -Name NoProxyValues           -Value 'localhost,0.0.0.0,127.0.0.1,.local,192.168.10.0/8' -Option Constant -Scope Global
+Set-Variable -Name ProxyKeys               -Value @('HTTP_PROXY', 'HTTPS_PROXY', 'FTP_PROXY') -Option Constant -Scope Global
+Set-Variable -Name ProxyKeysVagrant        -Value @('VAGRANT_HTTP_PROXY', 'VAGRANT_HTTPS_PROXY', 'VAGRANT_FTP_PROXY') -Option Constant -Scope Global
+Set-Variable -Name ProxyValues             -Value 'http://proxy.arteveldehs.be:8080' -Option Constant -Scope Global
 Set-Variable -Name RegPathInternetSettings -Value 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Option Constant -Scope Global
 Set-Variable -Name RegPathEnvironment      -Value 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Option Constant -Scope Global
 
@@ -62,7 +62,7 @@ function TurnProxyOff {
     if ($IsOSX) {
         foreach ($Key in ($Global:ProxyKeys + $Global:NoProxyKeys)) {
             foreach ($Variable in @($Key.ToUpper(), $Key.ToLower())) {
-                if (Test-Path Env:$Variable) {
+                if (Test-Path -Path Env:$Variable) {
                     Remove-Item -Path Env:$Variable
                 }
             }
@@ -70,7 +70,7 @@ function TurnProxyOff {
     } elseif ($IsWindows) {
         foreach ($Key in ($Global:ProxyKeys + $Global:NoProxyKeys)) {
             foreach ($Variable in @($Key.ToUpper(), $Key.ToLower())) {
-                if (Test-Path Env:$Variable) {
+                if (Test-Path -Path Env:$Variable) {
                     Remove-Item -Path Env:$Variable
                 }
             }

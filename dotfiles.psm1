@@ -1,5 +1,5 @@
-Set-Variable -Name DotfilesConfigPath -Value (Join-Path -Path $Home -ChildPath '.dotfiles' | Join-Path -ChildPath 'config.json') -Option Constant -Scope Global -ErrorAction SilentlyContinue
-Set-Variable -Name DotfilesVersion -Value (Get-Content (Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'VERSION') | Select-Object -First 1 -Skip 1) -Option Constant -Scope Global -ErrorAction SilentlyContinue
+Set-Variable -Name DotfilesConfigPath -Value (Join-Path -Path $Home -ChildPath .dotfiles | Join-Path -ChildPath config.json) -Option Constant -Scope Global -ErrorAction SilentlyContinue
+Set-Variable -Name DotfilesVersion -Value (Get-Content -Path (Join-Path -Path $Global:DotfilesInstallPath -ChildPath VERSION) | Select-Object -First 1 -Skip 1) -Option Constant -Scope Global -ErrorAction SilentlyContinue
 
 # Config Functions
 
@@ -24,7 +24,7 @@ function ReadConfig([String] $Name) {
 }
 
 function SaveConfig {
-    ConvertTo-Json -InputObject $Global:DotfilesConfig | Out-File $Global:DotfilesConfigPath
+    ConvertTo-Json -InputObject $Global:DotfilesConfig | Out-File -FilePath $Global:DotfilesConfigPath
 }
 
 function WriteConfig([String] $Name, [String] $Value) {
@@ -42,11 +42,11 @@ function SetEnvironment {
 
         # First
         $AndroidSdkPath = "$HOME/Library/Android/sdk/tools"
-        if (Test-Path $AndroidSdkPath) {
+        if (Test-Path -Path $AndroidSdkPath) {
             $Path += $AndroidSdkPath
         }
         $DotNetCore = '/usr/local/share/dotnet/dotnet'
-        if (Test-Path $DotNetCore) {
+        if (Test-Path -Path $DotNetCore) {
             $Path += $DotNetCore
         }
 
@@ -76,7 +76,7 @@ function SetEnvironment {
             'C:\Program Files\PowerShell\6.0.0.10'
         )
         $DotNetCore = 'C:\Program Files\dotnet'
-        if (Test-Path $DotNetCore) {
+        if (Test-Path -Path $DotNetCore) {
             $Path += $DotNetCore
         }
         [System.Environment]::SetEnvironmentVariable('Path', $Path -join ';')
@@ -163,10 +163,10 @@ function InstallComposer {
         $Uri = "https://getcomposer.org/$Urn"
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
-        if (Test-Path $InstallerFile) {
+        if (Test-Path -Path $InstallerFile) {
             Write-Host 'Running Composer Installer...'
-            Invoke-Expression $InstallerFile
-            Remove-Item $InstallerFile
+            Invoke-Expression -Command $InstallerFile
+            Remove-Item -Path $InstallerFile
         }
     }
 }
@@ -199,7 +199,7 @@ function InstallFontFiraCode {
     if ($IsOSX) {
         $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
-        if (Test-Path $OutFile) {
+        if (Test-Path -Path $OutFile) {
             Write-Host 'Installing Fira Code typeface...'
             $DestinationPath = "$HOME/Library/Fonts/"
             $TempPath = "$env:TMPDIR$Name/"
@@ -211,7 +211,7 @@ function InstallFontFiraCode {
     } elseif ($IsWindows) {
         $OutFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
-        if (Test-Path $OutFile) {
+        if (Test-Path -Path $OutFile) {
             Write-Host 'Installing Fira Code typeface...'
             $DestinationPath = "C:\Windows\Fonts\"
             $TempPath = "$env:TEMP$Name\"
@@ -232,7 +232,7 @@ function InstallFontHack {
     if ($IsOSX) {
         $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
-        if (Test-Path $OutFile) {
+        if (Test-Path -Path $OutFile) {
             Write-Host 'Installing Hack typeface...'
             $DestinationPath = "$HOME/Library/Fonts/"
             $TempPath = "$env:TMPDIR$Name/"
@@ -244,7 +244,7 @@ function InstallFontHack {
     } elseif ($IsWindows) {
         $OutFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
-        if (Test-Path $OutFile) {
+        if (Test-Path -Path $OutFile) {
             Write-Host 'Installing Hack typeface...'
             $DestinationPath = "C:\Windows\Fonts\"
             $TempPath = "$env:TEMP$Name\"
@@ -266,7 +266,7 @@ function InstallFontHasklig {
     if ($IsOSX) {
         $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
-        if (Test-Path $OutFile) {
+        if (Test-Path -Path $OutFile) {
             Write-Host 'Installing Hasklig typeface...'
             $DestinationPath = "$HOME/Library/Fonts/"
             $TempPath = "$env:TMPDIR$Name/"
@@ -278,7 +278,7 @@ function InstallFontHasklig {
     } elseif ($IsWindows) {
         $OutFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
-        if (Test-Path $OutFile) {
+        if (Test-Path -Path $OutFile) {
             Write-Host 'Installing Hasklig typeface...'
             $DestinationPath = "C:\Windows\Fonts\"
             $TempPath = "$env:TEMP$Name\"
@@ -301,7 +301,7 @@ function InstallGit {
         $Uri = "https://github.com/git-for-windows/git/releases/download/$Version/$Urn"
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
-        if (Test-Path $InstallerFile) {
+        if (Test-Path -Path $InstallerFile) {
             Write-Host 'Running Git installer...'
             Write-Host ' - [Next >]'
             Write-Host ' - [Next >]'
@@ -310,8 +310,8 @@ function InstallGit {
             Write-Host " - Use Windows' default console window, [Next >]"
             Write-Host ' - [Install]'
             Write-Host ' - [Finish]'
-            Invoke-Expression $InstallerFile
-            Remove-Item $InstallerFile
+            Invoke-Expression -Command $InstallerFile
+            Remove-Item -Path $InstallerFile
         }
     }
     if (Get-Command git -ErrorAction SilentlyContinue) {
@@ -329,7 +329,7 @@ function InstallGitIgnoreGlobal {
     Write-Host 'Installing GitIgnore Global...'
     $GitIgnoreSource = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath 'gitignore_global'
     $GitIgnoreDestination = Join-Path -Path $HOME -ChildPath '.gitignore_global'
-    if (Test-Path $GitIgnoreSource) {
+    if (Test-Path -Path $GitIgnoreSource) {
         Copy-Item -Path $GitIgnoreSource -Destination $GitIgnoreDestination
     }
 }
@@ -348,14 +348,14 @@ function InstallNvm {
         $Uri = ($Response.assets | Where-Object { $_.name.Equals($Urn) }).browser_download_url
         $InstallerArchive = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerArchive
-        if (Test-Path $InstallerArchive) {
+        if (Test-Path -Path $InstallerArchive) {
             Write-Host 'Running Node Version Manager installer...'
             Expand-Archive -Path $InstallerArchive -DestinationPath $env:TEMP -Force
             $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn.Replace('zip', 'exe')
-            if (Test-Path $InstallerFile) {
+            if (Test-Path -Path $InstallerFile) {
                 Remove-Item -Path $InstallerArchive
-                Invoke-Expression $InstallerFile
-                Remove-Item $InstallerFile
+                Invoke-Expression -Command $InstallerFile
+                Remove-Item -Path $InstallerFile
             }
         }
     }
@@ -385,9 +385,9 @@ function InstallPhp {
         $Uri = "$Url$RelativeUrl"
         $OutFile = Join-Path -Path $env:TEMP -ChildPath 'php.zip'
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
-        if (Test-Path $OutFile) {
+        if (Test-Path -Path $OutFile) {
             $DestinationPath = 'C:\php'
-            if ((Test-Path $DestinationPath) -and !(Test-Path "$DestinationPath.bak")) {
+            if ((Test-Path -Path $DestinationPath) -and !(Test-Path -Path "$DestinationPath.bak")) {
                 Write-Host "Making a backup of previously installed version..."
                 Move-Item -Path $DestinationPath -Destination "$DestinationPath.bak"
             }
@@ -395,15 +395,18 @@ function InstallPhp {
             Expand-Archive -Path $OutFile -DestinationPath $DestinationPath -Force
             Remove-Item -Path $OutFile
             Write-Host 'Configuring PHP 7.0...'
-            $ConfigFile = Get-Content C:\php\php.ini-development
+            $ConfigFile = Get-Content -Path C:\php\php.ini-development
             $Replacements = @(
                 'extension=php_curl.dll'
                 'extension=php_mbstring.dll'
                 'extension=php_openssl.dll'
+                'extension=php_pdo_sqlite.dll'
             )
             foreach ($Replacement in $Replacements) {
                 $ConfigFile = $ConfigFile.Replace(";$Replacement", $Replacement)
             }
+            # Adding CA Root Certificates for SSL
+            $ConfigFile = $ConfigFile.Replace(';openssl.cafile=', 'openssl.cafile=' + $Global:DotfilesInstallPath + '\ssl\cacert.pem')
             Set-Content -Path (Join-Path -Path $DestinationPath -ChildPath 'php.ini') -Value $ConfigFile
         }
     }
@@ -468,14 +471,14 @@ function InstallRuby {
         $Urn = "$DirectoryName.exe"
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
-        if (Test-Path $InstallerFile) {
+        if (Test-Path -Path $InstallerFile) {
             Write-Host 'Running Ruby installer...'
             Write-Host " - 'English', [OK]"
             Write-Host " - 'I accept the License', [Next>]"
             Write-Host " - 'C:\$DirectoryName', 'Add Ruby executables to your PATH', [Install]"
             Write-Host ' - [Finish]'
-            Invoke-Expression $InstallerFile
-            Remove-Item $InstallerFile
+            Invoke-Expression -Command $InstallerFile
+            Remove-Item -Path $InstallerFile
         }
         Write-Host 'Downloading Ruby DevKit installer...'
         $Version = 'mingw64-64'
@@ -484,11 +487,11 @@ function InstallRuby {
         $Urn = "$DirectoryName-DevKit.exe"
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
-        if (Test-Path $InstallerFile) {
+        if (Test-Path -Path $InstallerFile) {
             Write-Host 'Running Ruby DevKit installer...'
-            Invoke-Expression "$InstallerFile -o'C:\$DirectoryName' -y"
-            Remove-Item $InstallerFile
-            Set-Location C:\$DirectoryName
+            Invoke-Expression -Command "$InstallerFile -o'C:\$DirectoryName' -y"
+            Remove-Item -Path $InstallerFile
+            Set-Location -Path C:\$DirectoryName
             ruby dk.rb init
             ruby dk.rb install
         }
@@ -530,18 +533,20 @@ function OpenUri {
 
 function RemoveLocalArtestead {
     $File = 'Artestead.yaml'
-    if (Test-Path $File) {
+    if (Test-Path -Path $File) {
         Write-Host 'Removing Local Artestead...'
-        if (Test-Path Vagrantfile) {
+        $ToRemove = @($File)
+        if (Test-Path -Path Vagrantfile) {
             vagrant destroy
-            Remove-Item -Path .vagrant -Recurse -Force -ErrorAction SilentlyContinue
-            Remove-Item -Path Vagrantfile -Force -ErrorAction SilentlyContinue
+            $ToRemove += @('.vagrant', 'Vagrantfile')
         }
-        Remove-Item -Path .gitignore -Force -ErrorAction SilentlyContinue
-        Remove-Item -Path *.sh -Force -ErrorAction SilentlyContinue
-        Remove-Item -Path composer.* -Force -ErrorAction SilentlyContinue
-        Remove-Item -Path vendor -Recurse -Force -ErrorAction SilentlyContinue
-        Remove-Item -Path $File -Force -ErrorAction SilentlyContinue
+        $ToRemove += @(
+            '.gitignore',
+            '*.sh',
+            'composer.*',
+            'vendor'
+        )
+        Remove-Item -Path $ToRemove -Recurse -Force -ErrorAction SilentlyContinue
     } else {
         Write-Warning -Message "This is not an Artestead project. Could not find '$File' in this directory."
     }
@@ -549,24 +554,19 @@ function RemoveLocalArtestead {
 
 function RemoveAndroidStudio {
     if ($IsOSX) {
-        # rm -Rf /Applications/Android\ Studio.app
-        # rm -Rf ~/Library/Preferences/AndroidStudio*
-        # rm ~/Library/Preferences/com.google.android.studio.plist
-        # rm -Rf ~/Library/Application\ Support/AndroidStudio*
-        # rm -Rf ~/Library/Logs/AndroidStudio*
-        # rm -Rf ~/Library/Caches/AndroidStudio*
-
-        # # Projects
-        # rm -Rf ~/AndroidStudioProjects
-
-        # # Gradle
-        # rm -Rf ~/.gradle
-
-        # # Android Virtual Devices
-        # rm -Rf ~/.android
-
-        # # Android SDK
-        # rm -Rf ~/Library/Android*
+        $ToRemove = @(
+            '/Applications/Android\ Studio.app',
+            '~/.android', # Android Virtual Devices
+            '~/.gradle',  # Gradle
+            '~/AndroidStudioProjects',
+            '~/Library/Application\ Support/AndroidStudio*',
+            '~/Library/Android*', # Android SDK
+            '~/Library/Caches/AndroidStudio*',
+            '~/Library/Logs/AndroidStudio*',
+            '~/Library/Preferences/AndroidStudio*',
+            '~/Library/Preferences/com.google.android.studio.plist'
+        )
+        Remove-Item -Path $ToRemove -Recurse -Force -ErrorAction SilentlyContinue
     }
 }
 
@@ -583,8 +583,7 @@ function UninstallRuby {
         }
     } elseif ($IsWindows) {
         Write-Host 'Uninstalling Ruby...'
-        Remove-Item -Recurse -Force C:\DevKit
-        Remove-Item -Recurse -Force C:\Ruby22-x64
+        Remove-Item -Path @('C:\DevKit', 'C:\Ruby22-x64') -Recurse -Force
     }
 }
 
@@ -640,7 +639,7 @@ function UpdateComposer {
 
 function SearchDotfilesCommands {
     Get-Command "$args" | Where-Object { $_.Source -eq 'dotfiles' }
-    Get-Alias  "$args" | Where-Object { $_.Source -eq 'dotfiles' -or $_.Source -like 'aliases*' }
+    Get-Alias   "$args" | Where-Object { $_.Source -eq 'dotfiles' -or $_.Source -like 'aliases*' }
 }
 
 function UpdateSyllabi {
@@ -650,7 +649,7 @@ function UpdateSyllabi {
 
     foreach ($Directory in $Directories) {
         Push-Location $Directory
-        if (Test-Path .git) {
+        if (Test-Path -Path .git) {
             Write-Host " $Directory " -BackgroundColor Blue -ForegroundColor White
             git pull | Write-Host -ForegroundColor DarkGray
         }

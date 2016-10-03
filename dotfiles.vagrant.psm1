@@ -88,7 +88,7 @@ function VagrantShareName {
     )
     if (HasVagrantfile) {
         if (!$Name) {
-            $Name = (Get-Item .).Name.Replace('.local', '')
+            $Name = (Get-Item -Path .).Name.Replace('.local', '')
         }
         vagrant share --name $Name
     }
@@ -130,14 +130,14 @@ function VagrantWebsite {
     )
     if (HasVagrantfile) {
         $Protocol = if ($Secure) { 'https://' } else { 'http://' }
-        OpenUri -Uri ($Protocol + (Get-Item .).Name)
+        OpenUri -Uri ($Protocol + (Get-Item -Path .).Name)
     }
 }
 New-Alias -Name vw -Value VagrantWebsite
 
 function HasVagrantfile {
     $File = 'Vagrantfile'
-    if (Test-Path $File) {
+    if (Test-Path -Path $File) {
         return $true
     } else {
         Write-Warning -Message "Cannot run Vagrant in this directory because a '$File' is required."

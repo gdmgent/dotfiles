@@ -14,6 +14,13 @@ function GitCheckoutMaster {
 New-Alias -Name master -Value GitCheckoutMaster
 
 function GitPull {
+    Param (
+        [Switch]
+        $Force
+    )
+    if ($Force) {
+        GitStashDrop
+    }
     git pull
 }
 New-Alias -Name pull -Value GitPull
@@ -29,7 +36,14 @@ function GitPushWorkInProgress {
 }
 New-Alias -Name wip -Value GitPushWorkInProgress
 
+function GitStashDrop {
+    git stash
+    git stash drop
+}
+New-Alias -Name stashdrop -Value GitStashDrop
+
 function GitStatus {
     git status
 }
+New-Alias -Name status -Value GitStatus
 New-Alias -Name sts -Value GitStatus

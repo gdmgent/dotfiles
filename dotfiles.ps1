@@ -1,6 +1,6 @@
-Set-Variable -Name DotfilesInstallPath -Value (Split-Path $MyInvocation.MyCommand.Path) -Option Constant -Scope Global -ErrorAction SilentlyContinue
+Set-Variable -Name DotfilesInstallPath -Value (Split-Path -Path $MyInvocation.MyCommand.Path) -Option Constant -Scope Global -ErrorAction SilentlyContinue
 
-Push-Location $Global:DotfilesInstallPath
+Push-Location -Path $Global:DotfilesInstallPath
 
 Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.psm1); InitConfig
 Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.path.psm1)
@@ -24,7 +24,7 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
 } else { $Error.Remove($Error[$Error.Count - 1]) }
 Pop-Location
 
-Set-Location $HOME
+Set-Location -Path $HOME
 
 if (!$Error) {
     Clear-Host
