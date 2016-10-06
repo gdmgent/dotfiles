@@ -3,13 +3,13 @@ function BehatBehat {
         if ($IsWindows) {
             Invoke-Expression -Command "$Path $args"
         } else {
-            php $Path "$args"
+            Invoke-Expression -Command "php $Path $args"
         }
     } elseif (Test-Path -Path ($Path = Join-Path -Path vendor -ChildPath $Path)) {
         if ($IsWindows) {
             Invoke-Expression -Command "$Path $args"
         } else {
-            php $Path "$args"
+            Invoke-Expression -Command "php $Path $args"
         }
     } elseif (Get-Command behat -Type Application -ErrorAction SilentlyContinue) {
         Invoke-Expression -Command ((Get-Command -Name behat -Type Application).Source + " $args")
@@ -21,7 +21,7 @@ New-Alias -Name behat -Value BehatBehat
 
 function LaravelArtisan {
     if (Test-Path -Path artisan) {
-        php artisan "$args"
+        Invoke-Expression -Command "php artisan $args"
     } else {
         Write-Warning -Message "Laravel Artisan Console is not available from this directory."
     }
@@ -33,13 +33,13 @@ function PHPUnitPHPUnit {
         if ($IsWindows) {
             Invoke-Expression -Command "$Path $args"
         } else {
-            php $Path "$args"
+            Invoke-Expression -Command "php $Path $args"
         }
     } elseif (Test-Path -Path ($Path = Join-Path -Path vendor -ChildPath $Path)) {
         if ($IsWindows) {
             Invoke-Expression -Command "$Path $args"
         } else {
-            php $Path "$args"
+            Invoke-Expression -Command "php $Path $args"
         }
     } elseif (Get-Command phpunit -Type Application -ErrorAction SilentlyContinue) {
         Invoke-Expression -Command ((Get-Command -Name phpunit -Type Application).Source + " $args")
@@ -52,10 +52,10 @@ New-Alias -Name phpunit -Value PHPUnitPHPUnit
 function SymfonyConsole {
     if (Test-Path -Path ($PathBin = Join-Path -Path bin -ChildPath console)) {
         # Symfony 3.*.*
-        php $PathBin "$args"
+        Invoke-Expression -Command "php $PathBin $args"
     } elseif (Test-Path -Path ($PathApp = Join-Path -Path app -ChildPath console)) {
         # Symfony 2.*.*
-        php $PathApp "$args"
+        Invoke-Expression -Command "php $PathApp $args"
     } else {
         Write-Warning -Message "Symfony Console is not available from this directory."
     }
