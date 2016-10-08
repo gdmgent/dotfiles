@@ -643,6 +643,10 @@ function SearchDotfilesCommands {
 }
 
 function UpdateSyllabi {
+    Param(
+        [Switch]
+        $Force
+    )
     Push-Location
     SetLocationPathSyllabi
     $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)' }
@@ -651,7 +655,14 @@ function UpdateSyllabi {
         Push-Location $Directory
         if (Test-Path -Path .git) {
             Write-Host " $Directory " -BackgroundColor Blue -ForegroundColor White
-            git pull | Write-Host -ForegroundColor DarkGray
+            git add . | Write-Host -ForegroundColor DarkGray
+            if ($Force) {
+                git stash | Write-Host -ForegroundColor DarkGray
+                git stash drop | Write-Host -ForegroundColor DarkGray
+                git pull | Write-Host -ForegroundColor DarkGray
+            } else {
+                git pull | Write-Host -ForegroundColor DarkGray
+            }
         }
         Pop-Location
     }
