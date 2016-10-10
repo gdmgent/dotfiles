@@ -642,31 +642,22 @@ function SearchDotfilesCommands {
     Get-Alias   "$args" | Where-Object { $_.Source -eq 'dotfiles' -or $_.Source -like 'aliases*' }
 }
 
-function UpdateSyllabi {
+function CloneProject {
     Param(
-        [Switch]
-        $Force
+        [String]
+        [Parameter(Mandatory=$true)]
+        $Name,
+        [String]
+        $DestinationName
     )
-    Push-Location
-    SetLocationPathSyllabi
-    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)' }
-
-    foreach ($Directory in $Directories) {
-        Push-Location $Directory
-        if (Test-Path -Path .git) {
-            Write-Host " $Directory " -BackgroundColor Blue -ForegroundColor White
-            git add . | Write-Host -ForegroundColor DarkGray
-            if ($Force) {
-                git stash | Write-Host -ForegroundColor DarkGray
-                git stash drop | Write-Host -ForegroundColor DarkGray
-                git pull | Write-Host -ForegroundColor DarkGray
-            } else {
-                git pull | Write-Host -ForegroundColor DarkGray
-            }
-        }
-        Pop-Location
+    $DestinationName = $DestinationName.ToLower()
+    SetLocationPathCode
+    git clone https://github.com/gdmgent/$Name $DestinationName
+    if ($DestinationName) {
+        SetLocationPathCode $DestinationName
+    } else {
+        SetLocationPathCode $Name
     }
-    Pop-Location
 }
 
 function CloneSyllabus {
@@ -686,6 +677,49 @@ function CloneSyllabus {
         SetLocationPathSyllabi $Name
     }
     GitCheckoutGitHubPages
+}
+
+function PullSyllabi {
+    Param(
+        [Switch]
+        $Force
+    )
+    Push-Location
+    SetLocationPathSyllabi
+    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)' }
+    foreach ($Directory in $Directories) {
+        Push-Location $Directory
+        if (Test-Path -Path .git) {
+            Write-Host " $Directory " -BackgroundColor Blue -ForegroundColor White
+            git add . | Write-Host -ForegroundColor DarkGray
+            if ($Force) {
+                git stash | Write-Host -ForegroundColor DarkGray
+                git stash drop | Write-Host -ForegroundColor DarkGray
+                git pull | Write-Host -ForegroundColor DarkGray
+            } else {
+                git pull | Write-Host -ForegroundColor DarkGray
+            }
+        }
+        Pop-Location
+    }
+    Pop-Location
+}
+
+function PushSyllabi {
+    Push-Location
+    SetLocationPathSyllabi
+    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)' }
+    foreach ($Directory in $Directories) {
+        Push-Location $Directory
+        if (Test-Path -Path .git) {
+            Write-Host " $Directory " -BackgroundColor Blue -ForegroundColor White
+            git add . | Write-Host -ForegroundColor DarkGray
+            git commit -a -m [WIP] | Write-Host -ForegroundColor DarkGray
+            git push | Write-Host -ForegroundColor DarkGray
+        }
+        Pop-Location
+    }
+    Pop-Location
 }
 
 function X {
