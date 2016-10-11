@@ -9,13 +9,28 @@ function VagrantAccount {
 }
 New-Alias -Name va -Value VagrantAccount
 
+function VagrantBoxAdd {
+    Param(
+        [String]
+        [Parameter(Mandatory=$true)]
+        $Version
+    )
+    vagrant box add laravel/homestead --box-version "$Version" --provider virtualbox
+}
+New-Alias -Name vba -Value VagrantBoxAdd
+
 function VagrantBoxList {
     vagrant box list "$args"
 }
 New-Alias -Name vbl -Value VagrantBoxList
 
 function VagrantBoxRemove {
-    vagrant box remove laravel/homestead --box-version "$args"
+    Param(
+        [String]
+        [Parameter(Mandatory=$true)]
+        $Version
+    )
+    vagrant box remove laravel/homestead --box-version "$Version"
 }
 New-Alias -Name vbr -Value VagrantBoxRemove
 
