@@ -751,6 +751,21 @@ function PushSyllabi {
     Pop-Location
 }
 
+function StatusSyllabi {
+    Push-Location
+    SetLocationPathSyllabi
+    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)' }
+    foreach ($Directory in $Directories) {
+        Push-Location $Directory
+        if (Test-Path -Path .git) {
+            Write-Host " $Directory " -BackgroundColor Blue -ForegroundColor White
+            git status | Write-Host -ForegroundColor DarkGray
+        }
+        Pop-Location
+    }
+    Pop-Location
+}
+
 function X {
     exit
 }
