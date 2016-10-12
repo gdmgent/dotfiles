@@ -73,7 +73,8 @@ function SetEnvironment {
         $Path += @(
             "$HOME\AppData\Roaming\Composer\vendor\bin",
             'C:\php',
-            'C:\Program Files\PowerShell\6.0.0.10'
+            'C:\Program Files\PowerShell\6.0.0.10',
+            'C:\Program Files (x86)\Yarn\bin'
         )
         $DotNetCore = 'C:\Program Files\dotnet'
         if (Test-Path -Path $DotNetCore) {
@@ -298,7 +299,8 @@ function InstallGit {
         Write-Host 'Downloading Git installer...'
         $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/git-for-windows/git/releases/latest
         $Version = $Response.tag_name
-        $Uri = ($Response.assets | Where-Object { $_.name -match '-64-bit.exe$' }).browser_download_url
+        $OS = '-64-bit.exe$'
+        $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
         $Urn = 'git-64-bit.exe'
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
@@ -517,6 +519,31 @@ function InstallVisualStudioCode {
         $Destination = '/usr/local/lib'
         Copy-Item -Path $Path/libcrypto.dylib -Destination $Destination/libcrypto.1.0.0.dylib
         Copy-Item -Path $Path/libssl.dylib -Destination $Destination/libssl.1.0.0.dylib
+    }
+}
+
+function InstallYarn {
+    if ($IsOSX) {
+        Write-Host "Using cURL and Bash to install Yarn..."
+        sh -c 'curl -o- -L https://yarnpkg.com/install.sh | bash'
+    } elseif ($IsWindows) {
+        $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/yarnpkg/yarn/releases/latest
+        $Version = $Response.tag_name
+        $OS = '.msi$'
+        $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
+        $Urn = 'yarn.msi'
+        $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
+        Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
+        if (Test-Path -Path $InstallerFile) {
+            Write-Host "Installing Yarn $Version..."
+            Write-Host ' - [Next]'
+            Write-Host " - 'I accept the terms License Agreement', [Next]"
+            Write-Host " - 'C:\Program Files (x86)\Yarn\', [Next]"
+            Write-Host ' - [Install]'
+            Write-Host ' - [Finish]'
+            msiexec.exe /i $InstallerFile
+            Remove-Item -Path $InstallerFile
+       }
     }
 }
 
