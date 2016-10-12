@@ -65,7 +65,10 @@ function SetEnvironment {
         )
 
         # Last
-        $Path += "$HOME/.composer/vendor/bin"
+        $Path += @(
+            "$HOME/.composer/vendor/bin",
+            "$HOME/.yarn/bin"
+        )
 
         [System.Environment]::SetEnvironmentVariable('PATH', $Path -join ':')
     } elseif ($IsWindows) {
