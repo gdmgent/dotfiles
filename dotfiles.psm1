@@ -296,9 +296,10 @@ function InstallGit {
         sh -c 'brew install git'
     } elseif ($IsWindows) {
         Write-Host 'Downloading Git installer...'
-        $Version = 'v2.9.2.windows.1'
-        $Urn = 'Git-2.9.2-64-bit.exe'
-        $Uri = "https://github.com/git-for-windows/git/releases/download/$Version/$Urn"
+        $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/git-for-windows/git/releases/latest
+        $Version = $Response.tag_name
+        $Uri = ($Response.assets | Where-Object { $_.name -match '-64-bit.exe$' }).browser_download_url
+        $Urn = 'git-64-bit.exe'
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path -Path $InstallerFile) {
@@ -307,7 +308,7 @@ function InstallGit {
             Write-Host ' - [Next >]'
             Write-Host " - 'Use Git and optional Unix tools from the Windows Command Prompt', [Next >]"
             Write-Host " - 'Checkout Windows-style, commit Unix-style line endings', [Next >]"
-            Write-Host " - Use Windows' default console window, [Next >]"
+            Write-Host " - 'Use Windows' default console window', [Next >]"
             Write-Host ' - [Install]'
             Write-Host ' - [Finish]'
             Invoke-Expression -Command $InstallerFile
@@ -315,6 +316,7 @@ function InstallGit {
         }
     }
     if (Get-Command git -ErrorAction SilentlyContinue) {
+            git config --global credential.helper wincred
             Write-Host 'Installed version of Git: ' -NoNewline
             git --version
     } else {
