@@ -76,12 +76,15 @@ function SetEnvironment {
         $Path += @(
             "$HOME\AppData\Roaming\Composer\vendor\bin",
             'C:\php',
-            'C:\Program Files\PowerShell\6.0.0.10',
             'C:\Program Files (x86)\Yarn\bin'
         )
-        $DotNetCore = 'C:\Program Files\dotnet'
-        if (Test-Path -Path $DotNetCore) {
-            $Path += $DotNetCore
+        $PowerShellPath = 'C:\Program Files\PowerShell'
+        if (Test-Path -Path $PowerShellPath) {
+            $Path += (Get-ChildItem $PowerShellPath | Select-Object -Last 1).FullName
+        }
+        $DotNetCorePath = 'C:\Program Files\dotnet'
+        if (Test-Path -Path $DotNetCorePath) {
+            $Path += $DotNetCorePath
         }
         [System.Environment]::SetEnvironmentVariable('Path', $Path -join ';')
     }
@@ -527,8 +530,8 @@ function InstallVisualStudioCode {
 
 function InstallYarn {
     if ($IsOSX) {
-        Write-Host "Using cURL and Bash to install Yarn..."
-        sh -c 'curl -o- -L https://yarnpkg.com/install.sh | bash'
+        Write-Host "Using Homebrew to install Yarn..."
+        sh -c 'brew install yarn'
     } elseif ($IsWindows) {
         $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/yarnpkg/yarn/releases/latest
         $Version = $Response.tag_name
