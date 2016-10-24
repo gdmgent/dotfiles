@@ -453,7 +453,7 @@ function InstallPowerShell {
             Write-Host " - 'C:\Program Files\PowerShell\', [Next]"
             Write-Host ' - [Finish]'
             Write-Host ' - ConEmu > Startup > Tasks > 6 {Shells::PowerShell (Admin)} >'
-            Write-Host '   C:\Program Files\PowerShell\6.0.0.10\powershell.exe -NoLogo'
+            Write-Host ('   C:\Program Files\PowerShell\' + ($Version.Substring(1) -replace '[a-zA-Z\-]+','') + '\powershell.exe -NoLogo')
             msiexec.exe /i $InstallerFile
             Remove-Item -Path $InstallerFile
        }
