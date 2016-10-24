@@ -76,7 +76,8 @@ function SetEnvironment {
         $Path += @(
             "$HOME\AppData\Roaming\Composer\vendor\bin",
             'C:\php',
-            'C:\Program Files (x86)\Yarn\bin'
+            'C:\Program Files (x86)\Yarn\bin',
+            "$HOME\AppData\Local\Yarn\config\global\node_modules\.bin"
         )
         $PowerShellPath = 'C:\Program Files\PowerShell'
         if (Test-Path -Path $PowerShellPath) {
