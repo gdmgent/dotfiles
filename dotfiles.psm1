@@ -110,8 +110,8 @@ New-Alias -Name dot -Value Dotfiles
 
 function FindConnectionListeningOn {
     Param(
-        [Int16]
         [Parameter(Mandatory=$true)]
+        [Int16]
         $Port
     )
     if ($IsOSX) {
@@ -556,8 +556,8 @@ function InstallYarn {
 
 function OpenUri {
     Param(
-        [String]
         [Parameter(Mandatory=$true)]
+        [String]
         $Uri
     )
     if ($IsOSX) {
@@ -680,8 +680,8 @@ function SearchDotfilesCommands {
 
 function CloneProject {
     Param(
-        [String]
         [Parameter(Mandatory=$true)]
+        [String]
         $Name,
         [String]
         $DestinationName
@@ -698,8 +698,8 @@ function CloneProject {
 
 function CloneSyllabus {
     Param(
-        [String]
         [Parameter(Mandatory=$true)]
+        [String]
         $Name,
         [String]
         $DestinationName

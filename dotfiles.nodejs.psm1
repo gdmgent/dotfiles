@@ -45,7 +45,24 @@ function UseNode6 {
     }
 }
 
-function UseNode([String] $Version) {
+function UseNode7 {
+    $NodeVersion = 7
+    if ($IsOSX) {
+        $Version = (Get-ChildItem $NodeJsPath).Name | Where-Object { $_ -match "v$NodeVersion.\d.\d" } | Sort-Object -Descending | Select-Object -First 1
+    } elseif ($IsWindows) {
+        $Version = nvm.exe list | Select-String -Pattern "$NodeVersion.\d.\d" -AllMatches | ForEach-Object { ($_.Matches).Value } | Sort-Object -Descending | Select-Object -First 1
+    }
+    if ($Version) {
+        UseNode -Version $Version
+    }
+}
+
+function UseNode {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [String]
+        $Version
+    )
     if ($IsOSX) {
         $Versions = (Get-ChildItem $NodeJsPath).Name
         switch ($Version) {
