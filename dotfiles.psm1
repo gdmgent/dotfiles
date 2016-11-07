@@ -2,6 +2,7 @@ Set-Variable -Name DotfilesConfigPath -Value (Join-Path -Path $Home -ChildPath .
 Set-Variable -Name DotfilesVersion -Value (Get-Content -Path (Join-Path -Path $Global:DotfilesInstallPath -ChildPath VERSION) | Select-Object -First 1 -Skip 1) -Option Constant -Scope Global -ErrorAction SilentlyContinue
 
 # Config Functions
+# ----------------
 
 function InitConfig {
     if (Test-Path $Global:DotfilesConfigPath) {
@@ -67,7 +68,7 @@ function SetEnvironment {
         # Last
         $Path += @(
             "$HOME/.composer/vendor/bin",
-            "$HOME/.yarn/bin"
+            "$HOME/.yarn-config/global/node_modules/.bin"
         )
 
         [System.Environment]::SetEnvironmentVariable('PATH', $Path -join ':')
@@ -122,6 +123,7 @@ function FindConnectionListeningOn {
 }
 
 # Install Functions
+# -----------------
 
 function InstallArtestead {
     Write-Host 'Installing Artestead (Artevelde Laravel Homestead)...'
