@@ -19,7 +19,11 @@ function JekyllServe {
         $Directory = (Get-Item -Path .).Name
         $Uri = "http://127.0.0.1:4000/$Directory/"
         OpenUri -Uri $Uri.Replace('utl_', '')
-        Invoke-Expression -Command "jekyll serve --watch $args"
+        if ($IsWindows) {
+            Invoke-Expression -Command "jekyll serve --no-watch $args"
+        } else {
+            Invoke-Expression -Command "jekyll serve $args"
+        }
     }
 }
 New-Alias -Name js -Value JekyllServe
