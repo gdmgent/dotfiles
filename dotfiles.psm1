@@ -322,7 +322,7 @@ function InstallGit {
             Write-Host " - 'Use Windows' default console window', [Next >]"
             Write-Host ' - [Install]'
             Write-Host ' - [Finish]'
-            Invoke-Expression -Command $InstallerFile
+            Start-Process -FilePath $InstallerFile -Wait
             Remove-Item -Path $InstallerFile
         }
     }
@@ -367,7 +367,7 @@ function InstallNvm {
             $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn.Replace('zip', 'exe')
             if (Test-Path -Path $InstallerFile) {
                 Remove-Item -Path $InstallerArchive
-                Invoke-Expression -Command $InstallerFile
+                Start-Process -FilePath $InstallerFile -Wait
                 Remove-Item -Path $InstallerFile
             }
         }
@@ -457,7 +457,7 @@ function InstallPowerShell {
             Write-Host ' - [Finish]'
             Write-Host ' - ConEmu > Startup > Tasks > 6 {Shells::PowerShell (Admin)} >'
             Write-Host ('   C:\Program Files\PowerShell\' + ($Version.Substring(1) -replace '[a-zA-Z\-]+','') + '\powershell.exe -NoLogo')
-            msiexec.exe /i $InstallerFile
+            Start-Process -FilePath $InstallerFile -Wait
             Remove-Item -Path $InstallerFile
        }
     } elseif ($IsLinux) {
@@ -490,7 +490,7 @@ function InstallRuby {
             Write-Host " - 'I accept the License', [Next>]"
             Write-Host " - 'C:\$DirectoryName', 'Add Ruby executables to your PATH', [Install]"
             Write-Host ' - [Finish]'
-            Invoke-Expression -Command $InstallerFile
+            Start-Process -FilePath $InstallerFile -Wait
             Remove-Item -Path $InstallerFile
         }
         Write-Host 'Downloading Ruby DevKit installer...'
@@ -550,7 +550,7 @@ function InstallYarn {
             Write-Host " - 'C:\Program Files (x86)\Yarn\', [Next]"
             Write-Host ' - [Install]'
             Write-Host ' - [Finish]'
-            msiexec.exe /i $InstallerFile
+            Start-Process -FilePath $InstallerFile -Wait
             Remove-Item -Path $InstallerFile
        }
     }
