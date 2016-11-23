@@ -15,7 +15,7 @@ function VagrantBoxAdd {
         [String]
         $Version
     )
-    vagrant box add laravel/homestead --box-version "$Version" --provider virtualbox
+    vagrant box add laravel/homestead --box-version "$Version" --provider virtualbox --clean
 }
 New-Alias -Name vba -Value VagrantBoxAdd
 
