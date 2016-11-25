@@ -455,9 +455,9 @@ function InstallPowerShell {
             Write-Host " - 'I accept the terms in the License Agreement', [next]"
             Write-Host " - 'C:\Program Files\PowerShell\', [Next]"
             Write-Host ' - [Finish]'
-            Write-Host ' - ConEmu > Startup > Tasks > 6 {Shells::PowerShell (Admin)} >'
+            Write-Host ' - ConEmu > Settings... > Startup > Tasks > 6 {Shells::PowerShell (Admin)} >'
             Write-Host ('   C:\Program Files\PowerShell\' + ($Version.Substring(1) -replace '[a-zA-Z\-]+','') + '\powershell.exe -NoLogo')
-            Start-Process -FilePath $InstallerFile -Wait
+            Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i $InstallerFile" -Wait
             Remove-Item -Path $InstallerFile
        }
     } elseif ($IsLinux) {
@@ -550,7 +550,7 @@ function InstallYarn {
             Write-Host " - 'C:\Program Files (x86)\Yarn\', [Next]"
             Write-Host ' - [Install]'
             Write-Host ' - [Finish]'
-            Start-Process -FilePath $InstallerFile -Wait
+            Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i $InstallerFile" -Wait
             Remove-Item -Path $InstallerFile
        }
     }
