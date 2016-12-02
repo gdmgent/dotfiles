@@ -388,13 +388,14 @@ function InstallOhMyZsh {
 }
 
 function InstallPhp {
+    $Version = '7.1'
     if ($IsOSX) {
-        Write-Host 'Using Homebrew to install PHP 7.0...'
-        sh -c 'brew tap homebrew/php && brew install php70 php70-mcrypt'
+        Write-Host "Using Homebrew to install PHP $Version..."
+        sh -c 'brew tap homebrew/php && brew install php71 php71-mcrypt'
     } elseif ($IsWindows) {
-        Write-Host 'Downloading PHP 7.0...'
+        Write-Host "Downloading PHP $Version..."
         $Url = 'http://windows.php.net'
-        $RelativeUrl = ((Invoke-WebRequest -Uri "$Url/download").Links | Where-Object { $_.href -match '/php-7.0.\d+-nts-Win32-VC14-x64.zip$' } | Select-Object -First 1).href
+        $RelativeUrl = ((Invoke-WebRequest -Uri "$Url/download").Links | Where-Object { $_.href -match "/php-$Version.\d+-nts-Win32-VC14-x64.zip$" } | Select-Object -First 1).href
         $Uri = "$Url$RelativeUrl"
         $OutFile = Join-Path -Path $env:TEMP -ChildPath 'php.zip'
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
@@ -404,10 +405,10 @@ function InstallPhp {
                 Write-Host "Making a backup of previously installed version..."
                 Move-Item -Path $DestinationPath -Destination "$DestinationPath.bak"
             }
-            Write-Host 'Installing PHP 7.0...'
+            Write-Host 'Installing PHP...'
             Expand-Archive -Path $OutFile -DestinationPath $DestinationPath -Force
             Remove-Item -Path $OutFile
-            Write-Host 'Configuring PHP 7.0...'
+            Write-Host 'Configuring PHP...'
             $ConfigFile = Get-Content -Path C:\php\php.ini-development
             $Replacements = @(
                 'extension=php_curl.dll'
