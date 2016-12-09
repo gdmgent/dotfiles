@@ -498,12 +498,12 @@ function InstallRuby {
         $Version = 'mingw64-64'
         $DirectoryName = 'DevKit'
         $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "DevKit-$Version-(\S+)-sfx.exe$" } | Select-Object -First 1).href
-        $Urn = "$DirectoryName-DevKit.exe"
+        $Urn = "$DirectoryName.exe"
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path -Path $InstallerFile) {
             Write-Host 'Running Ruby DevKit installer...'
-            Invoke-Expression -Command "$InstallerFile -o'C:\$DirectoryName' -y"
+            Start-Process -FilePath $InstallerFile -ArgumentList "-oC:\$DirectoryName -y" -Wait
             Remove-Item -Path $InstallerFile
             Set-Location -Path C:\$DirectoryName
             ruby dk.rb init
