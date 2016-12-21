@@ -68,6 +68,11 @@ function VagrantLogin {
 }
 New-Alias -Name vl -Value VagrantLogin
 
+function VagrantPluginUpdate {
+    vagrant plugin update "$args"
+}
+New-Alias -Name vpu -Value VagrantPluginUpdate
+
 function VagrantProvision {
     if (HasVagrantfile) {
         vagrant provision "$args"
