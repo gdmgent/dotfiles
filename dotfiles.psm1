@@ -709,13 +709,31 @@ function CloneSyllabus {
     )
     $DestinationName = $DestinationName.ToLower()
     SetLocationPathSyllabi
-    git clone https://github.com/gdmgent/$Name $DestinationName
+    git clone https://github.com/gdmgent/$Name --branch gh-pages --single-branch $DestinationName
     if ($DestinationName) {
         SetLocationPathSyllabi $DestinationName
     } else {
         SetLocationPathSyllabi $Name
     }
-    GitCheckoutGitHubPages
+}
+
+function NewSyllabus {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [String]
+        $Name
+    )
+    $Name = $Name.ToLower()
+    SetLocationPathSyllabi
+    New-Item -Path $Name -ItemType Directory
+    Set-Location -Path $Name
+    git init
+    git checkout -b gh-pages
+    git remote add origin https://github.com/gdmgent/$Name.git
+    New-Item -Path README.md -ItemType File
+    git add .
+    git commit -m [WIP]
+    git push --set-upstream origin gh-pages
 }
 
 function PullSyllabi {
