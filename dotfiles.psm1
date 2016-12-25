@@ -42,6 +42,10 @@ function SetEnvironment {
         $Path = @()
 
         # First
+        $Path += @(
+            "$HOME/.rbenv/shims"
+        )
+
         $AndroidSdkPath = "$HOME/Library/Android/sdk/tools"
         if (Test-Path -Path $AndroidSdkPath) {
             $Path += $AndroidSdkPath
@@ -474,8 +478,8 @@ function InstallPowerShell {
 
 function InstallRuby {
     if ($IsOSX) {
-        Write-Host 'Using Homebrew to install Ruby...'
-        sh -c 'brew install ruby'
+        Write-Host 'Using Homebrew and rbenv to install Ruby...'
+        sh -c 'brew install rbenv && rbenv install 2.3.3 && rbenv global 2.3.3'
     } elseif ($IsWindows) {
         $Url = 'http://rubyinstaller.org/downloads/'
         Write-Host 'Downloading Ruby installer...'
