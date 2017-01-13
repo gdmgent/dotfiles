@@ -2,8 +2,9 @@ Set-Variable -Name DotfilesInstallPath -Value (Split-Path -Path $MyInvocation.My
 
 Push-Location -Path $Global:DotfilesInstallPath
 
-Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.psm1); InitConfig
+Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.core.psm1); InitConfig
 Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.path.psm1)
+Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.prompt.psm1)
 Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.proxysettings.psm1); InitProxy
 # Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.proxy.psm1)
 Import-Module ./dotfiles.nodejs.psm1; InitNode
