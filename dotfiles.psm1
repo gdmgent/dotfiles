@@ -483,34 +483,35 @@ function InstallRuby {
     } elseif ($IsWindows) {
         $Url = 'http://rubyinstaller.org/downloads/'
         Write-Host 'Downloading Ruby installer...'
-        $Version = '2.2.\d+' # Jekyll is not compatible with newer versions of Ruby
-        $DirectoryName = 'Ruby22-x64'
+        $Version = '2.3.\d+' # Jekyll is not compatible with newer versions of Ruby
+        $RubyDirectoryName = 'Ruby23-x64'
         $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "rubyinstaller-$Version-x64.exe$" } | Select-Object -First 1).href
-        $Urn = "$DirectoryName.exe"
+        $Urn = "$RubyDirectoryName.exe"
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path -Path $InstallerFile) {
             Write-Host 'Running Ruby installer...'
             Write-Host " - 'English', [OK]"
             Write-Host " - 'I accept the License', [Next>]"
-            Write-Host " - 'C:\$DirectoryName', 'Add Ruby executables to your PATH', [Install]"
+            Write-Host " - 'C:\$RubyDirectoryName', 'Add Ruby executables to your PATH', [Install]"
             Write-Host ' - [Finish]'
             Start-Process -FilePath $InstallerFile -Wait
             Remove-Item -Path $InstallerFile
         }
         Write-Host 'Downloading Ruby DevKit installer...'
         $Version = 'mingw64-64'
-        $DirectoryName = 'DevKit'
+        $DevKitDirectoryName = 'DevKit'
         $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "DevKit-$Version-(\S+)-sfx.exe$" } | Select-Object -First 1).href
-        $Urn = "$DirectoryName.exe"
+        $Urn = "$DevKitDirectoryName.exe"
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path -Path $InstallerFile) {
             Write-Host 'Running Ruby DevKit installer...'
-            Start-Process -FilePath $InstallerFile -ArgumentList "-oC:\$DirectoryName -y" -Wait
+            Start-Process -FilePath $InstallerFile -ArgumentList "-oC:\$DevKitDirectoryName -y" -Wait
             Remove-Item -Path $InstallerFile
-            Set-Location -Path C:\$DirectoryName
-            ruby dk.rb init
+            Set-Location -Path C:\$DevKitDirectoryName
+            # ruby dk.rb init
+            "---`n- C:\$RubyDirectoryName`n" | Out-File -FilePath 'config.yml' -Encoding utf8
             ruby dk.rb install
         }
     }
