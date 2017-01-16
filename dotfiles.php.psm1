@@ -19,6 +19,24 @@ function BehatBehat {
 }
 New-Alias -Name behat -Value BehatBehat
 
+function GetGravGrav {
+    if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath grav)) {
+        Invoke-Expression -Command "php $Path $args"
+    } else {
+        Write-Warning -Message "Grav CLI Application is not available from this directory."
+    }
+}
+New-Alias -Name grav -Value GetGravGrav
+
+function GetGravGPM {
+    if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath gpm)) {
+        Invoke-Expression -Command "php $Path $args"
+    } else {
+        Write-Warning -Message "Grav Package Manager is not available from this directory."
+    }
+}
+New-Alias -Name gpm -Value GetGravGPM
+
 function LaravelArtisan {
     if (Test-Path -Path artisan) {
         Invoke-Expression -Command "php artisan $args"
@@ -27,6 +45,21 @@ function LaravelArtisan {
     }
 }
 New-Alias -Name artisan -Value LaravelArtisan
+
+function PhpServerPhpServer {
+    Param(
+        [String]
+        $Hostname = 'localhost',
+        [Int16]
+        $Port = 80,
+        [String]
+        $RouterScript = ''
+    )
+    $Uri = "${Hostname}:$Port"
+    OpenUri -Uri "http://$Uri"
+    Invoke-Expression -Command "php -S $Uri $RouterScript"
+}
+New-Alias -Name phpserver -Value PhpServerPhpServer
 
 function PHPUnitPHPUnit {
     if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath phpunit)) {

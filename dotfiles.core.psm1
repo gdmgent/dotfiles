@@ -416,6 +416,7 @@ function InstallPhp {
             $ConfigFile = Get-Content -Path C:\php\php.ini-development
             $Replacements = @(
                 'extension=php_curl.dll'
+                'extension=php_gd2.dll'
                 'extension=php_mbstring.dll'
                 'extension=php_openssl.dll'
                 'extension=php_pdo_sqlite.dll'
