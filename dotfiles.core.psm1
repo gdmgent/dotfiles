@@ -691,13 +691,15 @@ function CloneProject {
     Param(
         [Parameter(Mandatory=$true)]
         [String]
+        $Service = 'github.com/gdmgent',
+        [String]
         $Name,
         [String]
         $DestinationName
     )
     $DestinationName = $DestinationName.ToLower()
     SetLocationPathCode
-    git clone https://github.com/gdmgent/$Name $DestinationName
+    git clone https://$Service/$Name $DestinationName
     if ($DestinationName) {
         SetLocationPathCode $DestinationName
     } else {
