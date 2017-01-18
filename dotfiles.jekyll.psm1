@@ -19,7 +19,7 @@ function JekyllServe {
         $Directory = (Get-Item -Path .).Name
         $Uri = "http://127.0.0.1:4000/$Directory/"
         OpenUri -Uri $Uri.Replace('utl_', '')
-        Invoke-Expression -Command "jekyll serve $args"
+        Invoke-Expression -Command "bundle exec jekyll serve $args"
     }
 }
 New-Alias -Name js -Value JekyllServe

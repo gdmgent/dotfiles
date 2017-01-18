@@ -153,9 +153,9 @@ function InstallBrew {
 function InstallBundler {
     Write-Host 'Using Ruby Gem to install the Bundler Gem...'
     gem install bundler
-    if (Get-Command bundler -ErrorAction SilentlyContinue) {
+    if (Get-Command bundle -ErrorAction SilentlyContinue) {
         Write-Host 'Installed version of Bundler: ' -NoNewline
-        bundler --version
+        bundle --version
     } else {
         Write-Warning -Message 'Bundler was not installed.'
     }
@@ -628,7 +628,7 @@ function UninstallRuby {
         }
     } elseif ($IsWindows) {
         Write-Host 'Uninstalling Ruby...'
-        Remove-Item -Path @('C:\DevKit', 'C:\Ruby22-x64') -Recurse -Force
+        Remove-Item -Path @('C:\DevKit', 'C:\Ruby23-x64') -Recurse -Force
     }
 }
 
@@ -642,8 +642,8 @@ function UpdateBrew {
 function UpdateBundler {
     $File = 'Gemfile'
     if (Test-Path $File) {
-        if (Get-Command bundler -ErrorAction SilentlyContinue) {
-            bundler update
+        if (Get-Command bundle -ErrorAction SilentlyContinue) {
+            bundle update
             gem cleanup
         } else {
             Write-Warning -Message 'Bundler Ruby Gem is not installed. Run InstallBundler.'
