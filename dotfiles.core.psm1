@@ -691,11 +691,11 @@ function CloneProject {
     Param(
         [Parameter(Mandatory=$true)]
         [String]
-        $Service = 'github.com/gdmgent',
-        [String]
         $Name,
         [String]
-        $DestinationName
+        $DestinationName,
+        [String]
+        $Service = 'github.com/gdmgent'
     )
     $DestinationName = $DestinationName.ToLower()
     SetLocationPathCode
