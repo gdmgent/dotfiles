@@ -106,3 +106,14 @@ function ShowNodeConfig {
     }
     Write-Host '.'
 }
+
+function WebpackCommand {
+    if (Test-Path -Path ($Path = [io.path]::combine('.', 'node_modules', '.bin', 'webpack'))) {
+        Invoke-Expression -Command "$Path $args"    
+    } elseif (ExistCommand -Name webpack) {
+        Invoke-Expression -Command ((Get-Command -Name webpack -Type Application).Source + " $args")
+    } else {
+        Write-Warning -Message "Webpack is not available from this directory, nor is it installed globally."
+    }
+}
+New-Alias -Name webpack -Value WebpackCommand

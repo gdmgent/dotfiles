@@ -1,4 +1,4 @@
-function BehatBehat {
+function BehatCommand {
     if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath behat)) {
         if ($IsWindows) {
             Invoke-Expression -Command "$Path $args"
@@ -17,36 +17,36 @@ function BehatBehat {
         Write-Warning -Message "Behat is not available from this directory, nor is it installed globally."
     }
 }
-New-Alias -Name behat -Value BehatBehat
+New-Alias -Name behat -Value BehatCommand
 
-function GetGravGrav {
+function GravCommand {
     if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath grav)) {
         Invoke-Expression -Command "php $Path $args"
     } else {
         Write-Warning -Message "Grav CLI Application is not available from this directory."
     }
 }
-New-Alias -Name grav -Value GetGravGrav
+New-Alias -Name grav -Value GravCommand
 
-function GetGravGPM {
+function GravGPMCommand {
     if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath gpm)) {
         Invoke-Expression -Command "php $Path $args"
     } else {
         Write-Warning -Message "Grav Package Manager is not available from this directory."
     }
 }
-New-Alias -Name gpm -Value GetGravGPM
+New-Alias -Name gpm -Value GravGPMCommand
 
-function LaravelArtisan {
+function LaravelArtisanCommand {
     if (Test-Path -Path artisan) {
         Invoke-Expression -Command "php artisan $args"
     } else {
         Write-Warning -Message "Laravel Artisan Console is not available from this directory."
     }
 }
-New-Alias -Name artisan -Value LaravelArtisan
+New-Alias -Name artisan -Value LaravelArtisanCommand
 
-function PhpServerPhpServer {
+function PhpServerCommand {
     Param(
         [String]
         $Hostname = 'localhost',
@@ -59,9 +59,9 @@ function PhpServerPhpServer {
     OpenUri -Uri "http://$Uri"
     Invoke-Expression -Command "php -S $Uri $RouterScript"
 }
-New-Alias -Name phpserver -Value PhpServerPhpServer
+New-Alias -Name phpserver -Value PhpServerCommand
 
-function PHPUnitPHPUnit {
+function PHPUnitCommand {
     if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath phpunit)) {
         if ($IsWindows) {
             Invoke-Expression -Command "$Path $args"
@@ -80,9 +80,9 @@ function PHPUnitPHPUnit {
         Write-Warning -Message "PHPUnit is not available from this directory, nor is it installed globally."
     }
 }
-New-Alias -Name phpunit -Value PHPUnitPHPUnit
+New-Alias -Name phpunit -Value PHPUnitCommand
 
-function SymfonyConsole {
+function SymfonyConsoleCommand {
     if (Test-Path -Path ($PathBin = Join-Path -Path bin -ChildPath console)) {
         # Symfony 3.*.*
         Invoke-Expression -Command "php $PathBin $args"
@@ -93,4 +93,4 @@ function SymfonyConsole {
         Write-Warning -Message "Symfony Console is not available from this directory."
     }
 }
-New-Alias -Name console -Value SymfonyConsole
+New-Alias -Name console -Value SymfonyConsoleCommand
