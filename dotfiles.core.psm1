@@ -1,6 +1,19 @@
 Set-Variable -Name DotfilesConfigPath -Value (Join-Path -Path $Home -ChildPath .dotfiles | Join-Path -ChildPath config.json) -Option Constant -Scope Global -ErrorAction SilentlyContinue
 Set-Variable -Name DotfilesVersion -Value (Get-Content -Path (Join-Path -Path $Global:DotfilesInstallPath -ChildPath VERSION) | Select-Object -First 1 -Skip 1) -Option Constant -Scope Global -ErrorAction SilentlyContinue
 
+function ExistCommand {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [String]
+        $Name
+    )
+    return [bool](Get-Command -Name $Name -CommandType Application -ErrorAction SilentlyContinue)
+}
+
+function RemoveError {
+    $Error.Remove($Error[$Error.Count - 1])
+}
+
 # Config Functions
 # ----------------
 
@@ -131,10 +144,10 @@ function FindConnectionListeningOn {
 
 function InstallArtestead {
     Write-Host 'Installing Artestead (Artevelde Laravel Homestead)...'
-    if (Get-Command vagrant -ErrorAction SilentlyContinue) {
+    if (ExistCommand -Name vagrant) {
         vagrant plugin install vagrant-hostsupdater
     }
-    if (Get-Command cgr -ErrorAction SilentlyContinue) {
+    if (ExistCommand -Name cgr) {
         cgr gdmgent/artestead
     }
 }
@@ -142,7 +155,7 @@ function InstallArtestead {
 function InstallBrew {
     Write-Host 'Using Ruby to install Homebrew...'
     sh -c 'ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\"'
-    if (Get-Command brew -ErrorAction SilentlyContinue) {
+    if (ExistCommand -Name brew) {
         Write-Host 'Installed version of Homebrew: ' -NoNewline
         brew --version
     } else {
@@ -153,7 +166,7 @@ function InstallBrew {
 function InstallBundler {
     Write-Host 'Using Ruby Gem to install the Bundler Gem...'
     gem install bundler
-    if (Get-Command bundle -ErrorAction SilentlyContinue) {
+    if (ExistCommand -Name bundle) {
         Write-Host 'Installed version of Bundler: ' -NoNewline
         bundle --version
     } else {
@@ -165,7 +178,7 @@ function InstallComposer {
     if ($IsOSX) {
         Write-Host 'Using PHP to install Composer...'
         sh -c 'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer'
-        if (Get-Command bundler -ErrorAction SilentlyContinue) {
+        if (ExistCommand -Name bundler) {
             Write-Host 'Installed version of Composer: ' -NoNewline
             composer --version
         } else {
@@ -187,21 +200,18 @@ function InstallComposer {
 
 function InstallComposerCgr {
     Write-Host 'Using Composer to install CGR (Composer Global Require)...'
-    if (Get-Command composer -ErrorAction SilentlyContinue) {
-        composer global require consolidation/cgr
-    } else {
+    if (!(ExistCommand -Name composer)) {
         InstallComposer
     }
-    
+    composer global require consolidation/cgr
 }
 
 function InstallComposerPrestissimo {
     Write-Host 'Using Composer to install Prestissimo...'
-    if (Get-Command composer -ErrorAction SilentlyContinue) {
-        composer global require hirak/prestissimo
-    } else {
+    if (!(ExistCommand -Name composer)) {
         InstallComposer
     }
+    composer global require hirak/prestissimo
 }
 
 function InstallFontFiraCode {
@@ -330,7 +340,7 @@ function InstallGit {
             Remove-Item -Path $InstallerFile
         }
     }
-    if (Get-Command git -ErrorAction SilentlyContinue) {
+    if (ExistCommand -Name git) {
             git config --global credential.helper wincred
             Write-Host 'Installed version of Git: ' -NoNewline
             git --version
@@ -340,7 +350,7 @@ function InstallGit {
 }
 
 function InstallGitIgnoreGlobal {
-    if (Get-Command git -ErrorAction SilentlyContinue) {
+    if (!(ExistCommand -Name git)) {
         InstallGit
     }
     Write-Host 'Installing GitIgnore Global...'
@@ -429,7 +439,7 @@ function InstallPhp {
             Set-Content -Path (Join-Path -Path $DestinationPath -ChildPath 'php.ini') -Value $ConfigFile
         }
     }
-    if (Get-Command php -ErrorAction SilentlyContinue) {
+    if (ExistCommand -Name php) {
         Write-Host 'Installed version of PHP: ' -NoNewline
         php -v
     }
@@ -516,10 +526,10 @@ function InstallRuby {
             ruby dk.rb install
         }
     }
-    if (Get-Command ruby -ErrorAction SilentlyContinue) {
+    if (ExistCommand -Name ruby) {
         Write-Host 'Installed version of Ruby: ' -NoNewline
         ruby --version
-        if (Get-Command gem -ErrorAction SilentlyContinue) {
+        if (ExistCommand -Name gem) {
             Write-Host 'Installed version of Gem: ' -NoNewline
             gem --version
         }
@@ -623,7 +633,7 @@ function UninstallBrew {
 function UninstallRuby {
     if ($IsOSX) {
         Write-Host 'Using Homebrew to uninstall Ruby...'
-        if (Get-Command brew -ErrorAction SilentlyContinue) {
+        if (ExistCommand -Name brew) {
             brew uninstall ruby
         }
     } elseif ($IsWindows) {
@@ -634,7 +644,7 @@ function UninstallRuby {
 
 function UpdateBrew {
     Write-Host 'Updating Homebrew...'
-    if ($IsOSX -and (Get-Command brew -ErrorAction SilentlyContinue)) {
+    if ($IsOSX -and (ExistCommand -Name brew)) {
         sh -c 'brew update && brew upgrade && brew cleanup'
     }
 }
@@ -642,7 +652,7 @@ function UpdateBrew {
 function UpdateBundler {
     $File = 'Gemfile'
     if (Test-Path $File) {
-        if (Get-Command bundle -ErrorAction SilentlyContinue) {
+        if (ExistCommand -Name bundle) {
             bundle update
             gem cleanup
         } else {
@@ -659,10 +669,10 @@ function UpdateComposer {
         $Force
     )
     Write-Host 'Updating Composer and CGR installed packages...'
-    if (Get-Command composer -ErrorAction SilentlyContinue) {
+    if (ExistCommand -Name composer) {
         composer self-update
         composer global update
-        if (Get-Command cgr -ErrorAction SilentlyContinue) {
+        if (ExistCommand -Name cgr) {
             $Packages                 = @{}
             $Packages['drush']        = 'drush/drush'
             $Packages['php-cs-fixer'] = 'friendsofphp/php-cs-fixer'

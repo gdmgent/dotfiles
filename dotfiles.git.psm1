@@ -13,6 +13,10 @@ function GitCheckoutMaster {
 }
 New-Alias -Name master -Value GitCheckoutMaster
 
+function GitFixProtocol {
+    git config --global url."https://".insteadOf git://
+}
+
 function GitPull {
     Param (
         [Switch]

@@ -11,7 +11,7 @@ function BehatBehat {
         } else {
             Invoke-Expression -Command "php $Path $args"
         }
-    } elseif (Get-Command behat -Type Application -ErrorAction SilentlyContinue) {
+    } elseif (ExistCommand -Name behat) {
         Invoke-Expression -Command ((Get-Command -Name behat -Type Application).Source + " $args")
     } else {
         Write-Warning -Message "Behat is not available from this directory, nor is it installed globally."
@@ -74,7 +74,7 @@ function PHPUnitPHPUnit {
         } else {
             Invoke-Expression -Command "php $Path $args"
         }
-    } elseif (Get-Command phpunit -Type Application -ErrorAction SilentlyContinue) {
+    } elseif (ExistCommand -Name phpunit) {
         Invoke-Expression -Command ((Get-Command -Name phpunit -Type Application).Source + " $args")
     } else {
         Write-Warning -Message "PHPUnit is not available from this directory, nor is it installed globally."

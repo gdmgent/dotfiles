@@ -4,7 +4,7 @@ function GetLongList {
 New-Alias -Name ll -Value GetLongList
 
 function OpenHostsFile {
-    if (Get-Command code -ErrorAction SilentlyContinue) {
+    if (ExistCommand -Name code) {
         if ($IsOSX) {
             sudo code /etc/hosts
         } elseif ($IsWindows) {

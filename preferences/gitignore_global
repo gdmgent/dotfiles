@@ -37,9 +37,13 @@ Desktop.ini
 ehthumbs.db
 Thumbs.db
 
-# JetBrains PhpStorm #
-######################
+# JetBrains #
+#############
 .idea/
+
+# Visual Studio Code #
+######################
+.vscode/
 
 # .NET #
 ########
