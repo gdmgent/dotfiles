@@ -17,6 +17,10 @@ function JekyllServe {
         [Alias('i')]
         $Incremental,
 
+        [Switch]
+        [Alias('o')]
+        $Open,
+
         [Int]
         [ValidateRange(4000,4999)]
         [Alias('p')]
@@ -29,7 +33,6 @@ function JekyllServe {
     if (IsJekyllSite) {
         $Directory = (Get-Item -Path .).Name
         $Uri = "http://127.0.0.1:$Port/$Directory/"
-        # OpenUri -Uri $Uri.Replace('utl_', '')
         $Command = "bundle exec jekyll serve --port=$Port"
         if ($Code) {
             code .
@@ -42,6 +45,9 @@ function JekyllServe {
         }
         if ($Incremental) {
             $Command += ' --incremental'
+        }
+        if ($Open) {
+            OpenUri -Uri $Uri.Replace('utl_', '')
         }
         if ($Unpublished) {
             $Command += ' --unpublished'
