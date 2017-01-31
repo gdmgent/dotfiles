@@ -22,9 +22,9 @@ function JekyllServe {
         $Open,
 
         [Int]
-        [ValidateRange(4000,4999)]
+        [ValidateRange(0,999)]
         [Alias('p')]
-        $Port = 4000,
+        $PortOffset = 0,
 
         [Switch]
         [Alias('r')]
@@ -35,6 +35,7 @@ function JekyllServe {
         $Unpublished
     )
     if (IsJekyllSite) {
+        $Port = 4000 + $PortOffset
         $Command = "bundle exec jekyll serve --port=$Port"
         if ($Code) {
             code .

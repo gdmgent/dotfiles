@@ -341,9 +341,9 @@ function InstallGit {
         }
     }
     if (ExistCommand -Name git) {
-            git config --global credential.helper wincred
-            Write-Host 'Installed version of Git: ' -NoNewline
-            git --version
+        git config --global credential.helper wincred
+        Write-Host 'Installed version of Git: ' -NoNewline
+        git --version
     } else {
         Write-Warning -Message 'Git was not installed.'
     }
