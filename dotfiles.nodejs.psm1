@@ -21,6 +21,14 @@ function InitNode {
     }
 }
 
+function InstallNode {
+    if ($IsOSX) {
+        nvm install stable
+    } elseif ($IsWindows) {
+        nvm install latest
+    }
+}
+
 function UseNode4 {
     $NodeVersion = 4
     if ($IsOSX) {
