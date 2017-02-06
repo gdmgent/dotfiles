@@ -28,7 +28,7 @@ Pop-Location
 Set-Location -Path $HOME
 
 if (!$Error) {
-    # Clear-Host
+    Clear-Host
 }
 
 Dotfiles
