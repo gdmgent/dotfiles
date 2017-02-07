@@ -723,11 +723,14 @@ function CloneSyllabus {
         [String]
         $Name,
         [String]
-        $DestinationName
+        $DestinationName,
+        [Switch]
+        $Master
     )
+    $Branch = if ($Master) { 'master' } else { 'gh-pages' }
     $DestinationName = $DestinationName.ToLower()
     SetLocationPathSyllabi
-    git clone https://github.com/gdmgent/$Name --branch gh-pages --single-branch $DestinationName
+    git clone https://github.com/gdmgent/$Name --branch $Branch --single-branch $DestinationName
     if ($DestinationName) {
         SetLocationPathSyllabi $DestinationName
     } else {
@@ -761,7 +764,7 @@ function PullSyllabi {
     )
     Push-Location
     SetLocationPathSyllabi
-    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)' }
+    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)|.github.io$' }
     foreach ($Directory in $Directories) {
         Push-Location $Directory
         if (Test-Path -Path .git) {
@@ -783,7 +786,7 @@ function PullSyllabi {
 function PushSyllabi {
     Push-Location
     SetLocationPathSyllabi
-    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)' }
+    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)|.github.io$' }
     foreach ($Directory in $Directories) {
         Push-Location $Directory
         if (Test-Path -Path .git) {
@@ -800,7 +803,7 @@ function PushSyllabi {
 function StatusSyllabi {
     Push-Location
     SetLocationPathSyllabi
-    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)' }
+    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)|.github.io$' }
     foreach ($Directory in $Directories) {
         Push-Location $Directory
         if (Test-Path -Path .git) {
