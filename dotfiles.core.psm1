@@ -84,9 +84,8 @@ function SetEnvironment {
 
         # Last
         $Path += @(
-            "$HOME/.composer/vendor/bin",
-            # "$HOME/.yarn-config/global/node_modules/.bin"
-            "$HOME/.config/yarn/global/node_modules/.bin"
+            "$HOME/.config/yarn/global/node_modules/.bin",
+            "$HOME/.composer/vendor/bin"
         )
 
         [System.Environment]::SetEnvironmentVariable('PATH', $Path -join ':')
