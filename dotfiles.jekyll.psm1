@@ -2,17 +2,21 @@ function JekyllServe {
     [CmdletBinding(PositionalBinding=$false)]
     Param(
         [Switch]
+        [Alias('a')]
+        $AtomEditor,
+
+        [Switch]
         [Alias('c')]
-        $Code,
-        
+        $CodeEditor,
+
         [Switch]
         [Alias('d')]
         $Drafts,
-        
+
         [Switch]
         [Alias('f')]
         $Future,
-        
+
         [Switch]
         [Alias('i')]
         $Incremental,
@@ -37,7 +41,10 @@ function JekyllServe {
     if (IsJekyllSite) {
         $Port = 4000 + $PortOffset
         $Command = "bundle exec jekyll serve --port=$Port"
-        if ($Code) {
+        if ($AtomEditor) {
+            atom .
+        }
+        if ($CodeEditor) {
             code .
         }
         if ($Drafts) {
@@ -53,7 +60,7 @@ function JekyllServe {
             if (!$OpenRoot) {
                 $Directory = (Get-Item -Path .).Name.Replace('utl_', '') + '/'
             }
-            OpenUri -Uri "http://127.0.0.1:$Port/$Directory"
+            OpenUri -Uri "http://localhost:$Port/$Directory"
         }
         if ($Unpublished) {
             $Command += ' --unpublished'
