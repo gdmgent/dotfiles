@@ -460,7 +460,7 @@ function InstallPowerShell {
             Remove-Item -Path $InstallerFile
        }
     } elseif ($IsWindows) {
-        $OS = 'win10-win2k16-x64.msi$'
+        $OS = 'win10-win2016-x64.msi$'
         $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
         $Urn = 'powershell-win10-x64.msi'
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
