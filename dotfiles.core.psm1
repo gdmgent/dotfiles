@@ -523,7 +523,7 @@ function InstallRuby {
             Set-Location -Path C:\$DevKitDirectoryName
             # ruby dk.rb init
             "---`n- C:\$RubyDirectoryName`n" | Out-File -FilePath 'config.yml' -Encoding utf8
-            ruby dk.rb install
+            Invoke-Expression -Command "C:\$RubyDirectoryName\bin\ruby.exe dk.rb install"
         }
     }
     if (ExistCommand -Name ruby) {
