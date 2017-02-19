@@ -46,12 +46,12 @@ function LaravelArtisanCommand {
 }
 New-Alias -Name artisan -Value LaravelArtisanCommand
 
-function PhpServerCommand {
+function PhpServeCommand {
     Param(
         [String]
         $Hostname = 'localhost',
         [Int16]
-        $Port = 80,
+        $Port = 8080,
         [String]
         $RouterScript = ''
     )
@@ -59,7 +59,7 @@ function PhpServerCommand {
     OpenUri -Uri "http://$Uri"
     Invoke-Expression -Command "php -S $Uri $RouterScript"
 }
-New-Alias -Name phpserver -Value PhpServerCommand
+New-Alias -Name phpserve -Value PhpServeCommand
 
 function PHPUnitCommand {
     if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath phpunit)) {

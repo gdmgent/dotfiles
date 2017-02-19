@@ -51,7 +51,11 @@ function WriteConfig([String] $Name, [String] $Value) {
 }
 
 function SetEnvironment {
+    $Locale = 'nl_BE.UTF-8'
     if ($IsOSX) {
+        [System.Environment]::SetEnvironmentVariable('LANG', $Locale)
+        [System.Environment]::SetEnvironmentVariable('LC_ALL', $Locale)
+
         $Path = @()
 
         # First
@@ -152,14 +156,16 @@ function InstallArtestead {
     }
 }
 
-function InstallBrew {
-    Write-Host 'Using Ruby to install Homebrew...'
-    sh -c 'ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\"'
-    if (ExistCommand -Name brew) {
-        Write-Host 'Installed version of Homebrew: ' -NoNewline
-        brew --version
-    } else {
-        Write-Warning -Message 'Homebrew was not installed.'
+if ($IsOSX) {
+    function InstallBrew {
+        Write-Host 'Using Ruby to install Homebrew...'
+        sh -c 'ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\"'
+        if (ExistCommand -Name brew) {
+            Write-Host 'Installed version of Homebrew: ' -NoNewline
+            brew --version
+        } else {
+            Write-Warning -Message 'Homebrew was not installed.'
+        }
     }
 }
 
@@ -388,16 +394,18 @@ function InstallNvm {
     }
 }
 
-function InstallOhMyZsh {
-    if ($IsOSX) {
-        Write-Host 'Using Homebrew to install Zsh...'
-        sh -c 'brew install zsh'
-        Write-Host 'Installed version of Zsh: ' -NoNewline
-        zsh --version
-        Write-Host 'Using Bash to install Oh-My-Zsh...'
-        sh -c '$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)'
-    } else {
-        Write-Warning -Message 'This is for macOS only.'
+if ($IsWindows) {
+    function InstallOhMyZsh {
+        if ($IsOSX) {
+            Write-Host 'Using Homebrew to install Zsh...'
+            sh -c 'brew install zsh'
+            Write-Host 'Installed version of Zsh: ' -NoNewline
+            zsh --version
+            Write-Host 'Using Bash to install Oh-My-Zsh...'
+            sh -c '$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)'
+        } else {
+            Write-Warning -Message 'This is for macOS only.'
+        }
     }
 }
 
@@ -625,9 +633,11 @@ function RemoveAndroidStudio {
     }
 }
 
-function UninstallBrew {
-    Write-Host 'Using Ruby to uninstall Homebrew...'
-    sh -c 'ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)\"'
+if ($IsOSX) {
+    function UninstallBrew {
+        Write-Host 'Using Ruby to uninstall Homebrew...'
+        sh -c 'ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)\"'
+    }
 }
 
 function UninstallRuby {
@@ -642,10 +652,12 @@ function UninstallRuby {
     }
 }
 
-function UpdateBrew {
-    Write-Host 'Updating Homebrew...'
-    if ($IsOSX -and (ExistCommand -Name brew)) {
-        sh -c 'brew update && brew upgrade && brew cleanup'
+if ($IsOSX) {
+    function UpdateBrew {
+        Write-Host 'Updating Homebrew...'
+        if ($IsOSX -and (ExistCommand -Name brew)) {
+            sh -c 'brew update && brew upgrade && brew cleanup'
+        }
     }
 }
 
