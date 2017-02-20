@@ -367,6 +367,13 @@ function InstallGitIgnoreGlobal {
     }
 }
 
+function InstallHyperPreferences {
+    Write-Host 'Installing Hyper.js preferences...'
+    $FileName = '.hyper.js'
+    $HyperSource = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath ($(if ($IsOSX) { 'mac' } elseif ($IsWindows) { 'win' }) + $FileName)
+    Copy-Item -Path $HyperSource -Destination (Join-Path -Path $HOME -ChildPath $FileName)
+}
+
 function InstallNvm {
     if ($IsOSX) {
         Write-Host 'Using Homebrew to install Node Version Manager...'
