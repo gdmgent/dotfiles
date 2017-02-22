@@ -16,10 +16,10 @@ module.exports = {
     foregroundColor: '#fff',
 
     // terminal background color
-    backgroundColor: '#333',
+    backgroundColor: 'rgba(33, 33 , 33, .7)',
 
     // border color (window, tabs)
-    borderColor: '#333',
+    borderColor: '#444',
 
     // custom css to embed in the main window
     css: '',

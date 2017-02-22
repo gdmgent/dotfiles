@@ -16,10 +16,10 @@ module.exports = {
     foregroundColor: '#fff',
 
     // terminal background color
-    backgroundColor: '#333',
+    backgroundColor: 'rgba(33, 33 , 33, .7)',
 
     // border color (window, tabs)
-    borderColor: '#333',
+    borderColor: '#444',
 
     // custom css to embed in the main window
     css: '',
@@ -66,7 +66,7 @@ module.exports = {
     // make sure to use a full path if the binary name doesn't work
     // (e.g `C:\\Windows\\System32\\bash.exe` instad of just `bash.exe`)
     // if you're using powershell, make sure to remove the `--login` below
-    shell: '/usr/bin/powershell',
+    shell: '/usr/local/bin/powershell',
 
     // for setting shell arguments (i.e. for using interactive shellArgs: ['-i'])
     // by default ['--login'] will be used
