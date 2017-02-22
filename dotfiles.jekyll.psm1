@@ -28,7 +28,7 @@ function JekyllServe {
         [Int]
         [ValidateRange(0,999)]
         [Alias('p')]
-        $PortOffset = 0,
+        $PortOffset,
 
         [Switch]
         [Alias('r')]
@@ -39,8 +39,7 @@ function JekyllServe {
         $Unpublished
     )
     if (IsJekyllSite) {
-        $Port = 4000 + $PortOffset
-        $Command = "bundle exec jekyll serve --port=$Port"
+        $Command = "bundle exec jekyll serve"
         if ($AtomEditor) {
             atom .
         }
@@ -56,14 +55,24 @@ function JekyllServe {
         if ($Incremental) {
             $Command += ' --incremental'
         }
+        if ($PortOffset) {
+            $Port = 4000 + $PortOffset
+            $Command +=  " --port=$Port"
+        }
+        if ($Unpublished) {
+            $Command += ' --unpublished'
+        }
         if ($Open -or $OpenRoot) {
             if (!$OpenRoot) {
                 $Directory = (Get-Item -Path .).Name.Replace('utl_', '') + '/'
             }
+            if (!$PortOffset) {
+                $Port = (Get-Content -Path ./_config.yml | Select-String -Pattern '^port\s*:\s*(\d+)$') -replace '^port\s*:\s*', ''
+                if (!$Port) {
+                    $Port = 4000;
+                }
+            }
             OpenUri -Uri "http://localhost:$Port/$Directory"
-        }
-        if ($Unpublished) {
-            $Command += ' --unpublished'
         }
         Invoke-Expression -Command $Command
     }
