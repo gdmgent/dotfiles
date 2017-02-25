@@ -723,12 +723,15 @@ function CloneProject {
         $Name,
         [String]
         $DestinationName,
+        [ValidateSet('bitbucket.org','github.com','gitlab.com')]
         [String]
-        $Service = 'github.com/gdmgent'
+        $Service = 'github.com',
+        [String]
+        $Account = 'gdmgent'
     )
     $DestinationName = $DestinationName.ToLower()
     SetLocationPathCode
-    git clone https://$Service/$Name $DestinationName
+    git clone https://$Service/$Account/$Name $DestinationName
     if ($DestinationName) {
         SetLocationPathCode $DestinationName
     } else {
@@ -743,13 +746,18 @@ function CloneSyllabus {
         $Name,
         [String]
         $DestinationName,
+        [ValidateSet('github.com','gitlab.com')]
+        [String]
+        $Service = 'github.com',
+        [String]
+        $Account = 'gdmgent',
         [Switch]
         $Master
     )
     $Branch = if ($Master) { 'master' } else { 'gh-pages' }
     $DestinationName = $DestinationName.ToLower()
     SetLocationPathSyllabi
-    git clone https://github.com/gdmgent/$Name --branch $Branch --single-branch $DestinationName
+    git clone https://github.com/$Service/$Account/$Name --branch $Branch --single-branch $DestinationName
     if ($DestinationName) {
         SetLocationPathSyllabi $DestinationName
     } else {
