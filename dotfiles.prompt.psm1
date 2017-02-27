@@ -7,7 +7,7 @@ function PromptGit {
         $Branch = (git status | Select-Object -First 1) -replace 'On branch|\s'
         if ($IsWindows) {
             $StatusColor = if ((git status --branch --short | Measure-Object).Count -gt 1) { 'Red' } else { 'Green' }
-            Write-Host 'Git(' -NoNewline
+            Write-Host "$([char]::ConvertFromUtf32(0x26A1)) (" -NoNewline
             Write-Host $Branch -NoNewline -ForegroundColor $StatusColor
             Write-Host ') ' -NoNewline
         } else {
