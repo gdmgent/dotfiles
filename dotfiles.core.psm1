@@ -772,7 +772,7 @@ function CloneSyllabus {
     $Branch = if ($Master) { 'master' } else { 'gh-pages' }
     $DestinationName = $DestinationName.ToLower()
     SetLocationPathSyllabi
-    git clone https://github.com/$Service/$Account/$Name --branch $Branch --single-branch $DestinationName
+    git clone https://$Service/$Account/$Name --branch $Branch --single-branch $DestinationName
     if ($DestinationName) {
         SetLocationPathSyllabi $DestinationName
     } else {
