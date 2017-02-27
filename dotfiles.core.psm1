@@ -17,6 +17,13 @@ function RemoveError {
 # Config Functions
 # ----------------
 
+if ($IsWindows) {
+    function FindIp {
+        ipconfig | Select-String -Pattern '10.5.128.\d+$'
+    }
+    New-Alias -Name ip -Value FindIp
+}
+
 function InitConfig {
     if (Test-Path $Global:DotfilesConfigPath) {
         Write-Host 'Reading config file...'
