@@ -379,7 +379,7 @@ function InstallHyperPreferences {
     $FileName = '.hyper.js'
     $SourcePath = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath $FileName
     $DestinationPath = Join-Path -Path $HOME -ChildPath $FileName
-    if ($IsMacOS) {
+    if ($IsOSX) {
         $Command = (Get-Command -Name powershell).Source
     } elseif ($IsWindows) {
         $Command = (Get-Command -Name powershell).Source -replace '\\', '\\' # replaces \ with \\
