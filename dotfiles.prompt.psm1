@@ -5,8 +5,15 @@ function PromptColors {
 function PromptGit {
     if (Test-Path -Path '.git') {
         $Branch = (git status | Select-Object -First 1) -replace 'On branch|\s'
-        $Status = if ((git status --branch --short | Measure-Object).Count -gt 1) { '!' } else { '' }
-        return "Git($Branch)$Status "
+        if ($IsWindows) {
+            $StatusColor = if ((git status --branch --short | Measure-Object).Count -gt 1) { 'Red' } else { 'Green' }
+            Write-Host 'Git(' -NoNewline
+            Write-Host $Branch -NoNewline -ForegroundColor $StatusColor
+            Write-Host ') ' -NoNewline
+        } else {
+            $Status = if ((git status --branch --short | Measure-Object).Count -gt 1) { '!' } else { '' }
+            return "($Branch)$Status "
+        }
     }
 }
 
