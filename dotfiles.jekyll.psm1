@@ -74,7 +74,7 @@ function JekyllServe {
             }
             OpenUri -Uri "http://localhost:$Port/$Directory"
         }
-        Invoke-Expression -Command $Command
+        Invoke-Expression -Command "Clear-Host;$Command"
     }
 }
 New-Alias -Name js -Value JekyllServe

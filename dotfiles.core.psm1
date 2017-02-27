@@ -377,8 +377,16 @@ function InstallGitIgnoreGlobal {
 function InstallHyperPreferences {
     Write-Host 'Installing Hyper.js preferences...'
     $FileName = '.hyper.js'
-    $HyperSource = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath ($(if ($IsOSX) { 'mac' } elseif ($IsWindows) { 'win' }) + $FileName)
-    Copy-Item -Path $HyperSource -Destination (Join-Path -Path $HOME -ChildPath $FileName)
+    $SourcePath = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath $FileName
+    $DestinationPath = Join-Path -Path $HOME -ChildPath $FileName
+    if ($IsMacOS) {
+        $Command = (Get-Command -Name powershell).Source
+    } elseif ($IsWindows) {
+        $Command = (Get-Command -Name powershell).Source -replace '\\', '\\' # replaces \ with \\
+    }
+    Copy-Item -Path $SourcePath -Destination $DestinationPath
+    $FileContent = (Get-Content -Path $DestinationPath).Replace("shell: 'powershell',", "shell: '$Command',")
+    Set-Content -Path $DestinationPath -Value $FileContent
 }
 
 function InstallNvm {
