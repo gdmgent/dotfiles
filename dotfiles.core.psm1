@@ -784,7 +784,14 @@ function NewSyllabus {
     Param(
         [Parameter(Mandatory=$true)]
         [String]
-        $Name
+        $Name,
+        [ValidateSet('github.com','gitlab.com')]
+        [String]
+        $Service = 'github.com',
+        [String]
+        $Account = 'gdmgent',
+        [Switch]
+        $Master
     )
     $Name = $Name.ToLower()
     SetLocationPathSyllabi
@@ -792,7 +799,7 @@ function NewSyllabus {
     Set-Location -Path $Name
     git init
     git checkout -b gh-pages
-    git remote add origin https://github.com/gdmgent/$Name.git
+    git remote add origin https://$Service/$Account/$Name.git
     New-Item -Path README.md -ItemType File
     git add .
     git commit -m [WIP]
