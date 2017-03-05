@@ -8,7 +8,7 @@ Tips
 
  - [Download][Hack Download] and install [Hack][] typeface.
 
-©2016 [Artevelde University College Ghent][] [Bachelor of Graphic and Digital Media][]
+© 2017 [Artevelde University College Ghent][] [Bachelor of Graphic and Digital Media][]
 
 [Artevelde Dotfiles]:                       http://www.gdm.gent/dotfiles
 [Artevelde University College Ghent]:       http://www.arteveldeuniversitycollege.be
