@@ -617,17 +617,23 @@ function OpenUri {
 }
 
 function RemoveLocalArtestead {
-    $File = 'Artestead.yaml'
-    if (Test-Path -Path $File) {
+    $File = 'Artestead'
+    if ((Test-Path -Path "$File.json") -or (Test-Path -Path "$File.yaml")) {
         Write-Host 'Removing Local Artestead...'
-        $ToRemove = @($File, $File+'.example')
+        $ToRemove = @(
+            "$File.json",
+            "$File.json.example",
+            "$File.yaml",
+            "$File.yaml.example"
+        )
         if (Test-Path -Path Vagrantfile) {
             vagrant destroy
             $ToRemove += @('.vagrant', 'Vagrantfile')
         }
         $ToRemove += @(
             '.gitignore',
-            '*.sh',
+            'after.sh',
+            'aliases.sh',
             'composer.*',
             'vendor'
         )
