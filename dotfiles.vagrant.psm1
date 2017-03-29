@@ -156,7 +156,10 @@ function VagrantWebsite {
     )
     if (HasVagrantfile) {
         $Protocol = if ($Secure) { 'https://' } else { 'http://' }
-        OpenUri -Uri ($Protocol + (Get-Item -Path .).Name.Replace('.local', '') + '.local')
+        $Tld = '.local'
+        $Hostname = (Get-Item -Path .).Name + $Tld -replace "(${Tld})+", $Tld -replace '[^A-Za-z0-9-\.]', '-'
+
+        OpenUri -Uri ($Protocol + $Hostname)
     }
 }
 New-Alias -Name vw -Value VagrantWebsite
