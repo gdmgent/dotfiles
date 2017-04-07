@@ -32,7 +32,7 @@ function SetLocationPathCode {
     Param()
     DynamicParam {
         $Path = Join-Path -Path $HOME -ChildPath Code
-        if (!(Test-Path -Path $Path)) {
+        if (! (Test-Path -Path $Path)) {
             New-Item -Path $Path -ItemType Directory
         }
         try {
@@ -65,7 +65,7 @@ function SetLocationPathHome {
     Param()
     DynamicParam {
         $Path = $HOME
-        if (!(Test-Path -Path $Path)) {
+        if (! (Test-Path -Path $Path)) {
             New-Item -Path $Path -ItemType Directory
         }
         try {
@@ -98,7 +98,7 @@ function SetLocationPathSyllabi {
     Param()
     DynamicParam {
         $Path = Join-Path -Path $HOME -ChildPath Syllabi
-        if (!(Test-Path -Path $Path)) {
+        if (! (Test-Path -Path $Path)) {
             New-Item -Path $Path -ItemType Directory
         }
         try {

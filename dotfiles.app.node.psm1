@@ -113,3 +113,5 @@ function WebpackCommand {
     }
 }
 New-Alias -Name webpack -Value WebpackCommand
+
+InitNode

@@ -213,7 +213,7 @@ function InstallComposer {
 
 function InstallComposerCgr {
     Write-Host 'Using Composer to install CGR (Composer Global Require)...'
-    if (!(ExistCommand -Name composer)) {
+    if (! (ExistCommand -Name composer)) {
         InstallComposer
     }
     composer global require consolidation/cgr
@@ -221,7 +221,7 @@ function InstallComposerCgr {
 
 function InstallComposerPrestissimo {
     Write-Host 'Using Composer to install Prestissimo...'
-    if (!(ExistCommand -Name composer)) {
+    if (! (ExistCommand -Name composer)) {
         InstallComposer
     }
     composer global require hirak/prestissimo
@@ -363,7 +363,7 @@ function InstallGit {
 }
 
 function InstallGitIgnoreGlobal {
-    if (!(ExistCommand -Name git)) {
+    if (! (ExistCommand -Name git)) {
         InstallGit
     }
     Write-Host 'Installing GitIgnore Global...'
@@ -416,6 +416,13 @@ function InstallNvm {
     }
 }
 
+if ($IsOSX) {
+    function InstallMySQL {
+        Write-Host 'Using Homebrew to install MySQL Server...'
+        sh -c 'brew install mysql'
+    }
+}
+
 if ($IsWindows) {
     function InstallOhMyZsh {
         if ($IsOSX) {
@@ -445,7 +452,7 @@ function InstallPhp {
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
         if (Test-Path -Path $OutFile) {
             $DestinationPath = 'C:\php'
-            if ((Test-Path -Path $DestinationPath) -and !(Test-Path -Path "$DestinationPath.bak")) {
+            if ((Test-Path -Path $DestinationPath) -and ! (Test-Path -Path "$DestinationPath.bak")) {
                 Write-Host "Making a backup of previously installed version..."
                 Move-Item -Path $DestinationPath -Destination "$DestinationPath.bak"
             }
@@ -740,3 +747,5 @@ function SearchDotfilesCommands {
 function X {
     exit
 }
+
+InitConfig

@@ -48,7 +48,7 @@ function SetProxy {
     $flag = ReadConfig -Name Proxy
     Write-Host ' Artevelde University College Ghent proxyserver settings. ' -BackgroundColor Blue -ForegroundColor White
 
-    if (!$State) {
+    if (! $State) {
         ShowProxy
     } else {
         WriteConfig -Name Proxy -Value $State
@@ -139,3 +139,5 @@ end tell
         OpenUri -Uri 'ms-settings:network-proxy'
     }
 }
+
+InitProxy

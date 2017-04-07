@@ -2,32 +2,43 @@ Set-Variable -Name DotfilesInstallPath -Value (Split-Path -Path $MyInvocation.My
 
 Push-Location -Path $Global:DotfilesInstallPath
 
-Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.core.psm1); InitConfig
-Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.path.psm1)
-Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.prompt.psm1)
-Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.proxysettings.psm1); InitProxy
-# Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.proxy.psm1)
-Import-Module ./dotfiles.nodejs.psm1; InitNode
-if (ExistCommand -Name git) {
-    Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.git.psm1)
-} else { RemoveError }
-if (ExistCommand -Name jekyll) {
-    Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.jekyll.psm1)
-} else { RemoveError }
-if (ExistCommand -Name php) {
-    Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.php.psm1)
-} else { RemoveError }
-if (ExistCommand -Name vagrant) {
-    Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.vagrant.psm1)
-} else { RemoveError }
+$Modules = @(
+    'core'
+    'path'
+    'prompt'
+    'proxy'
+)
+foreach ($Module in $Modules) {
+    Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.$Module.psm1);
+}
+
+$Applications = @(
+    'git'
+    'jekyll'
+    'mysql'
+    'node'
+    'php'
+    'vagrant'
+)
+foreach ($Application in $Applications) {
+    if (ExistCommand -Name $Application) {
+        Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.app.$Application.psm1)
+    } else { 
+        RemoveError 
+    }
+}
+
 if (ExistCommand -Name git) {
     git pull
-} else { RemoveError }
+} else {
+    RemoveError
+}
+
 Pop-Location
 
 Set-Location -Path $HOME
 
-if (!$Error) {
+if (! $Error) {
     Clear-Host
 }
 

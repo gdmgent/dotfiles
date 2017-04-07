@@ -63,12 +63,12 @@ function JekyllServe {
             $Command += ' --unpublished'
         }
         if ($Open -or $OpenRoot) {
-            if (!$OpenRoot) {
+            if (! $OpenRoot) {
                 $Directory = (Get-Item -Path .).Name.Replace('utl_', '') + '/'
             }
-            if (!$PortOffset) {
+            if (! $PortOffset) {
                 $Port = (Get-Content -Path ./_config.yml | Select-String -Pattern '^port\s*:\s*(\d+)$') -replace '^port\s*:\s*', ''
-                if (!$Port) {
+                if (! $Port) {
                     $Port = 4000;
                 }
             }

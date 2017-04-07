@@ -107,7 +107,7 @@ function VagrantShareName {
         $Name
     )
     if (HasVagrantfile) {
-        if (!$Name) {
+        if (! $Name) {
             $Name = (Get-Item -Path .).Name.Replace('.local', '')
         }
         vagrant share --name $Name
