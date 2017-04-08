@@ -628,14 +628,102 @@ function OpenUri {
     Param(
         [Parameter(Mandatory=$true)]
         [String]
-        $Uri
+        $Uri,
+
+        [Switch]
+        [Alias('b')]
+        $Blisk,
+
+        [Switch]
+        [Alias('c')]
+        $Chrome,
+
+        [Switch]
+        [Alias('cx')]
+        $ChromeCanary,
+
+        [Switch]
+        [Alias('e')]
+        $Edge,
+
+        [Switch]
+        [Alias('f')]
+        $Firefox,
+
+        [Switch]
+        [Alias('fx')]
+        $FirefoxDeveloperEdition,
+
+        [Switch]
+        [Alias('o')]
+        $Opera,
+
+        [Switch]
+        [Alias('ox')]
+        $OperaDeveloper,
+
+        [Switch]
+        [Alias('s')]
+        $Safari,
+
+        [Switch]
+        [Alias('sx')]
+        $SafariTechnologyPreview,
+
+        [Switch]
+        [Alias('v')]
+        $Vivaldi
     )
+    $Command = ''
     if ($IsOSX) {
-        Invoke-Expression -Command "open $Uri"
+        $Command ="open $Uri"
+        if ($Blisk) {
+            $Command += ' -a Blisk'
+        } elseif ($Chrome) {
+            $Command += ' -a "Google Chrome"'
+        } elseif ($ChromeCanary) {
+            $Command += ' -a "Google Chrome Canary"'
+        } elseif ($Firefox) {
+            $Command += ' -a Firefox'
+        } elseif ($FirefoxDeveloperEdition) {
+            $Command += ' -a FirefoxDeveloperEdition'
+        } elseif ($Opera) {
+            $Command += ' -a Opera'
+        } elseif ($OperaDeveloper) {
+            $Command += ' -a "Opera Developer"'
+        } elseif ($Safari) {
+            $Command += ' -a Safari'
+        } elseif ($SafariTechnologyPreview) {
+            $Command += ' -a "Safari Technology Preview"'
+        } elseif ($Vivaldi) {
+            $Command += ' -a Vivaldi'
+        }
     } elseif ($IsWindows) {
-        Invoke-Expression -Command "cmd.exe /C 'start $Uri'"
+        $Command = "cmd.exe /C 'start"
+        if ($Blisk) {
+            $Command += ' blisk'
+        } elseif ($Chrome) {
+            $Command += ' chrome"'
+        } elseif ($ChromeCanary) {
+            $Command += ' chrome'
+        } elseif ($Edge) {
+            $Command += ' edge'
+        } elseif ($Firefox) {
+            $Command += ' firefox'
+        } elseif ($FirefoxDeveloperEdition) {
+            $Command += ' firefox'
+        } elseif ($Opera) {
+            $Command += ' opera'
+        } elseif ($OperaDeveloper) {
+            $Command += ' opera'
+        } elseif ($Vivaldi) {
+            $Command += ' vivaldi'
+        }
+        $Command += " $Uri'"
     }
+    Invoke-Expression -Command $Command
 }
+New-Alias -Name o -Value OpenUri
 
 function RemoveLocalArtestead {
     $File = 'Artestead'
