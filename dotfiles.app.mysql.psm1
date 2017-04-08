@@ -1,3 +1,8 @@
+function MySQLAliases {
+    Get-Alias -Name my*
+}
+New-Alias -Name my -Value MySQLAliases
+
 function MySQLStart {
     mysql.server start
 }

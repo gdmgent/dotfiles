@@ -575,6 +575,20 @@ function InstallRuby {
     }
 }
 
+if ($IsOSX) {
+    function InstallValet {
+        Write-Host 'Using CGR to install Laravel Valet...'
+        cgr laravel/valet
+        if (ExistCommand -Name valet) {
+            Write-Host 'Installed version of Laravel Valet: ' -NoNewline
+            valet --version
+            valet install
+        } else {
+            Write-Warning -Message 'Laravel Valet was not installed.'
+        }
+    }
+}
+
 function InstallVisualStudioCode {
     if ($IsOSX) {
         # Fixes a PowerShell extension in Visual Studio Code
@@ -668,6 +682,13 @@ function RemoveAndroidStudio {
     }
 }
 
+function UninstallArtestead {
+    Write-Host 'Using CGR to uninstall Artestead...'
+    if ((ExistCommand -Name cgr) -and (ExistCommand -Name artestead)) {
+        cgr remove gdmgent/artestead
+    }
+}
+
 if ($IsOSX) {
     function UninstallBrew {
         Write-Host 'Using Ruby to uninstall Homebrew...'
@@ -688,9 +709,18 @@ function UninstallRuby {
 }
 
 if ($IsOSX) {
+    function UninstallValet {
+        Write-Host 'Using CGR to uninstall Laravel Valet...'
+        if ((ExistCommand -Name cgr) -and (ExistCommand -Name valet)) {
+            cgr remove laravel/valet
+        }
+    }
+}
+
+if ($IsOSX) {
     function UpdateBrew {
         Write-Host 'Updating Homebrew...'
-        if ($IsOSX -and (ExistCommand -Name brew)) {
+        if (ExistCommand -Name brew) {
             sh -c 'brew update && brew upgrade && brew cleanup'
         }
     }
@@ -719,21 +749,7 @@ function UpdateComposer {
     if (ExistCommand -Name composer) {
         composer self-update
         composer global update
-        if (ExistCommand -Name cgr) {
-            $Packages                 = @{}
-            $Packages['drush']        = 'drush/drush'
-            $Packages['php-cs-fixer'] = 'friendsofphp/php-cs-fixer'
-            $Packages['artestead']    = 'gdmgent/artestead'
-            $Packages['laravel']      = 'laravel/installer'
-            $Packages['psysh']        = 'psy/psysh'
-            $Packages['symfony']      = 'symfony/symfony-installer'
-            $Packages['wp']           = 'wp-cli/wp-cli'
-            foreach ($Package in $Packages.GetEnumerator()) {
-                if ($Force -or (Get-Command $Package.Key -ErrorAction SilentlyContinue)) {
-                    cgr $Package.Value
-                }
-            }
-        }
+        cgr update
     } else {
         Write-Warning -Message 'Composer is not installed. Run InstallComposer or InstallComposerCgr.'
     }
