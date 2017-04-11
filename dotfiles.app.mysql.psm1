@@ -8,10 +8,20 @@ function MySQLStart {
 }
 New-Alias -Name myon -Value MySQLStart
 
+function MySQLStartService {
+    brew services start mysql
+}
+New-Alias -Name myonserv -Value MySQLStartService
+
 function MySQLStop {
     mysql.server stop
 }
 New-Alias -Name myoff -Value MySQLStop
+
+function MySQLStopService {
+    brew services stop mysql
+}
+New-Alias -Name myoffserv -Value MySQLStopService
 
 function MySQLStatus {
     mysql.server status
