@@ -631,6 +631,9 @@ function OpenUri {
         $Uri,
 
         [Switch]
+        $Secure,
+
+        [Switch]
         [Alias('b')]
         $Blisk,
 
@@ -674,6 +677,13 @@ function OpenUri {
         [Alias('v')]
         $Vivaldi
     )
+    if (! ($Uri -match '^http(s)?://')) {
+        $Protocol = 'http';
+        if ($Secure) {
+            $Protocol += 's' 
+        }
+        $Uri = $Protocol + '://' + $Uri
+    }
     $Command = ''
     if ($IsOSX) {
         $Command ="open $Uri"
@@ -703,7 +713,7 @@ function OpenUri {
         if ($Blisk) {
             $Command += ' blisk'
         } elseif ($Chrome) {
-            $Command += ' chrome"'
+            $Command += ' chrome'
         } elseif ($ChromeCanary) {
             $Command += ' chrome'
         } elseif ($Edge) {
