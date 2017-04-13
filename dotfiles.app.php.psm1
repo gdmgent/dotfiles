@@ -45,6 +45,7 @@ function LaravelArtisanCommand {
     }
 }
 New-Alias -Name artisan -Value LaravelArtisanCommand
+New-Alias -Name art -Value LaravelArtisanCommand
 
 function PhpServeCommand {
     Param(
