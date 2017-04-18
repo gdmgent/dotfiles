@@ -627,6 +627,7 @@ function OpenUri {
         $Uri,
 
         [Switch]
+        [Alias('https')]
         $Secure,
 
         [Switch]
@@ -680,9 +681,8 @@ function OpenUri {
         }
         $Uri = $Protocol + '://' + $Uri
     }
-    $Command = ''
     if ($IsOSX) {
-        $Command ="open $Uri"
+        $Command = "open $Uri"
         if ($Blisk) {
             $Command += ' -a Blisk'
         } elseif ($Chrome) {
@@ -704,30 +704,33 @@ function OpenUri {
         } elseif ($Vivaldi) {
             $Command += ' -a Vivaldi'
         }
+        Invoke-Expression -Command $Command
     } elseif ($IsWindows) {
-        $Command = "cmd.exe /C 'start"
         if ($Blisk) {
-            $Command += ' blisk'
+            $Browser = 'blisk.exe'
         } elseif ($Chrome) {
-            $Command += ' chrome'
+            $Browser = "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe"
         } elseif ($ChromeCanary) {
-            $Command += ' chrome'
+            $Browser = "$HOME\AppData\Local\Google\Chrome SxS\Application\chrome.exe"
         } elseif ($Edge) {
-            $Command += ' edge'
+            $Command = "microsoft-edge:$Uri"
         } elseif ($Firefox) {
-            $Command += ' firefox'
+            $Browser = "${env:ProgramFiles}\Mozilla Firefox\firefox.exe"
         } elseif ($FirefoxDeveloperEdition) {
-            $Command += ' firefox'
-        } elseif ($Opera) {
-            $Command += ' opera'
-        } elseif ($OperaDeveloper) {
-            $Command += ' opera'
+            $Browser = "${env:ProgramFiles}\Firefox Developer Edition\firefox.exe"
+         } elseif ($Opera) {
+             $Browser = "${env:ProgramFiles(x86)}\Opera\launcher.exe"
+         } elseif ($OperaDeveloper) {
+             $Browser = "${env:ProgramFiles(x86)}\Opera developer\launcher.exe"
         } elseif ($Vivaldi) {
-            $Command += ' vivaldi'
+            $Browser = 'vivaldi.exe'
         }
-        $Command += " $Uri'"
+        if ($Browser) {
+            Start-Process -FilePath $Browser -ArgumentList $Uri
+        } else {
+            Start-Process -FilePath $Command
+        }
     }
-    Invoke-Expression -Command $Command
 }
 New-Alias -Name o -Value OpenUri
 
