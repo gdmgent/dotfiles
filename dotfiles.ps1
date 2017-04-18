@@ -23,15 +23,15 @@ $Applications = @(
 foreach ($Application in $Applications) {
     if (ExistCommand -Name $Application) {
         Import-Module -Name (Join-Path -Path . -ChildPath dotfiles.app.$Application.psm1)
-    } else { 
-        RemoveError 
+    } else {
+        $Error.RemoveAt(0)
     }
 }
 
 if (ExistCommand -Name git) {
     git pull
 } else {
-    RemoveError
+    $Error.RemoveAt(0)
 }
 
 Pop-Location

@@ -10,10 +10,6 @@ function ExistCommand {
     return [bool](Get-Command -Name $Name -CommandType Application -ErrorAction SilentlyContinue)
 }
 
-function RemoveError {
-    $Error.Remove($Error[$Error.Count - 1])
-}
-
 # Config Functions
 # ----------------
 
