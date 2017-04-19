@@ -846,7 +846,12 @@ function UpdateComposer {
     if (ExistCommand -Name composer) {
         composer self-update
         composer global update
-        cgr update
+        if (ExistCommand -Name cgr) {
+            cgr update
+        } else {
+            Write-Warning -Message 'CGR (Composer Global Require) is not installed. Run InstallComposerCgr.'
+        }
+    
     } else {
         Write-Warning -Message 'Composer is not installed. Run InstallComposer or InstallComposerCgr.'
     }
