@@ -376,9 +376,9 @@ function InstallHyperPreferences {
     $SourcePath = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath $FileName
     $DestinationPath = Join-Path -Path $HOME -ChildPath $FileName
     if ($IsOSX) {
-        $Command = (Get-Command -Name powershell).Source
+        $Command = (Get-Command -Name powershell -CommandType Application).Source
     } elseif ($IsWindows) {
-        $Command = (Get-Command -Name powershell).Source -replace '\\', '\\' # replaces \ with \\
+        $Command = (Get-Command -Name powershell -CommandType Application | Select-Object -Last 1).Source -replace '\\', '\\' # replaces \ with \\
     }
     Copy-Item -Path $SourcePath -Destination $DestinationPath
     $FileContent = (Get-Content -Path $DestinationPath).Replace("shell: 'powershell',", "shell: '$Command',")
