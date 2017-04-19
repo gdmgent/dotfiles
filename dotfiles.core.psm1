@@ -723,11 +723,13 @@ function OpenUri {
          } elseif ($OperaDeveloper) {
              $Browser = "${env:ProgramFiles(x86)}\Opera developer\launcher.exe"
         } elseif ($Vivaldi) {
-            $Browser = 'vivaldi.exe'
+             $Browser = 'vivaldi.exe'
+        } else {
+            $Command = $Uri;
         }
         if ($Browser) {
             Start-Process -FilePath $Browser -ArgumentList $Uri
-        } else {
+        } elseif ($Command) {
             Start-Process -FilePath $Command
         }
     }
