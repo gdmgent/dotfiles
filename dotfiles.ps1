@@ -14,6 +14,7 @@ foreach ($Module in $Modules) {
 
 $Applications = @(
     'git'
+    'hotel'
     'jekyll'
     'mysql'
     'node'

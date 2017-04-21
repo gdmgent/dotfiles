@@ -370,6 +370,13 @@ function InstallGitIgnoreGlobal {
     }
 }
 
+function InstallHotel {
+    Write-Host 'Installing Hotel...'
+    if (ExistCommand -Name yarn) {
+        yarn global add hotel
+    }
+}
+
 function InstallHyperPreferences {
     Write-Host 'Installing Hyper.js preferences...'
     $FileName = '.hyper.js'
