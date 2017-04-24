@@ -1,5 +1,9 @@
 function GitAdd {
-    git add .
+    Param(
+        [String]
+        $Files = '.'
+    )
+    git add $Files
 }
 New-Alias -Name add -Value GitAdd
 
@@ -12,6 +16,19 @@ function GitCheckoutMaster {
     git checkout master
 }
 New-Alias -Name master -Value GitCheckoutMaster
+
+function GitCommit {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [String]
+        $Message,
+        [ValidateSet('CHORE','ENHANCEMENT','FEATURE','FIX','REFACTOR','TEST','STYLE')]
+        [String]
+        $Type = "WIP"
+    )
+    git commit -m "[$Type] $Message"
+}
+New-Alias -Name commit -Value GitCommit
 
 function GitFixProtocol {
     git config --global url."https://".insteadOf git://
