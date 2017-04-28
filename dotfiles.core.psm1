@@ -99,6 +99,7 @@ function SetEnvironment {
     } elseif ($IsWindows) {
         $Path = [System.Environment]::GetEnvironmentVariable('Path') -split ';'
         $Path += @(
+            'C:\cygwin64\bin',
             "$HOME\AppData\Roaming\Composer\vendor\bin",
             'C:\php',
             'C:\Program Files (x86)\Yarn\bin',
@@ -469,7 +470,9 @@ function InstallPhp {
                 'extension=php_gd2.dll'
                 'extension=php_mbstring.dll'
                 'extension=php_openssl.dll'
+                'extension=php_pdo_mysql.dll'
                 'extension=php_pdo_sqlite.dll'
+                'extension=php_sqlite3.dll'
             )
             foreach ($Replacement in $Replacements) {
                 $ConfigFile = $ConfigFile.Replace(";$Replacement", $Replacement)
