@@ -95,3 +95,16 @@ function SymfonyConsoleCommand {
     }
 }
 New-Alias -Name console -Value SymfonyConsoleCommand
+
+function XdebugCliConfig {
+    $Settings = @(
+        "remote_connect_back=0"
+        "remote_enable=1"
+        "remote_host=127.0.0.1"
+        "remote_mode=req"
+        "remote_port=9000"
+    ) -join " "
+
+    $env:XDEBUG_CONFIG = $Settings
+}
+XdebugCliConfig

@@ -3,6 +3,7 @@ Set-Variable -Name DotfilesInstallPath -Value (Split-Path -Path $MyInvocation.My
 Push-Location -Path $Global:DotfilesInstallPath
 
 $Modules = @(
+    'apps'
     'core'
     'path'
     'prompt'
