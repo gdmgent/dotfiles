@@ -5,21 +5,49 @@ if ($IsOSX) {
 }
 
 function AddJekyllToHotel {
-    Invoke-Expression -Command "hotel add 'bundle exec jekyll serve --port=${HotelPort} --baseurl='"
+    Param(
+        [String]
+        $Name
+    )
+    if ($Name) {
+        $Name = " --name $Name"
+    }
+    Invoke-Expression -Command "hotel add 'bundle exec jekyll serve --port=${HotelPort} --baseurl='$Name"
 }
 New-Alias -Name hj -Value AddJekyllToHotel
 
 function AddLaravelToHotel {
-    Invoke-Expression -Command "hotel add 'php artisan serve --port=${HotelPort}'"
+    Param(
+        [String]
+        $Name
+    )
+    if ($Name) {
+        $Name = " --name $Name"
+    }
+    Invoke-Expression -Command "hotel add 'php artisan serve --port=${HotelPort}'$Name"
 }
 New-Alias -Name hl -Value AddLaravelToHotel
 
 function AddPhpToHotel {
-    Invoke-Expression -Command "hotel add 'php -S localhost:${HotelPort}'"
+    Param(
+        [String]
+        $Name
+    )
+    if ($Name) {
+        $Name = " --name $Name"
+    }
+    Invoke-Expression -Command "hotel add 'php -S localhost:${HotelPort}'$Name"
 }
 New-Alias -Name hp -Value AddPhpToHotel
 
 function AddSymfonyToHotel {
-    Invoke-Expression -Command "hotel add 'php bin/console server:start 127.0.0.1:${HotelPort}'"
+    Param(
+        [String]
+        $Name
+    )
+    if ($Name) {
+        $Name = " --name $Name"
+    }
+    Invoke-Expression -Command "hotel add 'php bin/console server:start 127.0.0.1:${HotelPort}'$Name"
 }
 New-Alias -Name hs -Value AddSymfonyToHotel
