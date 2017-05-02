@@ -1,5 +1,6 @@
 function BehatCommand {
-    if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath behat)) {
+    $Command = 'behat'
+    if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
         if ($IsWindows) {
             Invoke-Expression -Command "$Path $args"
         } else {
@@ -11,37 +12,62 @@ function BehatCommand {
         } else {
             Invoke-Expression -Command "php $Path $args"
         }
-    } elseif (ExistCommand -Name behat) {
-        Invoke-Expression -Command ((Get-Command -Name behat -Type Application).Source + " $args")
+    } elseif (ExistCommand -Name $Command) {
+        Invoke-Expression -Command (((Get-Command -Name $Command -Type Application).Source | Select-Object -first 1) + " $args")
     } else {
-        Write-Warning -Message "Behat is not available from this directory, nor is it installed globally."
+        Write-Warning -Message 'Behat is not available from this directory, nor is it installed globally.'
     }
 }
 New-Alias -Name behat -Value BehatCommand
 
+function DrushCommand {
+    $Command = 'drush'
+    if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
+        if ($IsWindows) {
+            Invoke-Expression -Command "$Path --nocolor $args"
+        } else {
+            Invoke-Expression -Command "php $Path $args"
+        }
+    } elseif (Test-Path -Path ($Path = Join-Path -Path vendor -ChildPath $Path)) {
+        if ($IsWindows) {
+            Invoke-Expression -Command "$Path --nocolor $args"
+        } else {
+            Invoke-Expression -Command "php $Path $args"
+        }
+    } elseif (ExistCommand -Name $Command) {
+        Invoke-Expression -Command (((Get-Command -Name $Command -Type Application).Source | Select-Object -first 1) + " --nocolor $args")
+    } else {
+        Write-Warning -Message 'Drush is not available from this directory, nor is it installed globally.'
+    }
+}
+New-Alias -Name drush -Value DrushCommand
+
 function GravCommand {
-    if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath grav)) {
+    $Command = 'grav'
+    if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
         Invoke-Expression -Command "php $Path $args"
     } else {
-        Write-Warning -Message "Grav CLI Application is not available from this directory."
+        Write-Warning -Message 'Grav CLI Application is not available from this directory.'
     }
 }
 New-Alias -Name grav -Value GravCommand
 
 function GravGPMCommand {
-    if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath gpm)) {
+    $Command = 'gpm'
+    if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
         Invoke-Expression -Command "php $Path $args"
     } else {
-        Write-Warning -Message "Grav Package Manager is not available from this directory."
+        Write-Warning -Message 'Grav Package Manager is not available from this directory.'
     }
 }
 New-Alias -Name gpm -Value GravGPMCommand
 
 function LaravelArtisanCommand {
-    if (Test-Path -Path artisan) {
-        Invoke-Expression -Command "php artisan $args"
+    $Command = 'artisan'
+    if (Test-Path -Path $Command) {
+        Invoke-Expression -Command "php $Command $args"
     } else {
-        Write-Warning -Message "Laravel Artisan Console is not available from this directory."
+        Write-Warning -Message 'Laravel Artisan Console is not available from this directory.'
     }
 }
 New-Alias -Name artisan -Value LaravelArtisanCommand
@@ -63,7 +89,8 @@ function PhpServeCommand {
 New-Alias -Name phpserve -Value PhpServeCommand
 
 function PHPUnitCommand {
-    if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath phpunit)) {
+    $Command = 'phpunit'
+    if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
         if ($IsWindows) {
             Invoke-Expression -Command "$Path $args"
         } else {
@@ -75,23 +102,24 @@ function PHPUnitCommand {
         } else {
             Invoke-Expression -Command "php $Path $args"
         }
-    } elseif (ExistCommand -Name phpunit) {
-        Invoke-Expression -Command ((Get-Command -Name phpunit -Type Application).Source + " $args")
+    } elseif (ExistCommand -Name $Command) {
+        Invoke-Expression -Command ((Get-Command -Name $Command -Type Application).Source + " $args")
     } else {
-        Write-Warning -Message "PHPUnit is not available from this directory, nor is it installed globally."
+        Write-Warning -Message 'PHPUnit is not available from this directory, nor is it installed globally.'
     }
 }
 New-Alias -Name phpunit -Value PHPUnitCommand
 
 function SymfonyConsoleCommand {
-    if (Test-Path -Path ($PathBin = Join-Path -Path bin -ChildPath console)) {
+    $Command = 'console'
+    if (Test-Path -Path ($PathBin = Join-Path -Path bin -ChildPath $Command)) {
         # Symfony 3.*.*
         Invoke-Expression -Command "php $PathBin $args"
-    } elseif (Test-Path -Path ($PathApp = Join-Path -Path app -ChildPath console)) {
+    } elseif (Test-Path -Path ($PathApp = Join-Path -Path app -ChildPath $Command)) {
         # Symfony 2.*.*
         Invoke-Expression -Command "php $PathApp $args"
     } else {
-        Write-Warning -Message "Symfony Console is not available from this directory."
+        Write-Warning -Message 'Symfony Console is not available from this directory.'
     }
 }
 New-Alias -Name console -Value SymfonyConsoleCommand

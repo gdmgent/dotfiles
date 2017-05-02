@@ -39,12 +39,7 @@ function InstallComposer {
     if ($IsOSX) {
         Write-Host 'Using PHP to install Composer...'
         sh -c 'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer'
-        if (ExistCommand -Name bundler) {
-            Write-Host 'Installed version of Composer: ' -NoNewline
-            composer --version
-        } else {
-            Write-Warning -Message 'Composer was not installed.'
-        }
+        
     } elseif ($IsWindows) {
         Write-Host 'Downloading Composer installer...'
         $Urn = 'Composer-Setup.exe'
@@ -53,9 +48,15 @@ function InstallComposer {
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path -Path $InstallerFile) {
             Write-Host 'Running Composer Installer...'
-            Invoke-Expression -Command $InstallerFile
+            Start-Process -FilePath $InstallerFile -Wait
             Remove-Item -Path $InstallerFile
         }
+    }
+    if (ExistCommand -Name composer) {
+        Write-Host 'Installed version of Composer: ' -NoNewline
+        composer --version
+    } else {
+        Write-Warning -Message 'Composer was not installed.'
     }
 }
 
@@ -338,7 +339,16 @@ function InstallPhp {
             }
             # Adding CA Root Certificates for SSL
             $ConfigFile = $ConfigFile.Replace(';openssl.cafile=', 'openssl.cafile=' + $Global:DotfilesInstallPath + '\ssl\cacert.pem')
-            Set-Content -Path (Join-Path -Path $DestinationPath -ChildPath 'php.ini') -Value $ConfigFile
+            Set-Content -Path ($ConfigFilePath = Join-Path -Path $DestinationPath -ChildPath 'php.ini') -Value $ConfigFile
+            # Xdebug
+            Write-Host 'Downloading Xdebug for PHP...'
+            $Url = 'https://xdebug.org'
+            $RelativeUrl = ((Invoke-WebRequest -Uri "$Url/download.php").Links | Where-Object { $_.href -match "/php_xdebug-\d.\d.\d-$Version-vc14-nts-x86_64.dll$" } | Select-Object -First 1).href
+            $Uri = "$Url/$RelativeUrl"
+            $OutFile = 'C:\php\ext\php_xdebug.dll'
+            Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+            Write-Host 'Configuring PHP to use Xdebug...'
+            Add-Content -Path $ConfigFilePath -Value "`nzend_extension = C:\php\ext\php_xdebug.dll"
         }
     }
     if (ExistCommand -Name php) {
