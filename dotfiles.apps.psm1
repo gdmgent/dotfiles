@@ -66,6 +66,11 @@ function InstallComposerCgr {
         InstallComposer
     }
     composer global require consolidation/cgr
+    if (ExistCommand -Name cgr) {
+        Write-Host 'CGR is installed.'
+    } else {
+        Write-Warning -Message 'CGR was not installed.'
+    }
 }
 
 function InstallComposerPrestissimo {
@@ -225,8 +230,15 @@ function InstallGitIgnoreGlobal {
 
 function InstallHotel {
     Write-Host 'Installing Hotel...'
-    if (ExistCommand -Name yarn) {
-        yarn global add hotel
+    if (! (ExistCommand -Name yarn)) {
+        InstallYarn
+    }
+    yarn global add hotel
+    if (ExistCommand -Name hotel) {
+        Write-Host 'Installed version of Hotel: ' -NoNewline
+        hotel --version
+    } else {
+        Write-Warning -Message 'Hotel was not installed.'
     }
 }
 
@@ -249,8 +261,7 @@ function InstallNvm {
     if ($IsOSX) {
         Write-Host 'Using Homebrew to install Node Version Manager...'
         sh -c 'brew install nvm'
-        Write-Host 'Installed version of NVM: ' -NoNewline
-        nvm --version
+
     } elseif ($IsWindows) {
         $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/coreybutler/nvm-windows/releases/latest
         $Version = $Response.name
@@ -269,6 +280,16 @@ function InstallNvm {
                 Remove-Item -Path $InstallerFile
             }
         }
+    }
+    if (ExistCommand -Name nvm) {
+        Write-Host 'Installed version of NVM: ' -NoNewline
+        if ($IsOSX) {
+            nvm --version
+        } elseif ($IsWindows) {
+            nvm version
+        }
+    } else {
+        Write-Warning -Message 'NVM is not correctly installed.'
     }
 }
 
@@ -354,6 +375,8 @@ function InstallPhp {
     if (ExistCommand -Name php) {
         Write-Host 'Installed version of PHP: ' -NoNewline
         php -v
+    } else {
+        Write-Warning -Message 'PHP is not correctly installed.'
     }
 }
 
@@ -495,7 +518,14 @@ function InstallYarn {
             Write-Host ' - [Finish]'
             Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i $InstallerFile" -Wait
             Remove-Item -Path $InstallerFile
+            
        }
+    }
+    if (ExistCommand -Name yarn) {
+        Write-Host 'Installed version of Yarn: ' -NoNewline
+        yarn --version
+    } else {
+        Write-Warning -Message 'Yarn is not correctly installed.'
     }
 }
 
