@@ -4,6 +4,18 @@ if ($IsOSX) {
     Set-Variable -Name HotelPort -Value '%PORT%' -Option Constant -Scope Global
 }
 
+function AddDrushToHotel {
+    Param(
+        [String]
+        $Name
+    )
+    if ($Name) {
+        $Name = " --name $Name"
+    }
+    Invoke-Expression -Command "hotel add 'drush runserver localhost:${HotelPort}'$Name"
+}
+New-Alias -Name hd -Value AddDrushToHotel
+
 function AddJekyllToHotel {
     Param(
         [String]
@@ -12,7 +24,7 @@ function AddJekyllToHotel {
     if ($Name) {
         $Name = " --name $Name"
     }
-    Invoke-Expression -Command "hotel add 'bundle exec jekyll serve --port=${HotelPort} --baseurl='$Name"
+    Invoke-Expression -Command "hotel add 'bundle exec jekyll serve --port=${HotelPort} --baseurl= --unpublished'$Name"
 }
 New-Alias -Name hj -Value AddJekyllToHotel
 
