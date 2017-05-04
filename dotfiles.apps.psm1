@@ -320,7 +320,7 @@ function InstallPhp {
     if ($IsOSX) {
         Write-Host "Using Homebrew to install PHP $Version..."
         $V = $Version.replace('.', '')
-        sh -c "brew tap homebrew/php && brew install php${V} php${V}-mcrypt php${V}-xdebug"
+        sh -c "brew tap homebrew/php && brew install php${V} php${V}-mcrypt php${V}-opcache php${V}-xdebug"
         $ConfigFilePath = "/usr/local/etc/php/${Version}/conf.d/ext-xdebug.ini"
         if (Test-Path -Path $ConfigFilePath) {
             $ConfigFile = Get-Content -Path $ConfigFilePath
@@ -361,6 +361,9 @@ function InstallPhp {
             # Adding CA Root Certificates for SSL
             $ConfigFile = $ConfigFile.Replace(';openssl.cafile=', 'openssl.cafile=' + $Global:DotfilesInstallPath + '\ssl\cacert.pem')
             Set-Content -Path ($ConfigFilePath = Join-Path -Path $DestinationPath -ChildPath 'php.ini') -Value $ConfigFile
+            # OPcache
+            Write-Host 'Configuring PHP to use OPcache...'
+            Add-Content -Path $ConfigFilePath -Value "`nzend_extension=C:\php\ext\php_opcache.dll"
             # Xdebug
             Write-Host 'Downloading Xdebug for PHP...'
             $Url = 'https://xdebug.org'
@@ -369,7 +372,7 @@ function InstallPhp {
             $OutFile = 'C:\php\ext\php_xdebug.dll'
             Invoke-WebRequest -Uri $Uri -OutFile $OutFile
             Write-Host 'Configuring PHP to use Xdebug...'
-            Add-Content -Path $ConfigFilePath -Value "`nzend_extension = C:\php\ext\php_xdebug.dll"
+            Add-Content -Path $ConfigFilePath -Value "`nzend_extension=C:\php\ext\php_xdebug.dll"
         }
     }
     if (ExistCommand -Name php) {
