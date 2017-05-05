@@ -124,6 +124,34 @@ function SymfonyConsoleCommand {
 }
 New-Alias -Name console -Value SymfonyConsoleCommand
 
+if (ExistCommand -Name composer) {
+    function UpdateComposer {
+        Param(
+            [Switch]
+            $Local
+        )
+        if ($Local) {
+            Write-Host 'Updating locally installed Composer packages...' -ForegroundColor Blue
+            $Directories = Get-ChildItem -Filter composer.json -Recurse | Where-Object { $_.Directory -notmatch 'vendor' } | Select-Object -Property Directory
+            foreach ($Directory in $Directories) {
+                Write-Host ('in ' + $Directory.Directory) -ForegroundColor  Magenta
+                Push-Location $Directory.Directory
+                composer update
+                Pop-Location
+            }
+        } else {
+            Write-Host 'Updating Composer...' -ForegroundColor Blue
+            composer self-update
+            Write-Host 'Updating globally installed Composer packages...' -ForegroundColor Blue
+            composer global update
+            if (ExistCommand -Name cgr) {
+                Write-Host 'Updating CGR installed Composer packages...' -ForegroundColor Blue
+                cgr update
+            }
+        }
+    }
+}
+
 function XdebugCliConfig {
     $Settings = @(
         "remote_connect_back=0"
