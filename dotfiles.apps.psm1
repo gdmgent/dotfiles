@@ -8,6 +8,8 @@ function InstallArtestead {
     }
     if (ExistCommand -Name cgr) {
         cgr gdmgent/artestead
+    } else {
+        Write-Warning -Message 'Run InstallComposerCgr and try again.'
     }
 }
 
@@ -222,10 +224,12 @@ function InstallGitIgnoreGlobal {
     }
     Write-Host 'Installing GitIgnore Global...'
     $GitIgnoreSource = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath 'gitignore_global'
-    $GitIgnoreDestination = Join-Path -Path $HOME -ChildPath '.gitignore_global'
-    if (Test-Path -Path $GitIgnoreSource) {
-        Copy-Item -Path $GitIgnoreSource -Destination $GitIgnoreDestination
-    }
+    git config --global core.excludesfile $GitIgnoreSource
+
+    # $GitIgnoreDestination = Join-Path -Path $HOME -ChildPath '.gitignore_global'
+    # if (Test-Path -Path $GitIgnoreSource) {
+    #     Copy-Item -Path $GitIgnoreSource -Destination $GitIgnoreDestination
+    # }
 }
 
 function InstallHotel {

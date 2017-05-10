@@ -30,9 +30,48 @@ function GitCommit {
 }
 New-Alias -Name commit -Value GitCommit
 
-function GitFixProtocol {
+function GitConfigFixProtocol {
     git config --global url."https://".insteadOf git://
 }
+
+function GitConfigIgnoreGlobal {
+    if (! (ExistCommand -Name git)) {
+        InstallGit
+    }
+    Write-Host 'Installing GitIgnore Global...'
+    $GitIgnoreSource = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath 'gitignore_global'
+    git config --global core.excludesfile $GitIgnoreSource
+
+    # $GitIgnoreDestination = Join-Path -Path $HOME -ChildPath '.gitignore_global'
+    # if (Test-Path -Path $GitIgnoreSource) {
+    #     Copy-Item -Path $GitIgnoreSource -Destination $GitIgnoreDestination
+    # }
+}
+
+function GitConfigProxyOff {
+    git config --global --unset http.proxy
+}
+
+function GitConfigProxyOn {
+    git config --global http.proxy "http://proxy.arteveldehs.be:8080"
+}
+
+function GitConfigUser {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [String]
+        $Email = "olivier.parent@arteveldehs.be",
+        [Parameter(Mandatory=$true)]
+        [String]
+        $User = "OlivierParent"
+    )
+    git config --global user.email $Email
+    git config --global user.name $User
+    if ($IsWindows) {
+        git config --global credential.helper wincred
+    }
+}
+
 
 function GitPull {
     Param (

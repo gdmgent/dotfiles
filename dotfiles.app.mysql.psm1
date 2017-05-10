@@ -29,7 +29,12 @@ function MySQLStatus {
 New-Alias -Name mysts -Value MySQLStatus
 
 function MySQLInitialize {
-    mysql --host=127.0.0.1 --user=root --execute="CREATE USER 'homestead'@'localhost' IDENTIFIED BY 'secret';GRANT ALL PRIVILEGES ON *.* TO 'homestead'@'localhost' WITH GRANT OPTION;"
+    $DbAdminUser = 'root'
+    $DbAdminPassword = 'secret'
+    $DbUser = 'homestead'
+    $DbPassword = 'secret'
+    [System.Environment]::SetEnvironmentVariable('MYSQL_PWD', $DbAdminPassword)
+    mysql --host=127.0.0.1 --user=$DbAdminUser --execute="CREATE USER IF NOT EXISTS '${DbUser}'@'localhost' IDENTIFIED BY '${DbPassword}'; GRANT ALL PRIVILEGES ON *.* TO '${DbUser}'@'localhost' WITH GRANT OPTION;"
 }
 New-Alias -Name myinit -Value MySQLInitialize
 
