@@ -97,7 +97,7 @@ function SetEnvironment {
             "$HOME/.composer/vendor/bin"
         )
 
-         [System.Environment]::SetEnvironmentVariable('Path', $EnvironmentPath -join ':')
+        [System.Environment]::SetEnvironmentVariable('PATH', $EnvironmentPath -join ':')
     } elseif ($IsWindows) {
         $EnvironmentPath = [System.Environment]::GetEnvironmentVariable('Path') -split ';'
         $EnvironmentPath += @(
