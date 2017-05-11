@@ -41,11 +41,6 @@ function GitConfigIgnoreGlobal {
     Write-Host 'Installing GitIgnore Global...'
     $GitIgnoreSource = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath 'gitignore_global'
     git config --global core.excludesfile $GitIgnoreSource
-
-    # $GitIgnoreDestination = Join-Path -Path $HOME -ChildPath '.gitignore_global'
-    # if (Test-Path -Path $GitIgnoreSource) {
-    #     Copy-Item -Path $GitIgnoreSource -Destination $GitIgnoreDestination
-    # }
 }
 
 function GitConfigProxyOff {
@@ -71,7 +66,6 @@ function GitConfigUser {
         git config --global credential.helper wincred
     }
 }
-
 
 function GitPull {
     Param (
@@ -119,18 +113,40 @@ function CloneProject {
         [String]
         $Service = 'github.com',
         [String]
-        $Account = 'gdmgent'
+        $Account = 'gdmgent',
+        [Switch]
+        $Student
     )
+    $StudentPath = 'students'
     if ($Service -eq 'gitlab.com') {
         $Git = '.git'
     }
+    $Name = $Name.ToLower()
     $DestinationName = $DestinationName.ToLower()
-    SetLocationPathCode
+    if ($Student) {
+        SetLocationPathCode
+        if (! (Test-Path -Path $StudentPath)) {
+            New-Item -Path $StudentPath -ItemType Directory
+        }
+        SetLocationPathCode $StudentPath
+    } else {
+        SetLocationPathCode
+    }
     git clone https://$Service/$Account/$Name$Git $DestinationName
     if ($DestinationName) {
-        SetLocationPathCode $DestinationName
+        if ($Student) {
+            SetLocationPathCode $StudentPath
+            Set-Location -Path $DestinationName
+        } else {
+            SetLocationPathCode $DestinationName
+        }
     } else {
-        SetLocationPathCode $Name
+        if ($Student) {
+            SetLocationPathCode $StudentPath
+            Set-Location -Path $Name
+        } else {
+            SetLocationPathCode $Name
+        }
     }
 }
 
