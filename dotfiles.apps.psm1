@@ -225,11 +225,6 @@ function InstallGitIgnoreGlobal {
     Write-Host 'Installing GitIgnore Global...'
     $GitIgnoreSource = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath 'gitignore_global'
     git config --global core.excludesfile $GitIgnoreSource
-
-    # $GitIgnoreDestination = Join-Path -Path $HOME -ChildPath '.gitignore_global'
-    # if (Test-Path -Path $GitIgnoreSource) {
-    #     Copy-Item -Path $GitIgnoreSource -Destination $GitIgnoreDestination
-    # }
 }
 
 function InstallHotel {
@@ -451,22 +446,8 @@ function InstallRuby {
             Start-Process -FilePath $InstallerFile -Wait
             Remove-Item -Path $InstallerFile
         }
-        Write-Host 'Downloading Ruby DevKit installer...'
-        $Version = 'mingw64-64'
-        $DevKitDirectoryName = 'DevKit'
-        $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "DevKit-$Version-(\S+)-sfx.exe$" } | Select-Object -First 1).href
-        $Urn = "$DevKitDirectoryName.exe"
-        $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
-        Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
-        if (Test-Path -Path $InstallerFile) {
-            Write-Host 'Running Ruby DevKit installer...'
-            Start-Process -FilePath $InstallerFile -ArgumentList "-oC:\$DevKitDirectoryName -y" -Wait
-            Remove-Item -Path $InstallerFile
-            Set-Location -Path C:\$DevKitDirectoryName
-            # ruby dk.rb init
-            "---`n- C:\$RubyDirectoryName`n" | Out-File -FilePath 'config.yml' -Encoding utf8
-            Invoke-Expression -Command "C:\$RubyDirectoryName\bin\ruby.exe dk.rb install"
-        }
+        AddToEnvironmentPath -Path C:\$RubyDirectoryName\bin -First
+        InstallRubyDevKit
     }
     if (ExistCommand -Name ruby) {
         Write-Host 'Installed version of Ruby: ' -NoNewline
@@ -477,6 +458,32 @@ function InstallRuby {
         }
     } else {
         Write-Warning -Message 'Ruby is not correctly installed.'
+    }
+}
+
+if ($IsWindows) {
+    function InstallRubyDevKit {
+        if (ExistsCommand -Name ruby) {
+            Write-Host 'Downloading Ruby DevKit installer...'
+            $RubyDirectoryName = 'Ruby23-x64'
+            $Version = 'mingw64-64'
+            $DevKitDirectoryName = 'DevKit'
+            $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "DevKit-$Version-(\S+)-sfx.exe$" } | Select-Object -First 1).href
+            $Urn = "$DevKitDirectoryName.exe"
+            $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
+            Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
+            if (Test-Path -Path $InstallerFile) {
+                Write-Host 'Running Ruby DevKit installer...'
+                Start-Process -FilePath $InstallerFile -ArgumentList "-oC:\$DevKitDirectoryName -y" -Wait
+                Remove-Item -Path $InstallerFile
+                Set-Location -Path C:\$DevKitDirectoryName
+                # ruby dk.rb init
+                "---`n- C:\$RubyDirectoryName`n" | Out-File -FilePath 'config.yml' -Encoding utf8
+                ruby dk.rb install
+            }
+        } else {
+            Write-Warning -Message 'Ruby is not correctly installed.'
+        }
     }
 }
 

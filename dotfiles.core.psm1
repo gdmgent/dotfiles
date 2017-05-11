@@ -59,64 +59,91 @@ function SetEnvironment {
         [System.Environment]::SetEnvironmentVariable('LANG', $Locale)
         [System.Environment]::SetEnvironmentVariable('LC_ALL', $Locale)
 
-        $Path = @()
+        $EnvironmentPath = @()
 
         # First
-        $Path += @(
+        $EnvironmentPath += @(
             "$HOME/.rbenv/shims"
         )
 
         $AndroidSdkPath = "$HOME/Library/Android/sdk/tools"
         if (Test-Path -Path $AndroidSdkPath) {
-            $Path += $AndroidSdkPath
+            $EnvironmentPath += $AndroidSdkPath
         }
+
+
         $DotNetCore = '/usr/local/share/dotnet/dotnet'
         if (Test-Path -Path $DotNetCore) {
-            $Path += $DotNetCore
+            $EnvironmentPath += $DotNetCore
         }
 
         # User Paths
-        $Path += @(
+        $EnvironmentPath += @(
             '/usr/local/bin',
             '/usr/bin',
             '/bin'
         )
 
         # Superuser Paths
-        $Path += @(
+        $EnvironmentPath += @(
             '/usr/local/sbin',
             '/usr/sbin',
             '/sbin'
         )
 
         # Last
-        $Path += @(
+        $EnvironmentPath += @(
             "$HOME/.config/yarn/global/node_modules/.bin",
             "$HOME/.composer/vendor/bin"
         )
 
-        [System.Environment]::SetEnvironmentVariable('PATH', $Path -join ':')
+         [System.Environment]::SetEnvironmentVariable('Path', $EnvironmentPath -join ':')
     } elseif ($IsWindows) {
-        $Path = [System.Environment]::GetEnvironmentVariable('Path') -split ';'
-        $Path += @(
+        $EnvironmentPath = [System.Environment]::GetEnvironmentVariable('Path') -split ';'
+        $EnvironmentPath += @(
             'C:\cygwin64\bin',
             "$HOME\AppData\Roaming\Composer\vendor\bin",
             'C:\php',
             'C:\Program Files\MySQL\MySQL Server 5.7\bin',
             "$HOME\AppData\Local\Yarn\config\global\node_modules\.bin"
         )
+        
+        # PowerShell Paths
         $PowerShellPath = 'C:\Program Files\PowerShell'
         if (Test-Path -Path $PowerShellPath) {
-            $Path += (Get-ChildItem $PowerShellPath | Select-Object -Last 1).FullName
+            $EnvironmentPath += (Get-ChildItem $PowerShellPath | Select-Object -Last 1).FullName
         }
+        
+        # .Net Core Paths
         $DotNetCorePath = 'C:\Program Files\dotnet'
         if (Test-Path -Path $DotNetCorePath) {
-            $Path += $DotNetCorePath
+            $EnvironmentPath += $DotNetCorePath
         }
-        [System.Environment]::SetEnvironmentVariable('Path', $Path -join ';')
+
+        [System.Environment]::SetEnvironmentVariable('Path', $EnvironmentPath -join ';')
     }
+   
 }
 SetEnvironment
+
+function AddToEnvironmentPath {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [String]
+        $Path,
+        [Switch]
+        $First
+    )
+    $EnvironmentPath = [System.Environment]::GetEnvironmentVariable('Path') -split ';'
+
+    if ($First) {
+        $EnvironmentPath = @($Path) + $EnvironmentPath
+    } else {
+        $EnvironmentPath += @($Path)
+    }
+    
+    [System.Environment]::SetEnvironmentVariable('Path', $EnvironmentPath -join ';')
+}
 
 function Dotfiles {
     if ($IsOSX) {
