@@ -4,7 +4,12 @@ if ($IsOSX) {
     Set-Variable -Name HotelPort -Value '%PORT%' -Option Constant -Scope Global
 }
 
-function AddDrushToHotel {
+function HotelServerAliases {
+    Get-Alias -Name hs* | Select-Object -Property Name, ReferencedCommand
+}
+New-Alias -Name hs -Value HotelServerAliases
+
+function HotelServerAddDrush {
     Param(
         [String]
         $Name
@@ -14,9 +19,9 @@ function AddDrushToHotel {
     }
     Invoke-Expression -Command "hotel add 'drush runserver localhost:${HotelPort}'$Name"
 }
-New-Alias -Name hd -Value AddDrushToHotel
+New-Alias -Name hsd -Value HotelServerAddDrush
 
-function AddJekyllToHotel {
+function HotelServerAddJekyll {
     Param(
         [String]
         $Name
@@ -26,9 +31,9 @@ function AddJekyllToHotel {
     }
     Invoke-Expression -Command "hotel add 'bundle exec jekyll serve --port=${HotelPort} --baseurl= --unpublished'$Name"
 }
-New-Alias -Name hj -Value AddJekyllToHotel
+New-Alias -Name hsj -Value HotelServerAddJekyll
 
-function AddLaravelToHotel {
+function HotelServerAddLaravel {
     Param(
         [String]
         $Name
@@ -38,9 +43,9 @@ function AddLaravelToHotel {
     }
     Invoke-Expression -Command "hotel add 'php artisan serve --port=${HotelPort}'$Name"
 }
-New-Alias -Name hl -Value AddLaravelToHotel
+New-Alias -Name hsl -Value HotelServerAddLaravel
 
-function AddPhpToHotel {
+function HotelServerAddPhp {
     Param(
         [String]
         $Name
@@ -48,11 +53,11 @@ function AddPhpToHotel {
     if ($Name) {
         $Name = " --name $Name"
     }
-    Invoke-Expression -Command "hotel add 'php -S localhost:${HotelPort}'$Name"
+    Invoke-Expression -Command "hotel add 'php -S 127.0.0.1:${HotelPort}'$Name"
 }
-New-Alias -Name hp -Value AddPhpToHotel
+New-Alias -Name hsp -Value HotelServerAddPhp
 
-function AddSymfonyToHotel {
+function HotelServerAddSymfony {
     Param(
         [String]
         $Name
@@ -60,6 +65,6 @@ function AddSymfonyToHotel {
     if ($Name) {
         $Name = " --name $Name"
     }
-    Invoke-Expression -Command "hotel add 'php bin/console server:start 127.0.0.1:${HotelPort}'$Name"
+    Invoke-Expression -Command "hotel add 'php bin/console server:run 127.0.0.1:${HotelPort}'$Name"
 }
-New-Alias -Name hs -Value AddSymfonyToHotel
+New-Alias -Name hss -Value HotelServerAddSymfony

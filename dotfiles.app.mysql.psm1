@@ -1,7 +1,7 @@
 function MySQLAliases {
-    Get-Alias -Name my*
+    Get-Alias -Name my* | Select-Object -Property Name, ReferencedCommand
 }
-New-Alias -Name my -Value MySQLAliases
+New-Alias -Name my -Value MySQLAliases 
 
 function MySQLStart {
     mysql.server start
