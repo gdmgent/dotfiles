@@ -1,5 +1,5 @@
 function VagrantAliases {
-    Get-Alias -Name v*
+    Get-Alias -Name v* | Select-Object -Property Name, ReferencedCommand
 }
 New-Alias -Name v -Value VagrantAliases
 
