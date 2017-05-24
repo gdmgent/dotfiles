@@ -463,7 +463,7 @@ function InstallRuby {
 
 if ($IsWindows) {
     function InstallRubyDevKit {
-        if (ExistsCommand -Name ruby) {
+        if (ExistCommand -Name ruby) {
             Write-Host 'Downloading Ruby DevKit installer...'
             $RubyDirectoryName = 'Ruby23-x64'
             $Version = 'mingw64-64'
