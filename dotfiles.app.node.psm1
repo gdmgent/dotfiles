@@ -41,6 +41,18 @@ function UseNode7 {
     }
 }
 
+function UseNode8 {
+    $NodeVersion = 8
+    if ($IsOSX) {
+        $Version = (Get-ChildItem $NodeJsPath).Name | Where-Object { $_ -match "v$NodeVersion.\d+.\d+" } | Select-Object -Last 1
+    } elseif ($IsWindows) {
+        $Version = nvm.exe list | Select-String -Pattern "$NodeVersion.\d+.\d+" -AllMatches | ForEach-Object { ($_.Matches).Value } | Select-Object -Last 1
+    }
+    if ($Version) {
+        UseNode -Version $Version
+    }
+}
+
 function UseNode {
     Param(
         [Parameter(Mandatory=$true)]
