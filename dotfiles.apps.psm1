@@ -408,8 +408,7 @@ function InstallPowerShell {
             Write-Host " - 'I accept the terms in the License Agreement', [next]"
             Write-Host " - 'C:\Program Files\PowerShell\', [Next]"
             Write-Host ' - [Finish]'
-            Write-Host ' - ConEmu > Settings... > Startup > Tasks > 6 {Shells::PowerShell (Admin)} >'
-            Write-Host ('   C:\Program Files\PowerShell\' + ($Version.Substring(1) -replace '[a-zA-Z\-]+','') + '\powershell.exe -NoLogo')
+            Write-Host 'Run InstallHyperPreferences and reopen Hyper'
             Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i $InstallerFile" -Wait
             Remove-Item -Path $InstallerFile
        }

@@ -24,12 +24,15 @@ New-Alias -Name hsd -Value HotelServerAddDrush
 function HotelServerAddJekyll {
     Param(
         [String]
-        $Name
+        $Name,
+        [String]
+        $BaseUrl = ''
+
     )
     if ($Name) {
         $Name = " --name $Name"
     }
-    Invoke-Expression -Command "hotel add 'bundle exec jekyll serve --port=${HotelPort} --baseurl= --unpublished'$Name"
+    Invoke-Expression -Command "hotel add 'bundle exec jekyll serve --port=${HotelPort} --baseurl=${BaseUrl} --unpublished'$Name"
 }
 New-Alias -Name hsj -Value HotelServerAddJekyll
 
