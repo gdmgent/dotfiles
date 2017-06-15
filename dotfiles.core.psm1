@@ -153,7 +153,7 @@ function Dotfiles {
     } elseif ($IsLinux) {
         $OS = 'Linux'
     } else {
-        $OS = 'unknown operation system'
+        $OS = 'unknown operating system'
     }
     Write-Host " Artevelde Dotfiles $Global:DotfilesVersion " -ForegroundColor Black -BackgroundColor DarkYellow -NoNewline
     $PSVersion = $PSVersionTable.GitCommitId # $PSVersionTable.PSVersion.ToString()

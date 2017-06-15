@@ -32,9 +32,9 @@ function InstallNode {
 function UseNode7 {
     $NodeVersion = 7
     if ($IsOSX) {
-        $Version = (Get-ChildItem $NodeJsPath).Name | Where-Object { $_ -match "v$NodeVersion.\d+.\d+" } | Select-Object -Last 1
+        $Version = (Get-ChildItem $NodeJsPath).Name | Where-Object { $_ -match "(v$NodeVersion(.\d+){2})" } | Select-Object -Last 1
     } elseif ($IsWindows) {
-        $Version = nvm.exe list | Select-String -Pattern "$NodeVersion.\d+.\d+" -AllMatches | ForEach-Object { ($_.Matches).Value } | Select-Object -Last 1
+        $Version = nvm.exe list | Select-String -Pattern "($NodeVersion(.\d+){2})" -AllMatches | ForEach-Object { ($_.Matches).Value } | Select-Object -First 1
     }
     if ($Version) {
         UseNode -Version $Version
@@ -44,9 +44,9 @@ function UseNode7 {
 function UseNode8 {
     $NodeVersion = 8
     if ($IsOSX) {
-        $Version = (Get-ChildItem $NodeJsPath).Name | Where-Object { $_ -match "v$NodeVersion.\d+.\d+" } | Select-Object -Last 1
+        $Version = (Get-ChildItem $NodeJsPath).Name | Where-Object { $_ -match "(v$NodeVersion(.\d+){2})" } | Select-Object -Last 1
     } elseif ($IsWindows) {
-        $Version = nvm.exe list | Select-String -Pattern "$NodeVersion.\d+.\d+" -AllMatches | ForEach-Object { ($_.Matches).Value } | Select-Object -Last 1
+        $Version = nvm.exe list | Select-String -Pattern "($NodeVersion(.\d+){2})" -AllMatches | ForEach-Object { ($_.Matches).Value } | Select-Object -First 1
     }
     if ($Version) {
         UseNode -Version $Version
@@ -78,7 +78,7 @@ function UseNode {
             }
         }
     } elseif ($IsWindows) {
-        $Versions = nvm.exe list | Select-String -Pattern '\d+.\d+.\d+' | ForEach-Object { ($_.Matches).Value }
+        $Versions = nvm.exe list | Select-String -Pattern '(\d+(.\d+){2})' | ForEach-Object { ($_.Matches).Value }
         switch ($Version) {
             { $Versions -contains "$Version" } {
                 WriteConfig -Name Node -Value $Version
