@@ -22,7 +22,7 @@ function GitCommit {
         [Parameter(Mandatory=$true)]
         [String]
         $Message,
-        [ValidateSet('CHORE','ENHANCEMENT','FEATURE','FIX','REFACTOR','TEST','STYLE')]
+        [ValidateSet('CHORE','ENHANCEMENT','FEATURE','FIX','REFACTOR','STYLE','TEST')]
         [String]
         $Type = "WIP"
     )
