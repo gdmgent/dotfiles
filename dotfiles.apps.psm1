@@ -425,8 +425,12 @@ function InstallPowerShell {
 
 function InstallRuby {
     if ($IsOSX) {
-        Write-Host 'Using Homebrew and rbenv to install Ruby...'
-        sh -c 'brew install rbenv && rbenv install 2.3.3 && rbenv global 2.3.3'
+        # Write-Host 'Using Homebrew and rbenv to install Ruby...'
+        # sh -c 'brew install rbenv && rbenv install 2.3.4 && rbenv global 2.3.4'
+        Write-Host 'Using Homebrew to install Ruby...'
+        if (ExistCommand -Name brew) {
+            sh -c 'brew ruby'
+        }
     } elseif ($IsWindows) {
         $Url = 'http://rubyinstaller.org/downloads/'
         Write-Host 'Downloading Ruby installer...'

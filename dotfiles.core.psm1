@@ -63,7 +63,7 @@ function SetEnvironment {
 
         # First
         $EnvironmentPath += @(
-            "$HOME/.rbenv/shims"
+            # "$HOME/.rbenv/shims"
         )
 
         $AndroidSdkPath = "$HOME/Library/Android/sdk/tools"
