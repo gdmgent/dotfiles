@@ -1,9 +1,15 @@
 function GitAdd {
     Param(
         [String]
-        $Files = '.'
+        $Files = '.',
+        [Switch]
+        $Submodules
     )
-    git add $Files
+    $Command = "git add $Files"
+    if ($Submodules) {
+        $Command = "git submodule foreach '$Command'"
+    }
+    Invoke-Expression -Command $Command
 }
 New-Alias -Name add -Value GitAdd
 
@@ -24,9 +30,15 @@ function GitCommit {
         $Message,
         [ValidateSet('CHORE','ENHANCEMENT','FEATURE','FIX','REFACTOR','STYLE','TEST')]
         [String]
-        $Type = "WIP"
+        $Type = "WIP",
+        [Switch]
+        $Submodules
     )
-    git commit -m "[$Type] $Message"
+    $Command = "git commit -m `"[$Type] $Message`""
+    if ($Submodules) {
+        $Command = "git submodule foreach '$Command'"
+    }
+    Invoke-Expression -Command $Command
 }
 New-Alias -Name commit -Value GitCommit
 
@@ -70,23 +82,49 @@ function GitConfigUser {
 function GitPull {
     Param (
         [Switch]
-        $Force
+        $Force,
+        [Switch]
+        $Sub
     )
     if ($Force) {
         GitStashDrop
     }
-    git pull
+    $Command = "git pull"
+    if ($Submodules) {
+        $Command = "git submodule foreach '$Command'"
+    }
+    Invoke-Expression -Command $Command
 }
 New-Alias -Name pull -Value GitPull
 
 function GitPush {
-    git push
+    Param (
+        [Switch]
+        $Submodules
+    )
+    $Command = "git push"
+    if ($Submodules) {
+        $Command = "git submodule foreach '$Command'"
+    }
+    Invoke-Expression -Command $Command
 }
 New-Alias -Name push -Value GitPush
 
 function GitPushWorkInProgress {
-    git commit -a -m [WIP]
-    GitPush
+    Param(
+        [Switch]
+        $Submodules
+    )
+    $Command = "git commit -a -m [WIP]"
+    if ($Submodules) {
+        $Command = "git submodule foreach '$Command'"
+    }
+    Invoke-Expression -Command $Command
+    if ($Submodules) {
+        GitPush -Submodules
+    } else {
+        GitPush
+    }
 }
 New-Alias -Name wip -Value GitPushWorkInProgress
 
@@ -97,7 +135,15 @@ function GitStashDrop {
 New-Alias -Name stashdrop -Value GitStashDrop
 
 function GitStatus {
-    git status
+    Param (
+        [Switch]
+        $Submodules
+    )
+    $Command = "git status"
+    if ($Submodules) {
+        $Command = "git submodule foreach '$Command'"
+    }
+    Invoke-Expression -Command $Command
 }
 New-Alias -Name status -Value GitStatus
 New-Alias -Name sts -Value GitStatus
@@ -150,7 +196,7 @@ function CloneProject {
     }
 }
 
-function CloneSyllabus {
+function CloneSyllabusV1 {
     Param(
         [Parameter(Mandatory=$true)]
         [String]
@@ -174,6 +220,36 @@ function CloneSyllabus {
     } else {
         SetLocationPathSyllabi $Name
     }
+    bundle update
+}
+
+function CloneSyllabus {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [String]
+        $Name,
+        [String]
+        $DestinationName,
+        [ValidateSet('github.com','gitlab.com')]
+        [String]
+        $Service = 'github.com',
+        [String]
+        $Account = 'gdmgent'
+    )
+    $Branch = 'master'
+    $DestinationName = $DestinationName.ToLower()
+    SetLocationPathSyllabi
+    git clone https://$Service/$Account/$Name --branch $Branch --single-branch $DestinationName
+    if ($DestinationName) {
+        SetLocationPathSyllabi $DestinationName
+    } else {
+        SetLocationPathSyllabi $Name
+    }
+    Set-Location -Path syllabusv2-resources
+    git submodule init
+    git submodule update
+    Set-Location -Path ..
+    bundle update
 }
 
 function NewSyllabus {
