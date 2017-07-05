@@ -3,10 +3,10 @@ function GitAdd {
         [String]
         $Files = '.',
         [Switch]
-        $Submodules
+        $Submodule
     )
     $Command = "git add $Files"
-    if ($Submodules) {
+    if ($Submodule) {
         $Command = "git submodule foreach '$Command'"
     }
     Invoke-Expression -Command $Command
@@ -32,10 +32,10 @@ function GitCommit {
         [String]
         $Type = "WIP",
         [Switch]
-        $Submodules
+        $Submodule
     )
     $Command = "git commit -m `"[$Type] $Message`""
-    if ($Submodules) {
+    if ($Submodule) {
         $Command = "git submodule foreach '$Command'"
     }
     Invoke-Expression -Command $Command
@@ -84,13 +84,13 @@ function GitPull {
         [Switch]
         $Force,
         [Switch]
-        $Sub
+        $Submodule
     )
     if ($Force) {
         GitStashDrop
     }
     $Command = "git pull"
-    if ($Submodules) {
+    if ($Submodule) {
         $Command = "git submodule foreach '$Command'"
     }
     Invoke-Expression -Command $Command
@@ -100,10 +100,10 @@ New-Alias -Name pull -Value GitPull
 function GitPush {
     Param (
         [Switch]
-        $Submodules
+        $Submodule
     )
     $Command = "git push"
-    if ($Submodules) {
+    if ($Submodule) {
         $Command = "git submodule foreach '$Command'"
     }
     Invoke-Expression -Command $Command
@@ -113,14 +113,14 @@ New-Alias -Name push -Value GitPush
 function GitPushWorkInProgress {
     Param(
         [Switch]
-        $Submodules
+        $Submodule
     )
     $Command = "git commit -a -m [WIP]"
-    if ($Submodules) {
+    if ($Submodule) {
         $Command = "git submodule foreach '$Command'"
     }
     Invoke-Expression -Command $Command
-    if ($Submodules) {
+    if ($Submodule) {
         GitPush -Submodules
     } else {
         GitPush
@@ -137,10 +137,10 @@ New-Alias -Name stashdrop -Value GitStashDrop
 function GitStatus {
     Param (
         [Switch]
-        $Submodules
+        $Submodule
     )
     $Command = "git status"
-    if ($Submodules) {
+    if ($Submodule) {
         $Command = "git submodule foreach '$Command'"
     }
     Invoke-Expression -Command $Command
