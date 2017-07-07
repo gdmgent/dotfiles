@@ -246,6 +246,7 @@ function CloneSyllabus {
         SetLocationPathSyllabi $Name
     }
     Set-Location -Path syllabusv2-resources
+    git checkout master
     git submodule init
     git submodule update
     Set-Location -Path ..
