@@ -253,7 +253,7 @@ function CloneSyllabus {
     bundle update
 }
 
-function NewSyllabus {
+function NewSyllabusV1 {
     Param(
         [Parameter(Mandatory=$true)]
         [String]
@@ -335,4 +335,11 @@ function StatusSyllabi {
         Pop-Location
     }
     Pop-Location
+}
+
+function UpdateSyllabusResources {
+    if (Test-Path -Path syllabusv2-resources) {
+        $Origin = Join-Path -Path (Join-Path -Path syllabusv2-resources -ChildPath _data) -ChildPath *.yml
+        Copy-Item -Path $Origin -Destination _data
+    }
 }
