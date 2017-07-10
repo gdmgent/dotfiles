@@ -339,7 +339,8 @@ function StatusSyllabi {
 
 function UpdateSyllabusResources {
     if (Test-Path -Path syllabusv2-resources) {
-        $Origin = Join-Path -Path (Join-Path -Path syllabusv2-resources -ChildPath _data) -ChildPath *.yml
-        Copy-Item -Path $Origin -Destination _data
+        $Origin = Join-Path -Path (Join-Path -Path (Join-Path -Path syllabusv2-resources -ChildPath _data) -ChildPath shared) -ChildPath *.yml
+        $Destination = Join-Path -Path _data -ChildPath shared
+        Copy-Item -Path $Origin -Destination $Destination
     }
 }
