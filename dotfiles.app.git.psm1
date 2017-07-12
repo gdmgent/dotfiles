@@ -3,13 +3,17 @@ function GitAdd {
         [String]
         $Files = '.',
         [Switch]
+        $All,
+        [Switch]
         $Submodule
     )
     $Command = "git add $Files"
-    if ($Submodule) {
-        $Command = "git submodule foreach '$Command'"
+    if ($All -or $Submodule) {
+        Invoke-Expression -Command "git submodule foreach '$Command'"
     }
-    Invoke-Expression -Command $Command
+    if ($All -or !$Submodule) {
+        Invoke-Expression -Command $Command
+    }
 }
 New-Alias -Name add -Value GitAdd
 
@@ -32,13 +36,17 @@ function GitCommit {
         [String]
         $Type = "WIP",
         [Switch]
+        $All,
+        [Switch]
         $Submodule
     )
     $Command = "git commit -m `"[$Type] $Message`""
-    if ($Submodule) {
-        $Command = "git submodule foreach '$Command'"
+    if ($All -or $Submodule) {
+        Invoke-Expression -Command "git submodule foreach '$Command'"
     }
-    Invoke-Expression -Command $Command
+    if ($All -or !$Submodule) {
+        Invoke-Expression -Command $Command
+    }
 }
 New-Alias -Name commit -Value GitCommit
 
@@ -82,6 +90,8 @@ function GitConfigUser {
 function GitPull {
     Param (
         [Switch]
+        $All,
+        [Switch]
         $Force,
         [Switch]
         $Submodule
@@ -90,39 +100,46 @@ function GitPull {
         GitStashDrop
     }
     $Command = "git pull"
-    if ($Submodule) {
-        $Command = "git submodule foreach '$Command'"
+    if ($All -or $Submodule) {
+        Invoke-Expression -Command "git submodule foreach '$Command'"
     }
-    Invoke-Expression -Command $Command
+    if ($All -or !$Submodule) {
+        Invoke-Expression -Command $Command
+    }
 }
 New-Alias -Name pull -Value GitPull
 
 function GitPush {
     Param (
         [Switch]
+        $All,
+        [Switch]
         $Submodule
     )
     $Command = "git push"
-    if ($Submodule) {
-        $Command = "git submodule foreach '$Command'"
+    if ($All -or $Submodule) {
+        Invoke-Expression -Command "git submodule foreach '$Command'"
     }
-    Invoke-Expression -Command $Command
+    if ($All -or !$Submodule) {
+        Invoke-Expression -Command $Command
+    }
 }
 New-Alias -Name push -Value GitPush
 
 function GitPushWorkInProgress {
     Param(
         [Switch]
+        $All,
+        [Switch]
         $Submodule
     )
     $Command = "git commit -a -m [WIP]"
-    if ($Submodule) {
-        $Command = "git submodule foreach '$Command'"
-    }
-    Invoke-Expression -Command $Command
-    if ($Submodule) {
+    if ($All -or $Submodule) {
+        Invoke-Expression -Command "git submodule foreach '$Command'"
         GitPush -Submodules
-    } else {
+    }
+    if ($All -or !$Submodule) {
+        Invoke-Expression -Command $Command
         GitPush
     }
 }
@@ -137,13 +154,17 @@ New-Alias -Name stashdrop -Value GitStashDrop
 function GitStatus {
     Param (
         [Switch]
+        $All,
+        [Switch]
         $Submodule
     )
     $Command = "git status"
-    if ($Submodule) {
-        $Command = "git submodule foreach '$Command'"
+    if ($All -or $Submodule) {
+        Invoke-Expression -Command "git submodule foreach '$Command'"
     }
-    Invoke-Expression -Command $Command
+    if ($All -or !$Submodule) {
+        Invoke-Expression -Command $Command
+    }
 }
 New-Alias -Name status -Value GitStatus
 New-Alias -Name sts -Value GitStatus
@@ -339,8 +360,8 @@ function StatusSyllabi {
 
 function UpdateSyllabusResources {
     if (Test-Path -Path syllabusv2-resources) {
-        $Origin = Join-Path -Path (Join-Path -Path (Join-Path -Path syllabusv2-resources -ChildPath _data) -ChildPath shared) -ChildPath *.yml
-        $Destination = Join-Path -Path _data -ChildPath shared
+        $Origin = Join-Path -Path (Join-Path -Path (Join-Path -Path 'syllabusv2-resources' -ChildPath '_data') -ChildPath 'shared') -ChildPath '*.yml'
+        $Destination = Join-Path -Path '_data' -ChildPath 'shared'
         Copy-Item -Path $Origin -Destination $Destination
     }
 }
