@@ -266,12 +266,12 @@ function CloneSyllabus {
     } else {
         SetLocationPathSyllabi $Name
     }
-    Set-Location -Path syllabusv2-resources
-    git checkout master
+    Push-Location -Path 'syllabusv2-resources'
     git submodule init
     git submodule update
-    Set-Location -Path ..
-    bundle update
+    GitCheckoutMaster
+    Pop-Location
+    UpdateBundler
 }
 
 function NewSyllabusV1 {
