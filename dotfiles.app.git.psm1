@@ -307,7 +307,7 @@ function PullSyllabi {
     )
     Push-Location
     SetLocationPathSyllabi
-    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)|.github.io$' }
+    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)(_|-)|syllabus)|.github.io$' }
     foreach ($Directory in $Directories) {
         Push-Location $Directory
         if (Test-Path -Path .git) {
@@ -329,7 +329,7 @@ function PullSyllabi {
 function PushSyllabi {
     Push-Location
     SetLocationPathSyllabi
-    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)|.github.io$' }
+    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)(_|-)|syllabus)|.github.io$' }
     foreach ($Directory in $Directories) {
         Push-Location $Directory
         if (Test-Path -Path .git) {
@@ -346,7 +346,7 @@ function PushSyllabi {
 function StatusSyllabi {
     Push-Location
     SetLocationPathSyllabi
-    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)_|syllabus)|.github.io$' }
+    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)(_|-)|syllabus)|.github.io$' }
     foreach ($Directory in $Directories) {
         Push-Location $Directory
         if (Test-Path -Path .git) {
