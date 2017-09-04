@@ -191,6 +191,9 @@ function UpdateSyllabusResources {
     if (Test-Path -Path syllabusv2-resources) {
         $Origin = Join-Path -Path (Join-Path -Path (Join-Path -Path 'syllabusv2-resources' -ChildPath '_data') -ChildPath 'shared') -ChildPath '*.yml'
         $Destination = Join-Path -Path '_data' -ChildPath 'shared'
+        if (! (Test-Path -Path $Destination)) {
+            New-Item -Path $Destination -ItemType Directory | Out-Null
+        }
         Copy-Item -Path $Origin -Destination $Destination
     }
 }
