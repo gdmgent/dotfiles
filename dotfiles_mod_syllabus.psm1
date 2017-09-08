@@ -84,7 +84,9 @@ function CloneSyllabus {
         [String]
         $Service = 'github.com',
         [String]
-        $Account = 'gdmgent'
+        $Account = 'gdmgent',
+        [Switch]
+        $Clean
     )
     $Branch = 'master'
     $DestinationName = $DestinationName.ToLower()
@@ -95,11 +97,23 @@ function CloneSyllabus {
     } else {
         SetLocationPathSyllabi $Name
     }
-    Push-Location -Path 'syllabusv2-resources'
-    git submodule init
-    git submodule update
-    GitCheckoutMaster
-    Pop-Location
+    if ($Clean) {
+        Remove-Item -Path '.git' -Recurse -Force
+        Remove-Item -Path 'syllabusv2-resources' -Recurse -Force
+        git init
+        git submodule add https://github.com/gdmgent/syllabusv2-resources.git
+        if ($DestinationName) {
+            git remote add origin https://github.com/gdmgent/$DestinationName.git
+        } else {
+            git remote add origin https://github.com/gdmgent/$Name.git
+        }
+    } else {
+        Push-Location -Path 'syllabusv2-resources'
+        git submodule init
+        git submodule update
+        GitCheckoutMaster
+        Pop-Location
+    }
     UpdateBundler
 }
 
