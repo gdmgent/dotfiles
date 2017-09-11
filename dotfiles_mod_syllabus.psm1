@@ -201,6 +201,30 @@ function StatusSyllabi {
     Pop-Location
 }
 
+function UpdateSyllabi {
+    Param(
+        [Switch]
+        $Push
+    )
+    Push-Location
+    SetLocationPathSyllabi
+    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^\d{4}-' }
+    foreach ($Directory in $Directories) {
+        Push-Location $Directory
+        if (Test-Path -Path .git) {
+            Write-Host " $Directory " -BackgroundColor Blue -ForegroundColor White
+            pull -All
+            UpdateSyllabusResources
+            UpdateBundler
+            if ($Push) {
+                GitPushWorkInProgress
+            }
+        }
+        Pop-Location
+    }
+    Pop-Location
+}
+
 function UpdateSyllabusResources {
     if (Test-Path -Path syllabusv2-resources) {
         $Origin = Join-Path -Path (Join-Path -Path (Join-Path -Path 'syllabusv2-resources' -ChildPath '_data') -ChildPath 'shared') -ChildPath '*.yml'
