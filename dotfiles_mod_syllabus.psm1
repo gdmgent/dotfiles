@@ -169,24 +169,22 @@ function PullSyllabi {
     Pop-Location
 }
 
-function PushSyllabi {
+function StatusSyllabi {
     Push-Location
     SetLocationPathSyllabi
-    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)(_|-)|syllabus)|.github.io$' }
+    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^\d{4}-' }
     foreach ($Directory in $Directories) {
         Push-Location $Directory
         if (Test-Path -Path .git) {
             Write-Host " $Directory " -BackgroundColor Blue -ForegroundColor White
-            git add . | Write-Host -ForegroundColor DarkGray
-            git commit -a -m [WIP] | Write-Host -ForegroundColor DarkGray
-            git push | Write-Host -ForegroundColor DarkGray
+            git status | Write-Host -ForegroundColor DarkGray
         }
         Pop-Location
     }
     Pop-Location
 }
 
-function StatusSyllabi {
+function StatusSyllabiV1 {
     Push-Location
     SetLocationPathSyllabi
     $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)(_|-)|syllabus)|.github.io$' }
@@ -215,6 +213,7 @@ function UpdateSyllabi {
             Write-Host " $Directory " -BackgroundColor Blue -ForegroundColor White
             pull -All
             UpdateSyllabusResources
+            UpdateSyllabusTools
             UpdateBundler
             if ($Push) {
                 GitPushWorkInProgress
