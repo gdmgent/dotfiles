@@ -211,3 +211,14 @@ function UpdateSyllabusResources {
         Copy-Item -Path $Origin -Destination $Destination
     }
 }
+
+function UpdateSyllabusTools {
+    if (Test-Path -Path syllabusv2-resources) {
+        $Origin = Join-Path -Path (Join-Path -Path (Join-Path -Path 'syllabusv2-resources' -ChildPath '__tools') -ChildPath 'settings') -ChildPath '*.json'
+        $Destination = '.vscode'
+        if (! (Test-Path -Path $Destination)) {
+            New-Item -Path $Destination -ItemType Directory | Out-Null
+        }
+        Copy-Item -Path $Origin -Destination $Destination
+    }
+}
