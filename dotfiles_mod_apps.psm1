@@ -292,10 +292,12 @@ function InstallNvm {
     }
 }
 
-if ($IsMacOS) {
-    function InstallMySQL {
+function InstallMySQL {
+    if ($IsMacOS) {
         Write-Host 'Using Homebrew to install MySQL Server...'
         sh -c 'brew install mysql'
+    } elseif ($IsWindows) {
+        OpenUri -Uri https://dev.mysql.com/downloads/installer/
     }
 }
 
