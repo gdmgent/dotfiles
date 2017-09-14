@@ -7,6 +7,10 @@ Set-Variable -Name ProxyValues             -Value 'http://proxy.arteveldehs.be:8
 Set-Variable -Name RegPathInternetSettings -Value 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -Option Constant -Scope Global
 Set-Variable -Name RegPathEnvironment      -Value 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Option Constant -Scope Global
 
+if (ExistCommand -Name git) {
+    Import-Module -Name (Join-Path -Path . -ChildPath dotfiles_app_git.psm1)
+}
+
 function InitProxy {
     $State = ReadConfig -Name Proxy
     switch ($State) {
@@ -88,6 +92,9 @@ function TurnProxyOff {
         Remove-ItemProperty -Path $Global:RegPathInternetSettings -Name ProxyServer -ErrorAction SilentlyContinue
         # netsh.exe winhttp reset proxy
     }
+    if (ExistCommand -Name git) {
+        GitConfigProxyOff
+    }
 }
 
 function TurnProxyOn {
@@ -123,6 +130,9 @@ function TurnProxyOn {
         Set-ItemProperty -Path $Global:RegPathInternetSettings -Name ProxyEnable -Value 1
         Set-ItemProperty -Path $Global:RegPathInternetSettings -Name ProxyServer -Value $Global:ProxyValues
         # netsh.exe winhttp set proxy proxy-server="http=myproxy;https=sproxy:88" bypass-list="*.foo.com"
+    }
+    if (ExistCommand -Name git) {
+        GitConfigProxyOn
     }
 }
 

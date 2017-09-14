@@ -648,7 +648,9 @@ function UpdateBundler {
             bundle update
             gem cleanup
         } else {
-            Write-Warning -Message 'Bundler Ruby Gem is not installed. Run InstallBundler.'
+            Write-Warning -Message 'Bundler Ruby Gem is not installed.'
+            InstallBundler
+            UpdateBundler
         }
     } else {
         Write-Warning -Message "Cannot run Bundler in this directory because a '$File' is required."

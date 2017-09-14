@@ -105,6 +105,7 @@ function SetEnvironment {
             "$HOME\AppData\Roaming\Composer\vendor\bin",
             'C:\php',
             'C:\Program Files\MySQL\MySQL Server 5.7\bin',
+            'C:\Ruby23-x64\bin',
             "$HOME\AppData\Local\Yarn\config\global\node_modules\.bin"
         )
         
