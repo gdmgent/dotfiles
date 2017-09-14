@@ -249,7 +249,7 @@ function InstallHyperPreferences {
     if ($IsMacOS) {
         $Command = (Get-Command -Name powershell -CommandType Application).Source
     } elseif ($IsWindows) {
-        $Command = (Get-Command -Name powershell -CommandType Application | Select-Object -Last 1).Source -replace '\\', '\\' # replaces \ with \\
+        $Command = (Get-Command -Name powershell -CommandType Application | Where-Object { $_.Source -like '*6.0.0*' } | Select-Object -First 1).Source -replace '\\', '\\' # replaces \ with \\
     }
     Copy-Item -Path $SourcePath -Destination $DestinationPath
     $FileContent = (Get-Content -Path $DestinationPath).Replace("shell: 'powershell',", "shell: '$Command',")
