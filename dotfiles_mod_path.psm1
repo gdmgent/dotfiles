@@ -5,7 +5,7 @@ New-Alias -Name ll -Value GetLongList
 
 function OpenHostsFile {
     if (ExistCommand -Name code) {
-        if ($IsOSX) {
+        if ($IsMacOS) {
             sudo code /etc/hosts
         } elseif ($IsWindows) {
             code C:\Windows\System32\drivers\etc\hosts

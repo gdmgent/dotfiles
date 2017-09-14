@@ -55,7 +55,7 @@ function WriteConfig([String] $Name, [String] $Value) {
 
 function SetEnvironment {
     $Locale = 'nl_BE.UTF-8'
-    if ($IsOSX) {
+    if ($IsMacOS) {
         [System.Environment]::SetEnvironmentVariable('LANG', $Locale)
         [System.Environment]::SetEnvironmentVariable('LC_ALL', $Locale)
 
@@ -146,7 +146,7 @@ function AddToEnvironmentPath {
 }
 
 function Dotfiles {
-    if ($IsOSX) {
+    if ($IsMacOS) {
         $OS = 'macOS'
     } elseif ($IsWindows) {
         $OS = 'Windows'
@@ -167,7 +167,7 @@ function FindConnectionListeningOn {
         [Int16]
         $Port
     )
-    if ($IsOSX) {
+    if ($IsMacOS) {
         (netstat -ao | Where-Object { $_ -match 'Proto' -or ($_ -match ":$Port " -and $_ -match 'LISTENING') })
     } elseif ($IsWindows) {
         (NETSTAT.EXE -ao | Where-Object { $_ -match 'Proto' -or ($_ -match ":$Port " -and $_ -match 'LISTENING') })
@@ -235,7 +235,7 @@ function OpenUri {
         }
         $Uri = $Protocol + '://' + $Uri
     }
-    if ($IsOSX) {
+    if ($IsMacOS) {
         $Command = "open $Uri"
         if ($Blisk) {
             $Command += ' -a Blisk'

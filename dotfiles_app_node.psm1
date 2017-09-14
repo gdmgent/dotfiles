@@ -1,11 +1,11 @@
-if ($IsOSX) {
+if ($IsMacOS) {
     New-Alias -Name node -Value Node -Scope Global
     Set-Variable -Name NodeJsPath -Value "$HOME/.nvm/versions/node" -Option Constant -Scope Global
 }
 
 # Node Version Manager
 function nvm {
-    if ($IsOSX) {
+    if ($IsMacOS) {
         Invoke-Expression "sh -c 'export NVM_DIR=~/.nvm && source $(brew --prefix nvm)/nvm.sh && nvm $args'"
     } elseif ($IsWindows) {
         nvm.exe $args
@@ -13,7 +13,7 @@ function nvm {
 }
 
 function InitNode {
-    if ($IsOSX) {
+    if ($IsMacOS) {
         $Version = ReadConfig -Name Node
         if ($Version) {
             UseNode -Version $Version
@@ -22,7 +22,7 @@ function InitNode {
 }
 
 function InstallNode {
-    if ($IsOSX) {
+    if ($IsMacOS) {
         nvm install stable
     } elseif ($IsWindows) {
         nvm install latest
@@ -31,7 +31,7 @@ function InstallNode {
 
 function UseNode7 {
     $NodeVersion = 7
-    if ($IsOSX) {
+    if ($IsMacOS) {
         $Version = (Get-ChildItem $NodeJsPath).Name | Where-Object { $_ -match "(v$NodeVersion(.\d+){2})" } | Select-Object -Last 1
     } elseif ($IsWindows) {
         $Version = nvm.exe list | Select-String -Pattern "($NodeVersion(.\d+){2})" -AllMatches | ForEach-Object { ($_.Matches).Value } | Select-Object -First 1
@@ -43,7 +43,7 @@ function UseNode7 {
 
 function UseNode8 {
     $NodeVersion = 8
-    if ($IsOSX) {
+    if ($IsMacOS) {
         $Version = (Get-ChildItem $NodeJsPath).Name | Where-Object { $_ -match "(v$NodeVersion(.\d+){2})" } | Select-Object -Last 1
     } elseif ($IsWindows) {
         $Version = nvm.exe list | Select-String -Pattern "($NodeVersion(.\d+){2})" -AllMatches | ForEach-Object { ($_.Matches).Value } | Select-Object -First 1
@@ -59,7 +59,7 @@ function UseNode {
         [String]
         $Version
     )
-    if ($IsOSX) {
+    if ($IsMacOS) {
         $Versions = (Get-ChildItem $NodeJsPath).Name
         switch ($Version) {
             { $Versions -contains "$Version" } {

@@ -59,7 +59,7 @@ function SetProxy {
 New-Alias -Name proxy -Value SetProxy
 
 function TurnProxyOff {
-    if ($IsOSX) {
+    if ($IsMacOS) {
         foreach ($Key in ($Global:ProxyKeys + $Global:NoProxyKeys)) {
             foreach ($Variable in @($Key.ToUpper(), $Key.ToLower())) {
                 if (Test-Path -Path Env:$Variable) {
@@ -91,7 +91,7 @@ function TurnProxyOff {
 }
 
 function TurnProxyOn {
-    if ($IsOSX) {
+    if ($IsMacOS) {
         foreach ($Key in $Global:ProxyKeys) {
             foreach ($Variable in @($Key.ToUpper(), $Key.ToLower())) {
                 Set-Item -Path Env:$Variable -Value $Global:ProxyValues
@@ -127,7 +127,7 @@ function TurnProxyOn {
 }
 
 function OpenProxySettings {
-    if ($IsOSX) {
+    if ($IsMacOS) {
         $command = @'
 tell application \"System Preferences\"
     activate

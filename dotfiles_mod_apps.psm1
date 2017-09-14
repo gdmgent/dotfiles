@@ -13,7 +13,7 @@ function InstallArtestead {
     }
 }
 
-if ($IsOSX) {
+if ($IsMacOS) {
     function InstallBrew {
         Write-Host 'Using Ruby to install Homebrew...'
         sh -c 'ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)\"'
@@ -38,7 +38,7 @@ function InstallBundler {
 }
 
 function InstallComposer {
-    if ($IsOSX) {
+    if ($IsMacOS) {
         Write-Host 'Using PHP to install Composer...'
         sh -c 'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer'
         
@@ -89,7 +89,7 @@ function InstallFontFiraCode {
     $Name = 'FiraCode'
     $Urn = "$Name.zip"
     $Uri = $Response.assets.browser_download_url
-    if ($IsOSX) {
+    if ($IsMacOS) {
         $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
         if (Test-Path -Path $OutFile) {
@@ -122,7 +122,7 @@ function InstallFontHack {
     $Name = 'Hack'
     $Urn = "$Name.zip"
     $Uri = ($Response.assets | Where-Object { $_.name -match '^Hack-(.+)-otf.zip$' }).browser_download_url
-    if ($IsOSX) {
+    if ($IsMacOS) {
         $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
         if (Test-Path -Path $OutFile) {
@@ -156,7 +156,7 @@ function InstallFontHasklig {
     $Name = 'Hasklig'
     $Urn = "$Name.zip"
     $Uri = $Response.assets.browser_download_url
-    if ($IsOSX) {
+    if ($IsMacOS) {
         $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
         if (Test-Path -Path $OutFile) {
@@ -184,7 +184,7 @@ function InstallFontHasklig {
 }
 
 function InstallGit {
-    if ($IsOSX) {
+    if ($IsMacOS) {
         Write-Host 'Using Homebrew to install Git...'
         sh -c 'brew install git'
     } elseif ($IsWindows) {
@@ -246,7 +246,7 @@ function InstallHyperPreferences {
     $FileName = '.hyper.js'
     $SourcePath = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath $FileName
     $DestinationPath = Join-Path -Path $HOME -ChildPath $FileName
-    if ($IsOSX) {
+    if ($IsMacOS) {
         $Command = (Get-Command -Name powershell -CommandType Application).Source
     } elseif ($IsWindows) {
         $Command = (Get-Command -Name powershell -CommandType Application | Select-Object -Last 1).Source -replace '\\', '\\' # replaces \ with \\
@@ -257,7 +257,7 @@ function InstallHyperPreferences {
 }
 
 function InstallNvm {
-    if ($IsOSX) {
+    if ($IsMacOS) {
         Write-Host 'Using Homebrew to install Node Version Manager...'
         sh -c 'brew install nvm'
 
@@ -282,7 +282,7 @@ function InstallNvm {
     }
     if (ExistCommand -Name nvm) {
         Write-Host 'Installed version of NVM: ' -NoNewline
-        if ($IsOSX) {
+        if ($IsMacOS) {
             nvm --version
         } elseif ($IsWindows) {
             nvm version
@@ -292,7 +292,7 @@ function InstallNvm {
     }
 }
 
-if ($IsOSX) {
+if ($IsMacOS) {
     function InstallMySQL {
         Write-Host 'Using Homebrew to install MySQL Server...'
         sh -c 'brew install mysql'
@@ -301,7 +301,7 @@ if ($IsOSX) {
 
 if ($IsWindows) {
     function InstallOhMyZsh {
-        if ($IsOSX) {
+        if ($IsMacOS) {
             Write-Host 'Using Homebrew to install Zsh...'
             sh -c 'brew install zsh'
             Write-Host 'Installed version of Zsh: ' -NoNewline
@@ -316,7 +316,7 @@ if ($IsWindows) {
 
 function InstallPhp {
     $Version = '7.1'
-    if ($IsOSX) {
+    if ($IsMacOS) {
         Write-Host "Using Homebrew to install PHP $Version..."
         $V = $Version.replace('.', '')
         sh -c "brew tap homebrew/php && brew install php${V} php${V}-mcrypt php${V}-opcache php${V}-xdebug"
@@ -385,7 +385,7 @@ function InstallPhp {
 function InstallPowerShell {
     $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/powershell/powershell/releases/latest
     $Version = $Response.tag_name
-    if ($IsOSX) {
+    if ($IsMacOS) {
         $OS = '.pkg$'
         $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
         $Urn = 'powershell.pkg'
@@ -424,7 +424,7 @@ function InstallPowerShell {
 }
 
 function InstallRuby {
-    if ($IsOSX) {
+    if ($IsMacOS) {
         # Write-Host 'Using Homebrew and rbenv to install Ruby...'
         # sh -c 'brew install rbenv && rbenv install 2.3.4 && rbenv global 2.3.4'
         Write-Host 'Using Homebrew to install Ruby...'
@@ -490,7 +490,7 @@ if ($IsWindows) {
     }
 }
 
-if ($IsOSX) {
+if ($IsMacOS) {
     function InstallValet {
         Write-Host 'Using CGR to install Laravel Valet...'
         cgr laravel/valet
@@ -505,7 +505,7 @@ if ($IsOSX) {
 }
 
 function InstallVisualStudioCode {
-    if ($IsOSX) {
+    if ($IsMacOS) {
         # Fixes a PowerShell extension in Visual Studio Code
         $Path = '/usr/local/Cellar/openssl/1.0.2h_1/lib'
         $Destination = '/usr/local/lib'
@@ -515,7 +515,7 @@ function InstallVisualStudioCode {
 }
 
 function InstallYarn {
-    if ($IsOSX) {
+    if ($IsMacOS) {
         Write-Host "Using Homebrew to install Yarn..."
         sh -c 'brew install yarn'
     } elseif ($IsWindows) {
@@ -577,7 +577,7 @@ function RemoveLocalArtestead {
 }
 
 function RemoveAndroidStudio {
-    if ($IsOSX) {
+    if ($IsMacOS) {
         $ToRemove = @(
             '/Applications/Android\ Studio.app',
             '~/.android', # Android Virtual Devices
@@ -604,7 +604,7 @@ function UninstallArtestead {
     }
 }
 
-if ($IsOSX) {
+if ($IsMacOS) {
     function UninstallBrew {
         Write-Host 'Using Ruby to uninstall Homebrew...'
         sh -c 'ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)\"'
@@ -612,7 +612,7 @@ if ($IsOSX) {
 }
 
 function UninstallRuby {
-    if ($IsOSX) {
+    if ($IsMacOS) {
         Write-Host 'Using Homebrew to uninstall Ruby...'
         if (ExistCommand -Name brew) {
             brew uninstall ruby
@@ -623,7 +623,7 @@ function UninstallRuby {
     }
 }
 
-if ($IsOSX) {
+if ($IsMacOS) {
     function UninstallValet {
         Write-Host 'Using CGR to uninstall Laravel Valet...'
         if ((ExistCommand -Name cgr) -and (ExistCommand -Name valet)) {
@@ -632,7 +632,7 @@ if ($IsOSX) {
     }
 }
 
-if ($IsOSX) {
+if ($IsMacOS) {
     function UpdateBrew {
         Write-Host 'Updating Homebrew...'
         if (ExistCommand -Name brew) {

@@ -7,7 +7,7 @@ function PromptGit {
         $Branch = (git status | Select-Object -First 1) -replace 'On branch|\s'
         $Prompt = [char]::ConvertFromUtf32(0x26A1)
         $HasChanged = (git status --branch --short | Measure-Object).Count -gt 1
-        if ($IsOSX) {
+        if ($IsMacOS) {
             if ($HasChanged) {
                 $Prompt = [char]::ConvertFromUtf32(0x26A0)
             }
