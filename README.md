@@ -1,17 +1,17 @@
-Artevelde Dotfiles
-==================
+gdm.gent Dotfiles
+=================
 
-[Documentation][Artevelde Dotfiles]
+[Documentation][gdm.gent Dotfiles]
 
 Tips
 ----
 
  - [Download][Hack Download] and install [Hack][] typeface.
 
-© 2017 [Artevelde University College Ghent][] [Bachelor of Graphic and Digital Media][]
+© 2017 [Artevelde University College Ghent][] [Bachelor of Graphical and Digital Media][]
 
-[Artevelde Dotfiles]:                       http://www.gdm.gent/dotfiles
+[gdm.gent Dotfiles]:                        http://www.gdm.gent/dotfiles
 [Artevelde University College Ghent]:       http://www.arteveldeuniversitycollege.be
-[Bachelor of Graphic and Digital Media]:    http://www.gdm.gent
+[Bachelor of Graphical and Digital Media]:  http://www.gdm.gent
 [Hack]:                                     http://sourcefoundry.org/hack
 [Hack Download]:                            https://github.com/chrissimpkins/Hack/releases

@@ -156,7 +156,7 @@ function Dotfiles {
     } else {
         $OS = 'unknown operating system'
     }
-    Write-Host " Artevelde Dotfiles $Global:DotfilesVersion " -ForegroundColor Black -BackgroundColor DarkYellow -NoNewline
+    Write-Host " gdm.gent Dotfiles $Global:DotfilesVersion " -ForegroundColor Black -BackgroundColor DarkYellow -NoNewline
     $PSVersion = $PSVersionTable.GitCommitId # $PSVersionTable.PSVersion.ToString()
     Write-Host " on PowerShell $PSVersion for $OS" -ForegroundColor DarkGray
 }
