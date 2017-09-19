@@ -317,7 +317,17 @@ if ($IsWindows) {
 }
 
 function InstallPhp {
-    $Version = '7.1'
+    Param(
+        [Switch]
+        $Development
+    )
+    $VersionStable      = '7.1'
+    $VersionDevelopment = '7.2'
+    if ($Development) {
+        $Version = $VersionDevelopment
+    } else {
+        $Version = $VersionStable
+    }
     if ($IsMacOS) {
         Write-Host "Using Homebrew to install PHP $Version..."
         $V = $Version.replace('.', '')
@@ -331,9 +341,16 @@ function InstallPhp {
         }
     } elseif ($IsWindows) {
         Write-Host "Downloading PHP $Version..."
-        $Url = 'http://windows.php.net'
-        $RelativeUrl = ((Invoke-WebRequest -Uri "$Url/download").Links | Where-Object { $_.href -match "/php-$Version.\d+-nts-Win32-VC14-x64.zip$" } | Select-Object -First 1).href
-        $Uri = "$Url$RelativeUrl"
+        $Url =  'http://windows.php.net'
+        if ($Development) {
+            $File = "/php-$Version.\d+RC\d+-nts-Win32-VC15-x64.zip$"
+            $FileUri = "$Url/downloads/qa"
+        } else {
+            $File = "/php-$Version.\d+-nts-Win32-VC14-x64.zip$"
+            $FileUri = "$Url/downloads/releases"
+        }
+        $RelativeUri = ((Invoke-WebRequest -Uri $FileUri).Links | Where-Object { $_.href -match $File } | Select-Object -First 1).href
+        $Uri = "$Url$RelativeUri"
         $OutFile = Join-Path -Path $env:TEMP -ChildPath 'php.zip'
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
         if (Test-Path -Path $OutFile) {
@@ -348,13 +365,13 @@ function InstallPhp {
             Write-Host 'Configuring PHP...'
             $ConfigFile = Get-Content -Path C:\php\php.ini-development
             $Replacements = @(
-                'extension=php_curl.dll'
-                'extension=php_gd2.dll'
-                'extension=php_mbstring.dll'
-                'extension=php_openssl.dll'
-                'extension=php_pdo_mysql.dll'
-                'extension=php_pdo_sqlite.dll'
-                'extension=php_sqlite3.dll'
+                'extension=php_curl'
+                'extension=php_gd2'
+                'extension=php_mbstring'
+                'extension=php_openssl'
+                'extension=php_pdo_mysql'
+                'extension=php_pdo_sqlite'
+                'extension=php_sqlite3'
             )
             foreach ($Replacement in $Replacements) {
                 $ConfigFile = $ConfigFile.Replace(";$Replacement", $Replacement)
@@ -362,18 +379,20 @@ function InstallPhp {
             # Adding CA Root Certificates for SSL
             $ConfigFile = $ConfigFile.Replace(';openssl.cafile=', 'openssl.cafile=' + $Global:DotfilesInstallPath + '\ssl\cacert.pem')
             Set-Content -Path ($ConfigFilePath = Join-Path -Path $DestinationPath -ChildPath 'php.ini') -Value $ConfigFile
-            # OPcache
-            Write-Host 'Configuring PHP to use OPcache...'
-            Add-Content -Path $ConfigFilePath -Value "`nzend_extension=C:\php\ext\php_opcache.dll"
-            # Xdebug
-            Write-Host 'Downloading Xdebug for PHP...'
-            $Url = 'https://xdebug.org'
-            $RelativeUrl = ((Invoke-WebRequest -Uri "$Url/download.php").Links | Where-Object { $_.href -match "/php_xdebug-\d.\d.\d-$Version-vc14-nts-x86_64.dll$" } | Select-Object -First 1).href
-            $Uri = "$Url/$RelativeUrl"
-            $OutFile = 'C:\php\ext\php_xdebug.dll'
-            Invoke-WebRequest -Uri $Uri -OutFile $OutFile
-            Write-Host 'Configuring PHP to use Xdebug...'
-            Add-Content -Path $ConfigFilePath -Value "`nzend_extension=C:\php\ext\php_xdebug.dll"
+            if (!$Development) {
+                # OPcache
+                Write-Host 'Configuring PHP to use OPcache...'
+                Add-Content -Path $ConfigFilePath -Value "`nzend_extension=C:\php\ext\php_opcache.dll"
+                # Xdebug
+                Write-Host 'Downloading Xdebug for PHP...'
+                $Url = 'https://xdebug.org'
+                $RelativeUrl = ((Invoke-WebRequest -Uri "$Url/download.php").Links | Where-Object { $_.href -match "/php_xdebug-\d.\d.\d-$Version-vc14-nts-x86_64.dll$" } | Select-Object -First 1).href
+                $Uri = "$Url/$RelativeUrl"
+                $OutFile = 'C:\php\ext\php_xdebug.dll'
+                Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+                Write-Host 'Configuring PHP to use Xdebug...'
+                Add-Content -Path $ConfigFilePath -Value "`nzend_extension=C:\php\ext\php_xdebug.dll"
+            }
         }
     }
     if (ExistCommand -Name php) {
@@ -431,7 +450,7 @@ function InstallRuby {
         # sh -c 'brew install rbenv && rbenv install 2.3.4 && rbenv global 2.3.4'
         Write-Host 'Using Homebrew to install Ruby...'
         if (ExistCommand -Name brew) {
-            sh -c 'brew ruby'
+            sh -c 'brew install ruby'
         }
     } elseif ($IsWindows) {
         $Url = 'http://rubyinstaller.org/downloads/'

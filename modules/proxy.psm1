@@ -8,7 +8,7 @@ Set-Variable -Name RegPathInternetSettings -Value 'HKCU:\Software\Microsoft\Wind
 Set-Variable -Name RegPathEnvironment      -Value 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' -Option Constant -Scope Global
 
 if (ExistCommand -Name git) {
-    Import-Module -Name (Join-Path -Path . -ChildPath dotfiles_app_git.psm1)
+    Import-Module -Name ([io.path]::combine($Global:DotfilesInstallPath, 'apps', 'git.psm1'))
 }
 
 function InitProxy {

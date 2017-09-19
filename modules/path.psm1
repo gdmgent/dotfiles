@@ -26,6 +26,10 @@ function SetLocationPath ([String] $Path, [String] $Directory) {
         Get-ChildItem -Name $Path | Write-Host -ForegroundColor DarkGray
     }
 }
+function SetLocationPathDotfiles {
+     Set-Location -Path $DotfilesInstallPath
+}
+New-Alias -Name d -Value SetLocationPathDotfiles
 
 function SetLocationPathCode {
     [CmdletBinding()]

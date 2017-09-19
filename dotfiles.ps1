@@ -11,7 +11,7 @@ $Modules = @(
     'syllabus'
 )
 foreach ($Module in $Modules) {
-    Import-Module -Name (Join-Path -Path . -ChildPath dotfiles_mod_$Module.psm1);
+    Import-Module -Name ([io.path]::combine($Global:DotfilesInstallPath, 'modules', "$Module.psm1"))
 }
 
 $Applications = @(
@@ -25,7 +25,7 @@ $Applications = @(
 )
 foreach ($Application in $Applications) {
     if (ExistCommand -Name $Application) {
-        Import-Module -Name (Join-Path -Path . -ChildPath dotfiles_app_$Application.psm1)
+        Import-Module -Name ([io.path]::combine($Global:DotfilesInstallPath, 'apps', "$Application.psm1"))
     } else {
         $Error.RemoveAt(0)
     }
