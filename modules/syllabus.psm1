@@ -170,24 +170,18 @@ function PullSyllabi {
 }
 
 function StatusSyllabi {
-    Push-Location
-    SetLocationPathSyllabi
-    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^\d{4}-' }
-    foreach ($Directory in $Directories) {
-        Push-Location $Directory
-        if (Test-Path -Path .git) {
-            Write-Host " $Directory " -BackgroundColor Blue -ForegroundColor White
-            git status | Write-Host -ForegroundColor DarkGray
-        }
-        Pop-Location
+    Param(
+        [Switch]
+        $V1
+    )
+    if ($V1) {
+        $Pattern = '^((\d{4}|utl|mod)(_|-)|syllabus)|.github.io$'
+    } else {
+        $Pattern = '^\d{4}-'
     }
-    Pop-Location
-}
-
-function StatusSyllabiV1 {
     Push-Location
     SetLocationPathSyllabi
-    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^((\d{4}|utl|mod)(_|-)|syllabus)|.github.io$' }
+    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match $Pattern }
     foreach ($Directory in $Directories) {
         Push-Location $Directory
         if (Test-Path -Path .git) {
@@ -209,19 +203,33 @@ function UpdateSyllabi {
     $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^\d{4}-' }
     foreach ($Directory in $Directories) {
         Push-Location $Directory
-        if (Test-Path -Path .git) {
             Write-Host " $Directory " -BackgroundColor Blue -ForegroundColor White
-            pull -All
-            UpdateSyllabusResources
-            UpdateSyllabusTools
-            UpdateBundler
             if ($Push) {
-                GitPushWorkInProgress
+                UpdateSyllabus -Push
+            } else {
+                UpdateSyllabus
             }
-        }
         Pop-Location
     }
     Pop-Location
+}
+
+function UpdateSyllabus {
+    Param(
+        [Switch]
+        $Push
+    )
+    if (Test-Path -Path .git) {
+        pull -All
+        UpdateSyllabusResources
+        UpdateSyllabusTools
+        UpdateBundler
+        if ($Push) {
+            if (Test-Path -Path .git) {
+                GitPushWorkInProgress
+            }
+        }
+    }
 }
 
 function UpdateSyllabusResources {
