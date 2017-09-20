@@ -222,7 +222,8 @@ function UpdateSyllabus {
     if (Test-Path -Path .git) {
         pull -All
         UpdateSyllabusResources
-        UpdateSyllabusTools
+        UpdateSyllabusSettings
+        UpdateSyllabusSnippets
         UpdateBundler
         if ($Push) {
             if (Test-Path -Path .git) {
