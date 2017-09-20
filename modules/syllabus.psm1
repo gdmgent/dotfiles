@@ -268,7 +268,7 @@ function UpdateSyllabusSnippets {
         } else {
             $Destination =  $MyInvocation.MyCommand.Path
         }
-        Copy-Item -Path $Source -Destination $Destination -Force
+        Copy-Item -Path $Origin -Destination $Destination -Force
     }
 }
 
