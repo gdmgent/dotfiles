@@ -407,16 +407,8 @@ function InstallPowerShell {
     $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/powershell/powershell/releases/latest
     $Version = $Response.tag_name
     if ($IsMacOS) {
-        $OS = '.pkg$'
-        $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
-        $Urn = 'powershell.pkg'
-        $InstallerFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
-        Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
-        if (Test-Path -Path $InstallerFile) {
-            Write-Host "Installing PowerShell $Version..."
-            Invoke-Expression -Command "sudo installer -pkg $InstallerFile -target /"
-            Remove-Item -Path $InstallerFile
-       }
+        Write-Host 'Using Homebrew to install PowerShell...'
+        sh -c 'brew cask install powershell'
     } elseif ($IsWindows) {
         $OS = 'win10-win2016-x64.msi$'
         $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
