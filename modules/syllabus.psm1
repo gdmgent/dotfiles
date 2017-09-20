@@ -234,8 +234,9 @@ function UpdateSyllabus {
 
 function UpdateSyllabusResources {
     if (Test-Path -Path syllabusv2-resources) {
-        $Origin = Join-Path -Path (Join-Path -Path (Join-Path -Path 'syllabusv2-resources' -ChildPath '_data') -ChildPath 'shared') -ChildPath '*.yml'
-        $Destination = Join-Path -Path '_data' -ChildPath 'shared'
+        Write-Host 'Updating Syllabus Resources' -ForegroundColor Green
+        $Origin = [io.path]::combine('syllabusv2-resources', '_data', 'shared', '*.yml')
+        $Destination = [io.path]::combine('_data', 'shared')
         if (! (Test-Path -Path $Destination)) {
             New-Item -Path $Destination -ItemType Directory | Out-Null
         }
@@ -243,9 +244,10 @@ function UpdateSyllabusResources {
     }
 }
 
-function UpdateSyllabusTools {
+function UpdateSyllabusSettings {
     if (Test-Path -Path syllabusv2-resources) {
-        $Origin = Join-Path -Path (Join-Path -Path (Join-Path -Path 'syllabusv2-resources' -ChildPath '__tools') -ChildPath 'settings') -ChildPath '*.json'
+        Write-Host 'Updating Syllabus Settings' -ForegroundColor Green
+        $Origin = [io.path]::combine('syllabusv2-resources', '__tools', 'settings', '*.json')
         $Destination = '.vscode'
         if (! (Test-Path -Path $Destination)) {
             New-Item -Path $Destination -ItemType Directory | Out-Null
@@ -253,3 +255,19 @@ function UpdateSyllabusTools {
         Copy-Item -Path $Origin -Destination $Destination
     }
 }
+
+function UpdateSyllabusSnippets {
+    if (Test-Path -Path syllabusv2-resources) {
+        Write-Host 'Updating Syllabus Snippets' -ForegroundColor Green
+        $Origin = [io.path]::combine('syllabusv2-resources', '__tools', 'snippets', '*.json')
+        if ($IsMacOS) {
+            $Destination = "$HOME/Library/Application Support/Code/User/snippets/"
+        } elseif ($IsWindows) {
+            $Destination = "$env:APPDATA\Code\User\snippets\"
+        } else {
+            $Destination =  $MyInvocation.MyCommand.Path
+        }
+        Copy-Item -Path $Source -Destination $Destination -Force
+    }
+}
+
