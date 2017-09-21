@@ -31,7 +31,7 @@ New-Alias -Name mysts -Value MySQLStatus
 function MySQLInitialize {
     $DbAdminUser = 'root'
     $DbAdminPassword = 'secret'
-    $DbUser = 'homestead'
+    $DbUser = 'dbuser'
     $DbPassword = 'secret'
     [System.Environment]::SetEnvironmentVariable('MYSQL_PWD', $DbAdminPassword)
     mysql --host=127.0.0.1 --user=$DbAdminUser --execute="CREATE USER IF NOT EXISTS '${DbUser}'@'localhost' IDENTIFIED BY '${DbPassword}'; GRANT ALL PRIVILEGES ON *.* TO '${DbUser}'@'localhost' WITH GRANT OPTION;"
@@ -39,6 +39,7 @@ function MySQLInitialize {
 New-Alias -Name myinit -Value MySQLInitialize
 
 function MySQLLogin {
-    mysql --host=127.0.0.1 --user=homestead --password=secret
+    Set-Item Env:MYSQL_PWD -Value secret
+    mysql --host=127.0.0.1 --user=dbuser
 }
 New-Alias -Name mydb -Value MySQLLogin

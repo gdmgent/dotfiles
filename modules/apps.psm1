@@ -304,8 +304,13 @@ function InstallNvm {
 function InstallMySQL {
     if ($IsMacOS) {
         Write-Host 'Using Homebrew to install MySQL Server...'
+        Write-Host 'set root password to "secret"'
         sh -c 'brew install mysql'
+        mysql.server start
+        mysql_secure_installation
     } elseif ($IsWindows) {
+        Write-Host 'Using the MySQL Installer to install MySQL Server...'
+        Write-Host 'set root password to "secret"'
         OpenUri -Uri https://dev.mysql.com/downloads/installer/
     }
 }
@@ -630,6 +635,17 @@ if ($IsMacOS) {
     function UninstallBrew {
         Write-Host 'Using Ruby to uninstall Homebrew...'
         sh -c 'ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)\"'
+    }
+}
+
+if ($IsMacOS) {
+    function UninstallMySQL {
+        Write-Host 'Using Homebrew to uninstall MySQL...'
+        sh -c 'brew uninstall mysql'
+        $ToRemove = @(
+            '/usr/local/var/mysql'
+        )
+        Remove-Item -Path $ToRemove -Recurse -Force -ErrorAction SilentlyContinue
     }
 }
 
