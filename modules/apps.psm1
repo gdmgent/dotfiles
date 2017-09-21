@@ -7,7 +7,7 @@ function InstallArtestead {
         vagrant plugin install vagrant-hostsupdater
     }
     if (ExistCommand -Name cgr) {
-        cgr gdmgent/artestead
+        ComposerGlobalRequire gdmgent/artestead
     } else {
         Write-Warning -Message 'Run InstallComposerCgr and try again.'
     }
@@ -67,7 +67,12 @@ function InstallComposerCgr {
     if (! (ExistCommand -Name composer)) {
         InstallComposer
     }
-    composer global require consolidation/cgr
+    $State = ReadConfig -Name Proxy
+    if ($IsMacOS -and $State -eq 'on') {
+        composer global require --prefer-source consolidation/cgr
+    } else {
+        composer global require consolidation/cgr
+    }
     if (ExistCommand -Name cgr) {
         Write-Host 'CGR is installed.'
     } else {
@@ -80,7 +85,12 @@ function InstallComposerPrestissimo {
     if (! (ExistCommand -Name composer)) {
         InstallComposer
     }
-    composer global require hirak/prestissimo
+    $State = ReadConfig -Name Proxy
+    if ($IsMacOS -and $State -eq 'on') {
+        composer global require --prefer-source hirak/prestissimo
+    } else {
+        composer global require hirak/prestissimo
+    }
 }
 
 function InstallFontFiraCode {
@@ -260,7 +270,6 @@ function InstallNvm {
     if ($IsMacOS) {
         Write-Host 'Using Homebrew to install Node Version Manager...'
         sh -c 'brew install nvm'
-
     } elseif ($IsWindows) {
         $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/coreybutler/nvm-windows/releases/latest
         $Version = $Response.name
@@ -506,7 +515,7 @@ if ($IsWindows) {
 if ($IsMacOS) {
     function InstallValet {
         Write-Host 'Using CGR to install Laravel Valet...'
-        cgr laravel/valet
+        ComposerGlobalRequire laravel/valet
         if (ExistCommand -Name valet) {
             Write-Host 'Installed version of Laravel Valet: ' -NoNewline
             valet --version

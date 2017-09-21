@@ -20,6 +20,19 @@ function BehatCommand {
 }
 New-Alias -Name behat -Value BehatCommand
 
+function ComposerGlobalRequire {
+    if (ExistCommand cgr) {
+        $State = ReadConfig -Name Proxy
+        if ($IsMacOS -and $State -eq 'on') {
+            cgr --prefer-source $args
+        } else {
+            cgr $args
+        }
+    } else {
+        InstallComposerCgr
+    }
+}
+
 function DrushCommand {
     $Command = 'drush'
     if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
