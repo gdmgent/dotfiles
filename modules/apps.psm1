@@ -297,15 +297,11 @@ function InstallNvm {
             }
         }
     }
-    if (ExistCommand -Name nvm) {
-        Write-Host 'Installed version of NVM: ' -NoNewline
-        if ($IsMacOS) {
-            nvm --version
-        } elseif ($IsWindows) {
-            nvm version
-        }
-    } else {
-        Write-Warning -Message 'NVM is not correctly installed.'
+    Write-Host 'Installed version of NVM: ' -NoNewline
+    if ($IsMacOS) {
+        nvm --version
+    } elseif ($IsWindows) {
+        nvm version
     }
 }
 

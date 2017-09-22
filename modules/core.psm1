@@ -71,7 +71,6 @@ function SetEnvironment {
             $EnvironmentPath += $AndroidSdkPath
         }
 
-
         $DotNetCore = '/usr/local/share/dotnet/dotnet'
         if (Test-Path -Path $DotNetCore) {
             $EnvironmentPath += $DotNetCore
@@ -108,8 +107,8 @@ function SetEnvironment {
             'C:\Ruby23-x64\bin',
             "$HOME\AppData\Local\Yarn\config\global\node_modules\.bin"
         )
-        
-        # PowerShell Paths
+
+        # PowerShell Paths @TODO replace with $PSPATH ?
         $PowerShellPath = 'C:\Program Files\PowerShell'
         if (Test-Path -Path $PowerShellPath) {
             $EnvironmentPath += (Get-ChildItem $PowerShellPath | Select-Object -Last 1).FullName
@@ -123,7 +122,6 @@ function SetEnvironment {
 
         [System.Environment]::SetEnvironmentVariable('Path', $EnvironmentPath -join ';')
     }
-   
 }
 SetEnvironment
 
@@ -174,122 +172,6 @@ function FindConnectionListeningOn {
         (NETSTAT.EXE -ao | Where-Object { $_ -match 'Proto' -or ($_ -match ":$Port " -and $_ -match 'LISTENING') })
     }
 }
-
-function OpenUri {
-    Param(
-        [Parameter(Mandatory=$true)]
-        [String]
-        $Uri,
-
-        [Switch]
-        [Alias('https')]
-        $Secure,
-
-        [Switch]
-        [Alias('b')]
-        $Blisk,
-
-        [Switch]
-        [Alias('c')]
-        $Chrome,
-
-        [Switch]
-        [Alias('cx')]
-        $ChromeCanary,
-
-        [Switch]
-        [Alias('e')]
-        $Edge,
-
-        [Switch]
-        [Alias('f')]
-        $Firefox,
-
-        [Switch]
-        [Alias('fx')]
-        $FirefoxDeveloperEdition,
-
-        [Switch]
-        [Alias('o')]
-        $Opera,
-
-        [Switch]
-        [Alias('ox')]
-        $OperaDeveloper,
-
-        [Switch]
-        [Alias('s')]
-        $Safari,
-
-        [Switch]
-        [Alias('sx')]
-        $SafariTechnologyPreview,
-
-        [Switch]
-        [Alias('v')]
-        $Vivaldi
-    )
-    if (! ($Uri -match '^http(s)?://')) {
-        $Protocol = 'http';
-        if ($Secure) {
-            $Protocol += 's' 
-        }
-        $Uri = $Protocol + '://' + $Uri
-    }
-    if ($IsMacOS) {
-        $Command = "open $Uri"
-        if ($Blisk) {
-            $Command += ' -a Blisk'
-        } elseif ($Chrome) {
-            $Command += ' -a "Google Chrome"'
-        } elseif ($ChromeCanary) {
-            $Command += ' -a "Google Chrome Canary"'
-        } elseif ($Firefox) {
-            $Command += ' -a Firefox'
-        } elseif ($FirefoxDeveloperEdition) {
-            $Command += ' -a FirefoxDeveloperEdition'
-        } elseif ($Opera) {
-            $Command += ' -a Opera'
-        } elseif ($OperaDeveloper) {
-            $Command += ' -a "Opera Developer"'
-        } elseif ($Safari) {
-            $Command += ' -a Safari'
-        } elseif ($SafariTechnologyPreview) {
-            $Command += ' -a "Safari Technology Preview"'
-        } elseif ($Vivaldi) {
-            $Command += ' -a Vivaldi'
-        }
-        Invoke-Expression -Command $Command
-    } elseif ($IsWindows) {
-        if ($Blisk) {
-            $Browser = 'blisk.exe'
-        } elseif ($Chrome) {
-            $Browser = "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe"
-        } elseif ($ChromeCanary) {
-            $Browser = "$HOME\AppData\Local\Google\Chrome SxS\Application\chrome.exe"
-        } elseif ($Edge) {
-            $Command = "microsoft-edge:$Uri"
-        } elseif ($Firefox) {
-            $Browser = "${env:ProgramFiles}\Mozilla Firefox\firefox.exe"
-        } elseif ($FirefoxDeveloperEdition) {
-            $Browser = "${env:ProgramFiles}\Firefox Developer Edition\firefox.exe"
-         } elseif ($Opera) {
-             $Browser = "${env:ProgramFiles(x86)}\Opera\launcher.exe"
-         } elseif ($OperaDeveloper) {
-             $Browser = "${env:ProgramFiles(x86)}\Opera developer\launcher.exe"
-        } elseif ($Vivaldi) {
-             $Browser = 'vivaldi.exe'
-        } else {
-            $Command = $Uri;
-        }
-        if ($Browser) {
-            Start-Process -FilePath $Browser -ArgumentList $Uri
-        } elseif ($Command) {
-            Start-Process -FilePath $Command
-        }
-    }
-}
-New-Alias -Name o -Value OpenUri
 
 function SearchDotfilesCommands {
     Get-Command "$args" | Where-Object { $_.Source -eq 'dotfiles' }
