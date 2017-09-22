@@ -54,8 +54,8 @@ function WriteConfig([String] $Name, [String] $Value) {
 }
 
 function SetEnvironment {
-    $Locale = 'nl_BE.UTF-8'
     if ($IsMacOS) {
+        $Locale = 'nl_BE.UTF-8'
         [System.Environment]::SetEnvironmentVariable('LANG', $Locale)
         [System.Environment]::SetEnvironmentVariable('LC_ALL', $Locale)
 

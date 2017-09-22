@@ -267,11 +267,19 @@ function InstallHyperPreferences {
 }
 
 function InstallNvm {
+    Param(
+        [Switch]
+        $Prerelease
+    )
     if ($IsMacOS) {
         Write-Host 'Using Homebrew to install Node Version Manager...'
         sh -c 'brew install nvm'
     } elseif ($IsWindows) {
-        $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/coreybutler/nvm-windows/releases/latest
+        if ($Prerelease) {
+            $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/coreybutler/nvm-windows/releases?per_page=1
+        } else {
+            $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/coreybutler/nvm-windows/releases/latest
+        }
         $Version = $Response.name
         Write-Host "Downloading Node Version Manager $Version..."
         $Urn = 'nvm-setup.zip'

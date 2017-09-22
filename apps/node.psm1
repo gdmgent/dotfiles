@@ -29,22 +29,11 @@ function InstallNode {
     }
 }
 
-function UseNode7 {
-    $NodeVersion = 7
-    if ($IsMacOS) {
-        $Version = (Get-ChildItem $NodeJsPath).Name | Where-Object { $_ -match "(v$NodeVersion(.\d+){2})" } | Select-Object -Last 1
-    } elseif ($IsWindows) {
-        $Version = nvm.exe list | Select-String -Pattern "($NodeVersion(.\d+){2})" -AllMatches | ForEach-Object { ($_.Matches).Value } | Select-Object -First 1
-    }
-    if ($Version) {
-        UseNode -Version $Version
-    }
-}
-
 function UseNode8 {
     $NodeVersion = 8
     if ($IsMacOS) {
-        $Version = (Get-ChildItem $NodeJsPath).Name | Where-Object { $_ -match "(v$NodeVersion(.\d+){2})" } | Select-Object -Last 1
+        # $Version = (Get-ChildItem $NodeJsPath).Name | Where-Object { $_ -match "(v$NodeVersion(.\d+){2})" } | Select-Object -Last 1
+        $Version = "$(nvm current)"
     } elseif ($IsWindows) {
         $Version = nvm.exe list | Select-String -Pattern "($NodeVersion(.\d+){2})" -AllMatches | ForEach-Object { ($_.Matches).Value } | Select-Object -First 1
     }
