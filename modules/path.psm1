@@ -11,7 +11,7 @@ function OpenHostsFile {
             code C:\Windows\System32\drivers\etc\hosts
         }
     } else {
-        Write-Warning -Message "Please install Visual Studio Code and install the 'code' command in PATH."
+        WriteMessage -Type Warning -Message "Please install Visual Studio Code and install the 'code' command in PATH."
     }
 }
 New-Alias -Name hosts -Value OpenHostsFile
@@ -21,8 +21,8 @@ function SetLocationPath ([String] $Path, [String] $Directory) {
     if (Test-Path -Path $Location) {
         Set-Location $Location
     } else {
-        Write-Warning -Message "Cannot find path '$Location' because it does not exist."
-        Write-Host 'Available directories:'
+        WriteMessage -Type Danger -Message "Cannot find path '$Location' because it does not exist."
+        WriteMessage -Type Info -Message 'Available directories:'
         Get-ChildItem -Name $Path | Write-Host -ForegroundColor DarkGray
     }
 }

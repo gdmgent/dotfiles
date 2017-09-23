@@ -22,10 +22,10 @@ if ($IsWindows) {
 
 function InitConfig {
     if (Test-Path $Global:DotfilesConfigPath) {
-        Write-Host 'Reading config file...'
+        WriteMessage -Type Info -Message 'Reading config file...'
         Set-Variable -Name DotfilesConfig -Value (Get-Content -Raw -Path $Global:DotfilesConfigPath | ConvertFrom-Json) -Scope Global
     } else {
-        Write-Host 'Creating a new config file...'
+        WriteMessage -Type Info -Message 'Creating a new config file...'
         New-Item -Path $Global:DotfilesConfigPath -Force
         Set-Variable -Name DotfilesConfig -Value (New-Object -TypeName PSObject) -Scope Global
         SaveConfig
@@ -144,6 +144,82 @@ function AddToEnvironmentPath {
     [System.Environment]::SetEnvironmentVariable('Path', $EnvironmentPath -join ';')
 }
 
+# Message Functions
+# -----------------
+
+function WriteMessage {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [String]
+        $Message,
+        [ValidateSet('Danger','Info','Mute','Strong','Success','Warning')]
+        [String]
+        $Type,
+        [Switch]
+        $Inverse,
+        [Switch]
+        $NoNewline
+    )
+    switch ($Type) {
+        # Black        Cyan         DarkCyan     DarkGreen    DarkRed      Gray         Magenta      White
+        # Blue         DarkBlue     DarkGray     DarkMagenta  DarkYellow   Green        Red          Yellow
+        'Danger' {
+            $Foreground = 'Red'
+            if ($Inverse) {
+                $Background = $Foreground
+                $Foreground = 'White'
+            }
+        }
+        'Info' {
+            $Foreground = 'Cyan'
+            if ($Inverse) {
+                $Background = 'Blue'
+                $Foreground = 'White'
+            }
+        }
+        'Mute' {
+            $Foreground = 'DarkGray'
+            if ($Inverse) {
+                $Background = $Foreground
+                $Foreground = 'Black'
+            }
+        }
+        'Strong' {
+            $Foreground = 'White'
+            if ($Inverse) {
+                $Background = $Foreground
+                $Foreground = 'Black'
+            }
+        }
+        'Success' {
+            $Foreground = 'Green'
+            if ($Inverse) {
+                $Background = $Foreground
+                $Foreground = 'Black'
+            }
+        }
+        'Warning' {
+            $Foreground = 'Yellow'
+            if ($Inverse) {
+                $Background = $Foreground
+                $Foreground = 'Black'
+            }
+        }
+        Default {
+            $Foreground = 'Gray'
+            if ($Inverse) {
+                $Background = $Foreground
+                $Foreground = 'Black'
+            }
+        }
+    }
+    if ($Background) {
+        Write-Host " $Message " -BackgroundColor $Background -ForegroundColor $Foreground -NoNewline:$NoNewline;
+    } else {
+        Write-Host "$Message" -ForegroundColor $Foreground -NoNewline:$NoNewline;
+    }
+}
+
 function Dotfiles {
     if ($IsMacOS) {
         $OS = 'macOS'
@@ -154,9 +230,9 @@ function Dotfiles {
     } else {
         $OS = 'unknown operating system'
     }
-    Write-Host " gdm.gent Dotfiles $Global:DotfilesVersion " -ForegroundColor Black -BackgroundColor DarkYellow -NoNewline
+    WriteMessage -Type Info -Inverse -Message "gdm.gent Dotfiles $Global:DotfilesVersion" -NoNewline
     $PSVersion = $PSVersionTable.GitCommitId # $PSVersionTable.PSVersion.ToString()
-    Write-Host " on PowerShell $PSVersion for $OS" -ForegroundColor DarkGray
+    WriteMessage -Type Mute -Message " on PowerShell $PSVersion for $OS"
 }
 New-Alias -Name dot -Value Dotfiles
 

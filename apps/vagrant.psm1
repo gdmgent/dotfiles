@@ -169,6 +169,6 @@ function HasVagrantfile {
     if (Test-Path -Path $File) {
         return $true
     } else {
-        Write-Warning -Message "Cannot run Vagrant in this directory because a '$File' is required."
+        WriteMessage -Type Warning -Message "Cannot run Vagrant in this directory because a '$File' is required."
     }
 }

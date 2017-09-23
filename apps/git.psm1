@@ -58,7 +58,7 @@ function GitConfigIgnoreGlobal {
     if (! (ExistCommand -Name git)) {
         InstallGit
     }
-    Write-Host 'Installing GitIgnore Global...'
+    WriteMessage -Type Info -Inverse -Message 'Installing GitIgnore Global'
     $GitIgnoreSource = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath 'gitignore_global'
     git config --global core.excludesfile $GitIgnoreSource
 }

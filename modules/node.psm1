@@ -63,7 +63,7 @@ function UseNode {
             }
             Default {
                 WriteConfig -Name Node -Value $null
-                Write-Warning -Message "Version '$Version' of Node.js is not installed. Please install with nvm."
+                WriteMessage -Type Warning -Message "Version '$Version' of Node.js is not installed. Please install with nvm."
             }
         }
     } elseif ($IsWindows) {
@@ -75,7 +75,7 @@ function UseNode {
             }
             Default {
                 WriteConfig -Name Node -Value $null
-                Write-Warning -Message "Version '$Version' of Node.js is not installed. Please install with nvm."
+                WriteMessage -Type Warning -Message "Version '$Version' of Node.js is not installed. Please install with nvm."
             }
         }
     }
@@ -83,13 +83,13 @@ function UseNode {
 
 function ShowNodeConfig {
     $Version = ReadConfig -Name Node
-    Write-Host 'Node.js is currently version ' -NoNewline
+    WriteMessage -Type Info -Message 'Node.js is currently version ' -NoNewline
     if ($Version) {
-        Write-Host $Version -ForegroundColor Green -NoNewline
+        WriteMessage -Type Success -Message $Version -NoNewline
     } else {
-        Write-Host 'Undefined' -ForegroundColor Blue -NoNewline
+        WriteMessage -Type Warning -Message 'Undefined' -NoNewline
     }
-    Write-Host '.'
+    WriteMessage -Message '.'
 }
 
 function WebpackCommand {
@@ -98,7 +98,7 @@ function WebpackCommand {
     } elseif (ExistCommand -Name webpack) {
         Invoke-Expression -Command ((Get-Command -Name webpack -Type Application).Source + " $args")
     } else {
-        Write-Warning -Message "Webpack is not available from this directory, nor is it installed globally."
+        WriteMessage -Type Warning -Message "Webpack is not available from this directory, nor is it installed globally."
     }
 }
 New-Alias -Name webpack -Value WebpackCommand

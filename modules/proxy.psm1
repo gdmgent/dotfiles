@@ -28,19 +28,20 @@ function InitProxy {
 
 function ShowProxy {
     $State = ReadConfig -Name Proxy
-    Write-Host 'Proxyserver settings are currently ' -NoNewline
+    WriteMessage -Type Info -Message 'Proxyserver settings are currently ' -NoNewline
     switch ($State) {
         'off' {
-            Write-Host $State -ForegroundColor Red -NoNewline
+            $Type = 'Danger'
         }
         'on' {
-            Write-Host $State -ForegroundColor Green -NoNewline
+            $Type = 'Success'
         }
         Default {
-            Write-Host "unrecognized ($State)" -ForegroundColor Blue -NoNewline
+            $State = "unrecognized ($State)"
+            $Type = 'Warning'
         }
     }
-    Write-Host '.'
+    WriteMessage -Type $Type -Inverse -Message $State
 }
 
 function SetProxy {
@@ -50,8 +51,8 @@ function SetProxy {
         $State
     )
     $flag = ReadConfig -Name Proxy
-    Write-Host ' Artevelde University College Ghent proxyserver settings. ' -BackgroundColor Blue -ForegroundColor White
-
+    WriteMessage -Type Info -Inverse -Message 'Proxyserver Settings' -NoNewline
+    WriteMessage -Type Mute -Message ' for Artevelde University College Ghent'
     if (! $State) {
         ShowProxy
     } else {
