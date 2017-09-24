@@ -28,18 +28,63 @@ function MySQLStatus {
 }
 New-Alias -Name mysts -Value MySQLStatus
 
-function MySQLInitialize {
-    $DbAdminUser = 'root'
-    $DbAdminPassword = 'secret'
-    $DbUser = 'dbuser'
-    $DbPassword = 'secret'
-    [System.Environment]::SetEnvironmentVariable('MYSQL_PWD', $DbAdminPassword)
-    mysql --host=127.0.0.1 --user=$DbAdminUser --execute="CREATE USER IF NOT EXISTS '${DbUser}'@'localhost' IDENTIFIED BY '${DbPassword}'; GRANT ALL PRIVILEGES ON *.* TO '${DbUser}'@'localhost' WITH GRANT OPTION;"
+function MySQLCreateDbUser {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech2')]
+        [String]
+        $Course,
+        [String]
+        $Database,
+        [Switch]
+        $ShowSQL
+    )
+    if (! $Database) {
+        $Database= "${Course}-db"
+    } else {
+        $Database = $Database.ToLower()
+        $Course = $Database
+    }
+    $DatabaseAdministratorUsername = 'root'
+    $DatabaseAdministratorPassword = 'secret'
+    $DatabaseUserUsername          = "${Course}-user"
+    $DatabaseUserPassword          = "${Course}-pass"
+    if ($DatabaseUserUsername.Length -gt 13) {
+        WriteMessage -Type Danger -Message "The username '${DatabaseUserUsername}' is longer than the maximum allowed number of characters of 13."
+        return
+    }
+    WriteMessage -Type Info -Message 'Creating Database User...'
+    [System.Environment]::SetEnvironmentVariable('MYSQL_PWD', $DatabaseAdministratorPassword)
+    $SQL = @(
+        "CREATE USER IF NOT EXISTS '${DatabaseUserUsername}'@'localhost' IDENTIFIED BY '${DatabaseUserPassword}'",
+        "GRANT ALL PRIVILEGES ON ``${Database}``.* TO '${DatabaseUserUsername}'@'localhost' WITH GRANT OPTION"
+    )
+    $SQL = $SQL -join ';'
+    if ($ShowSQL) {
+        WriteMessage -Message "${SQL}";
+        return
+    }
+    mysql --host=127.0.0.1 --user=${DatabaseAdministratorUsername} --execute="`"${SQL};`""
+    # mysql --host=127.0.0.1 --user="${DatabaseAdministratorUsername}" --execute="CREATE USER IF NOT EXISTS '${DatabaseUserUsername}'@'localhost' IDENTIFIED BY '${DatabaseUserPassword}'; GRANT ALL PRIVILEGES ON ${Database}.* TO '${DatabaseUserUsername}'@'localhost' WITH GRANT OPTION;"
+    WriteMessage -Type Success -Message 'Database User created'
+    WriteMessage -Message 'Username                  : ' -NoNewLine
+    WriteMessage -Type Info -Message "'${DatabaseUserUsername}'"
+    WriteMessage -Message 'Password                  : ' -NoNewLine
+    WriteMessage -Type Info -Message "'${DatabaseUserPassword}'"
+    WriteMessage -Message 'Has privileges on database: ' -NoNewLine
+    WriteMessage -Type Info -Message "'${Database}'"
 }
-New-Alias -Name myinit -Value MySQLInitialize
+New-Alias -Name myuser -Value MySQLInitialize
 
 function MySQLLogin {
-    Set-Item Env:MYSQL_PWD -Value secret
-    mysql --host=127.0.0.1 --user=dbuser
+    Param(
+        [Parameter(Mandatory=$true)]
+        [ValidateSet('cms','cmsdev','webdev1','webdev2','webdtech2','root')]
+        [String]
+        $DbUser
+    )
+    $DbPassword = 'secret'
+    [System.Environment]::SetEnvironmentVariable('MYSQL_PWD', $DbPassword)
+    mysql --host=127.0.0.1 --user=$DbUser
 }
 New-Alias -Name mydb -Value MySQLLogin

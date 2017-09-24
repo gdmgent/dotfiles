@@ -152,7 +152,7 @@ function WriteMessage {
         [Parameter(Mandatory=$true)]
         [String]
         $Message,
-        [ValidateSet('Danger','Info','Mute','Strong','Success','Warning')]
+        [ValidateSet('Danger','Info','Mute','Primary','Strong','Success','Warning')]
         [String]
         $Type,
         [Switch]
@@ -182,6 +182,13 @@ function WriteMessage {
             if ($Inverse) {
                 $Background = $Foreground
                 $Foreground = 'Black'
+            }
+        }
+        'Primary' {
+            $Foreground = 'Magenta'
+            if ($Inverse) {
+                $Background = $Foreground
+                $Foreground = 'White'
             }
         }
         'Strong' {

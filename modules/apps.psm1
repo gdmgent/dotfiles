@@ -319,12 +319,17 @@ function InstallMySQL {
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install MySQL Server...'
         sh -c 'brew install mysql'
-        sh -c "$(brew --prefix mysql)/bin/mysqladmin -u root password secret"
-        mysql.server start
+        if (ExistCommand -Name mysql) {
+            sh -c "$(brew --prefix mysql)/bin/mysqladmin -u root password secret"
+            WriteMessage -Type Warning -Inverse -Message'Open a new PowerShell window/tab to activate the MySQL commands.'
+        } else {
+            WriteMessage -Type Danger -Inverse -Message'MySQL was not correctly installed.'
+        }
     } elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Using the MySQL Installer to install MySQL Server...'
         WriteMessage -Type Warning -Inverse -Message 'set "root" password to "secret"'
         OpenUri -Uri https://dev.mysql.com/downloads/installer/
+        WriteMessage -Type Warning -Inverse -Message'Open a new PowerShell window/tab once MySQL is installed to activate the MySQL commands.'
     }
 }
 
@@ -690,7 +695,7 @@ if ($IsMacOS) {
 
 if ($IsMacOS) {
     function UpdateBrew {
-        WriteMessage -Type Info -Inverse -Message 'Updating Homebrew'
+        WriteMessage -Type Primary -Inverse -Message 'Updating Homebrew'
         if (ExistCommand -Name brew) {
             WriteMessage -Type Info -Message 'Updating Homebrew...'
             sh -c 'brew update'
@@ -706,7 +711,7 @@ function UpdateBundler {
     $File = 'Gemfile'
     if (Test-Path $File) {
         if (ExistCommand -Name bundle) {
-            WriteMessage -Type Info -Inverse -Message 'Updating Bundler'
+            WriteMessage -Type Primary -Inverse -Message 'Updating Bundler'
             WriteMessage -Type Info -Message 'Updating Bundler Bundle...'
             bundle update
             WriteMessage -Type Info -Message 'Cleaning up unused Ruby Gems...'
