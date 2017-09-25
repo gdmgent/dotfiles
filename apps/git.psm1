@@ -58,17 +58,20 @@ function GitConfigIgnoreGlobal {
     if (! (ExistCommand -Name git)) {
         InstallGit
     }
-    Write-Host 'Installing GitIgnore Global...'
+    WriteMessage -Type Info -Inverse -Message 'Installing .gitignore_global'
     $GitIgnoreSource = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath 'gitignore_global'
     git config --global core.excludesfile $GitIgnoreSource
 }
 
 function GitConfigProxyOff {
     git config --global --unset http.proxy
+    git config --global --unset https.proxy
 }
 
 function GitConfigProxyOn {
-    git config --global http.proxy "http://proxy.arteveldehs.be:8080"
+    $Proxy = 'http://proxy.arteveldehs.be:8080'
+    git config --global http.proxy "$Proxy"
+    git config --global https.proxy "$Proxy"
 }
 
 function GitConfigUser {

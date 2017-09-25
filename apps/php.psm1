@@ -15,7 +15,7 @@ function BehatCommand {
     } elseif (ExistCommand -Name $Command) {
         Invoke-Expression -Command (((Get-Command -Name $Command -Type Application).Source | Select-Object -first 1) + " $args")
     } else {
-        Write-Warning -Message 'Behat is not available from this directory, nor is it installed globally.'
+        WriteMessage -Type Warning -Message 'Behat is not available from this directory, nor is it installed globally.'
     }
 }
 New-Alias -Name behat -Value BehatCommand
@@ -50,7 +50,7 @@ function DrushCommand {
     } elseif (ExistCommand -Name $Command) {
         Invoke-Expression -Command (((Get-Command -Name $Command -Type Application).Source | Select-Object -first 1) + " --nocolor $args")
     } else {
-        Write-Warning -Message 'Drush is not available from this directory, nor is it installed globally.'
+        WriteMessage -Type Warning -Message 'Drush is not available from this directory, nor is it installed globally.'
     }
 }
 New-Alias -Name drush -Value DrushCommand
@@ -60,7 +60,7 @@ function GravCommand {
     if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
         Invoke-Expression -Command "php $Path $args"
     } else {
-        Write-Warning -Message 'Grav CLI Application is not available from this directory.'
+        WriteMessage -Type Warning -Message 'Grav CLI Application is not available from this directory.'
     }
 }
 New-Alias -Name grav -Value GravCommand
@@ -70,7 +70,7 @@ function GravGPMCommand {
     if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
         Invoke-Expression -Command "php $Path $args"
     } else {
-        Write-Warning -Message 'Grav Package Manager is not available from this directory.'
+        WriteMessage -Type Warning -Message 'Grav Package Manager is not available from this directory.'
     }
 }
 New-Alias -Name gpm -Value GravGPMCommand
@@ -80,7 +80,7 @@ function LaravelArtisanCommand {
     if (Test-Path -Path $Command) {
         Invoke-Expression -Command "php $Command $args"
     } else {
-        Write-Warning -Message 'Laravel Artisan Console is not available from this directory.'
+        WriteMessage -Type Warning -Message 'Laravel Artisan Console is not available from this directory.'
     }
 }
 New-Alias -Name artisan -Value LaravelArtisanCommand
@@ -118,7 +118,7 @@ function PHPUnitCommand {
     } elseif (ExistCommand -Name $Command) {
         Invoke-Expression -Command ((Get-Command -Name $Command -Type Application).Source + " $args")
     } else {
-        Write-Warning -Message 'PHPUnit is not available from this directory, nor is it installed globally.'
+        WriteMessage -Type Warning -Message 'PHPUnit is not available from this directory, nor is it installed globally.'
     }
 }
 New-Alias -Name phpunit -Value PHPUnitCommand
@@ -132,7 +132,7 @@ function SymfonyConsoleCommand {
         # Symfony 2.*.*
         Invoke-Expression -Command "php $PathApp $args"
     } else {
-        Write-Warning -Message 'Symfony Console is not available from this directory.'
+        WriteMessage -Type Warning -Message 'Symfony Console is not available from this directory.'
     }
 }
 New-Alias -Name console -Value SymfonyConsoleCommand
@@ -144,21 +144,21 @@ if (ExistCommand -Name composer) {
             $Local
         )
         if ($Local) {
-            Write-Host 'Updating locally installed Composer packages...' -ForegroundColor Blue
+            WriteMessage -Type Info -Message 'Updating locally installed Composer packages...'
             $Directories = Get-ChildItem -Filter composer.json -Recurse | Where-Object { $_.Directory -notmatch 'vendor' } | Select-Object -Property Directory
             foreach ($Directory in $Directories) {
-                Write-Host ('in ' + $Directory.Directory) -ForegroundColor  Magenta
+                WriteMessage -Type Mute -Message ('in ' + $Directory.Directory)
                 Push-Location $Directory.Directory
                 composer update
                 Pop-Location
             }
         } else {
-            Write-Host 'Updating Composer...' -ForegroundColor Blue
+            WriteMessage -Type Info -Message 'Updating Composer...'
             composer self-update
-            Write-Host 'Updating globally installed Composer packages...' -ForegroundColor Blue
+            WriteMessage -Type Info -Message 'Updating globally installed Composer packages...'
             composer global update
             if (ExistCommand -Name cgr) {
-                Write-Host 'Updating CGR installed Composer packages...' -ForegroundColor Blue
+                WriteMessage -Type Info -Message 'Updating CGR installed Composer packages...'
                 cgr update
             }
         }

@@ -4,7 +4,9 @@ Push-Location -Path $Global:DotfilesInstallPath
 
 $Modules = @(
     'apps'
+    'browsers'
     'core'
+    'node'
     'path'
     'prompt'
     'proxy'
@@ -19,7 +21,6 @@ $Applications = @(
     'hotel'
     'jekyll'
     'mysql'
-    'node'
     'php'
     'vagrant'
 )

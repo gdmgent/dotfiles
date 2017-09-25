@@ -154,7 +154,7 @@ function PullSyllabi {
     foreach ($Directory in $Directories) {
         Push-Location $Directory
         if (Test-Path -Path .git) {
-            Write-Host " $Directory " -BackgroundColor Blue -ForegroundColor White
+            WriteMessage -Type Info -Inverse -Message $Directory
             git add . | Write-Host -ForegroundColor DarkGray
             if ($Force) {
                 git stash | Write-Host -ForegroundColor DarkGray
@@ -185,7 +185,7 @@ function StatusSyllabi {
     foreach ($Directory in $Directories) {
         Push-Location $Directory
         if (Test-Path -Path .git) {
-            Write-Host " $Directory " -BackgroundColor Blue -ForegroundColor White
+            WriteMessage -Type Info -Inverse -Message $Directory
             git status | Write-Host -ForegroundColor DarkGray
         }
         Pop-Location
@@ -203,7 +203,7 @@ function UpdateSyllabi {
     $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^\d{4}-' }
     foreach ($Directory in $Directories) {
         Push-Location $Directory
-            Write-Host " $Directory " -BackgroundColor Blue -ForegroundColor White
+            WriteMessage -Type Info -Inverse -Message $Directory
             if ($Push) {
                 UpdateSyllabus -Push
             } else {
@@ -235,7 +235,7 @@ function UpdateSyllabus {
 
 function UpdateSyllabusResources {
     if (Test-Path -Path syllabusv2-resources) {
-        Write-Host 'Updating Syllabus Resources' -ForegroundColor Green
+        WriteMessage -Type Info -Message 'Updating Syllabus Resources...'
         $Origin = [io.path]::combine('syllabusv2-resources', '_data', 'shared', '*.yml')
         $Destination = [io.path]::combine('_data', 'shared')
         if (! (Test-Path -Path $Destination)) {
@@ -247,7 +247,7 @@ function UpdateSyllabusResources {
 
 function UpdateSyllabusSettings {
     if (Test-Path -Path syllabusv2-resources) {
-        Write-Host 'Updating Syllabus Settings' -ForegroundColor Green
+        WriteMessage -Type Info -Message 'Updating Syllabus Settings...'
         $Origin = [io.path]::combine('syllabusv2-resources', '__tools', 'settings', '*.json')
         $Destination = '.vscode'
         if (! (Test-Path -Path $Destination)) {
@@ -259,7 +259,7 @@ function UpdateSyllabusSettings {
 
 function UpdateSyllabusSnippets {
     if (Test-Path -Path syllabusv2-resources) {
-        Write-Host 'Updating Syllabus Snippets' -ForegroundColor Green
+        WriteMessage -Type Info -Message 'Updating Syllabus Snippets...'
         $Origin = [io.path]::combine('syllabusv2-resources', '__tools', 'snippets', '*.json')
         if ($IsMacOS) {
             $Destination = "$HOME/Library/Application Support/Code/User/snippets/"

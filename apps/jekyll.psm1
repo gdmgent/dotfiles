@@ -84,6 +84,6 @@ function IsJekyllSite {
     if (Test-Path -Path $File) {
         return $true
     } else {
-        Write-Warning -Message "Cannot run Jekyll in this directory because a '$File' is required."
+        WriteMessage -Type Warning -Message "Cannot run Jekyll in this directory because a '$File' is required."
     }
 }
