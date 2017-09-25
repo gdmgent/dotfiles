@@ -65,7 +65,6 @@ function MySQLCreateDbUser {
         return
     }
     mysql --host=127.0.0.1 --user=${DatabaseAdministratorUsername} --execute="`"${SQL};`""
-    # mysql --host=127.0.0.1 --user="${DatabaseAdministratorUsername}" --execute="CREATE USER IF NOT EXISTS '${DatabaseUserUsername}'@'localhost' IDENTIFIED BY '${DatabaseUserPassword}'; GRANT ALL PRIVILEGES ON ${Database}.* TO '${DatabaseUserUsername}'@'localhost' WITH GRANT OPTION;"
     WriteMessage -Type Success -Message 'Database User created'
     WriteMessage -Message 'Username                  : ' -NoNewLine
     WriteMessage -Type Info -Message "'${DatabaseUserUsername}'"

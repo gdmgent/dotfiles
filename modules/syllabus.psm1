@@ -196,6 +196,8 @@ function StatusSyllabi {
 function UpdateSyllabi {
     Param(
         [Switch]
+        $NoBundlerUpdate,
+        [Switch]
         $Push
     )
     Push-Location
@@ -204,11 +206,7 @@ function UpdateSyllabi {
     foreach ($Directory in $Directories) {
         Push-Location $Directory
             WriteMessage -Type Info -Inverse -Message $Directory
-            if ($Push) {
-                UpdateSyllabus -Push
-            } else {
-                UpdateSyllabus
-            }
+            UpdateSyllabus -NoBundlerUpdate:$NoBundlerUpdate -Push:$Push
         Pop-Location
     }
     Pop-Location
@@ -217,6 +215,8 @@ function UpdateSyllabi {
 function UpdateSyllabus {
     Param(
         [Switch]
+        $NoBundlerUpdate,
+        [Switch]
         $Push
     )
     if (Test-Path -Path .git) {
@@ -224,7 +224,9 @@ function UpdateSyllabus {
         UpdateSyllabusResources
         UpdateSyllabusSettings
         UpdateSyllabusSnippets
-        UpdateBundler
+        if (! $NoBundlerUpdate) {
+            UpdateBundler
+        }
         if ($Push) {
             if (Test-Path -Path .git) {
                 GitPushWorkInProgress
