@@ -352,7 +352,7 @@ function InstallPhp {
     )
     $VersionStable      = '7.1'
     $VersionDevelopment = '7.2'
-    $Version = if ($Development) { $VersionDevelopment } else { VersionStable }
+    $Version = if ($Development) { $VersionDevelopment } else { $VersionStable }
     WriteMessage -Type Info -Inverse -Message "Installing PHP $Version"
     if ($IsMacOS) {
         WriteMessage -Type Info -Message "Using Homebrew to install PHP $Version..."
