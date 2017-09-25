@@ -74,7 +74,7 @@ function MySQLCreateDbUser {
     WriteMessage -Message 'Has privileges on database: ' -NoNewLine
     WriteMessage -Type Info -Message "'${Database}'"
 }
-New-Alias -Name myuser -Value MySQLInitialize
+New-Alias -Name myuser -Value MySQLCreateDbUser
 
 function MySQLLogin {
     Param(
