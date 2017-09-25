@@ -3,47 +3,96 @@ function MySQLAliases {
 }
 New-Alias -Name my -Value MySQLAliases 
 
-function MySQLStart {
-    mysql.server start
+if ($IsMacOS) {
+    function MySQLStart {
+        Param(
+            [Switch]
+            $Service
+        )
+        if ($Service) {
+            brew services start mysql
+        } else {
+            mysql.server start
+        }
+    }
+    New-Alias -Name myon -Value MySQLStart
 }
-New-Alias -Name myon -Value MySQLStart
 
-function MySQLStartService {
-    brew services start mysql
+if ($IsMacOS) {
+    function MySQLStop {
+        Param(
+            [Switch]
+            $Service
+        )
+        if ($Service) {
+            brew services stop mysql
+        } else {
+            mysql.server stop
+        }
+    }
+    New-Alias -Name myoff -Value MySQLStop
 }
-New-Alias -Name myonserv -Value MySQLStartService
-
-function MySQLStop {
-    mysql.server stop
+if ($IsMacOS) {
+    function MySQLStatus {
+        mysql.server status
+    }
+    New-Alias -Name mysts -Value MySQLStatus
 }
-New-Alias -Name myoff -Value MySQLStop
 
-function MySQLStopService {
-    brew services stop mysql
-}
-New-Alias -Name myoffserv -Value MySQLStopService
-
-function MySQLStatus {
-    mysql.server status
-}
-New-Alias -Name mysts -Value MySQLStatus
-
-function MySQLCreateDbUser {
+function MySQLCreateDatabase {
     Param(
         [Parameter(Mandatory=$true)]
         [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech2')]
         [String]
         $Course,
         [String]
-        $Database,
+        $DatabaseName,
+        [Switch]
+        $ShowSQL
+    )
+    if (! $DatabaseName) {
+        $DatabaseName= "${Course}-db"
+    } else {
+        $DatabaseName = $DatabaseName.ToLower()
+        $Course       = $DatabaseName
+    }
+    $DatabaseUserUsername = "${Course}-user"
+    $DatabaseUserPassword = "${Course}-pass"
+    WriteMessage -Type Info -Message 'Creating Database for User...'
+    [System.Environment]::SetEnvironmentVariable('MYSQL_PWD', $DatabaseUserPassword)
+    $SQL = "CREATE DATABASE IF NOT EXISTS ``${DatabaseName}`` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
+    if ($ShowSQL) {
+        WriteMessage -Message "${SQL}";
+        return
+    }
+    mysql --host=127.0.0.1 --user=${DatabaseUserUsername} --execute="`"${SQL};`""
+    WriteMessage -Type Success -Message 'Database created'
+    WriteMessage -Message 'Database Name: ' -NoNewLine
+    WriteMessage -Type Info -Message "'${DatabaseName}'"
+    WriteMessage -Type Success -Message 'for Database User'
+    WriteMessage -Message 'Username     : ' -NoNewLine
+    WriteMessage -Type Info -Message "'${DatabaseUserUsername}'"
+    WriteMessage -Message 'Password     : ' -NoNewLine
+    WriteMessage -Type Info -Message "'${DatabaseUserPassword}'"
+}
+New-Alias -Name mycrdb -Value MySQLCreateDatabase
+
+function MySQLCreateDatabaseUser {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech2')]
+        [String]
+        $Course,
+        [String]
+        $DatabaseName,
         [Switch]
         $ShowSQL
     )
     if (! $Database) {
-        $Database= "${Course}-db"
+        $DatabaseName = "${Course}-db"
     } else {
-        $Database = $Database.ToLower()
-        $Course = $Database
+        $DatabaseName = $DatabaseName.ToLower()
+        $Course       = $DatabaseName
     }
     $DatabaseAdministratorUsername = 'root'
     $DatabaseAdministratorPassword = 'secret'
@@ -56,10 +105,10 @@ function MySQLCreateDbUser {
     WriteMessage -Type Info -Message 'Creating Database User...'
     [System.Environment]::SetEnvironmentVariable('MYSQL_PWD', $DatabaseAdministratorPassword)
     $SQL = @(
-        "CREATE USER IF NOT EXISTS '${DatabaseUserUsername}'@'localhost' IDENTIFIED BY '${DatabaseUserPassword}'",
-        "GRANT ALL PRIVILEGES ON ``${Database}``.* TO '${DatabaseUserUsername}'@'localhost' WITH GRANT OPTION"
+        "CREATE USER IF NOT EXISTS '${DatabaseUserUsername}'@'localhost' IDENTIFIED BY '${DatabaseUserPassword}';",
+        "GRANT ALL PRIVILEGES ON ``${DatabaseName}``.* TO '${DatabaseUserUsername}'@'localhost' WITH GRANT OPTION;"
     )
-    $SQL = $SQL -join ';'
+    $SQL = $SQL -join ''
     if ($ShowSQL) {
         WriteMessage -Message "${SQL}";
         return
@@ -71,19 +120,61 @@ function MySQLCreateDbUser {
     WriteMessage -Message 'Password                  : ' -NoNewLine
     WriteMessage -Type Info -Message "'${DatabaseUserPassword}'"
     WriteMessage -Message 'Has privileges on database: ' -NoNewLine
-    WriteMessage -Type Info -Message "'${Database}'"
+    WriteMessage -Type Info -Message "'${DatabaseName}'"
 }
-New-Alias -Name myuser -Value MySQLCreateDbUser
+New-Alias -Name mycruser -Value MySQLCreateDatabaseUser
+
+function MySQLDropDatabase {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech2')]
+        [String]
+        $Course,
+        [String]
+        $DatabaseName,
+        [Switch]
+        $ShowSQL
+    )
+    if (! $DatabaseName) {
+        $DatabaseName= "${Course}-db"
+    } else {
+        $DatabaseName = $DatabaseName.ToLower()
+        $Course       = $DatabaseName
+    }
+    $DatabaseUserUsername = "${Course}-user"
+    $DatabaseUserPassword = "${Course}-pass"
+    WriteMessage -Type Info -Message 'Creating Database for User...'
+    [System.Environment]::SetEnvironmentVariable('MYSQL_PWD', $DatabaseUserPassword)
+    $SQL = "DROP DATABASE IF EXISTS ``${DatabaseName}``;";
+    if ($ShowSQL) {
+        WriteMessage -Message "${SQL}";
+        return
+    }
+    mysql --host=127.0.0.1 --user=${DatabaseUserUsername} --execute="`"${SQL};`""
+    WriteMessage -Type Success -Message 'Database dropped'
+    WriteMessage -Message 'Database Name: ' -NoNewLine
+    WriteMessage -Type Info -Message "'${DatabaseName}'"
+}
+New-Alias -Name mydrdb -Value MySQLDropDatabase
 
 function MySQLLogin {
     Param(
         [Parameter(Mandatory=$true)]
-        [ValidateSet('cms','cmsdev','webdev1','webdev2','webdtech2','root')]
+        [ValidateSet('cms','cmsdev','webdev1','webdev2','webdtech2')]
         [String]
-        $DbUser
+        $Course,
+        [Switch]
+        $Root
     )
-    $DbPassword = 'secret'
-    [System.Environment]::SetEnvironmentVariable('MYSQL_PWD', $DbPassword)
-    mysql --host=127.0.0.1 --user=$DbUser
+    if ($Root) {
+        $Username          = 'root'
+        $Password          = 'secret'
+    } else {
+        $Username          = "${Course}-user"
+        $Password          = "${Course}-pass"
+    }
+
+    [System.Environment]::SetEnvironmentVariable('MYSQL_PWD', $Password)
+    mysql --host=127.0.0.1 --user="${Username}"
 }
-New-Alias -Name mydb -Value MySQLLogin
+New-Alias -Name mylog -Value MySQLLogin
