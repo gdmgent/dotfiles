@@ -71,7 +71,6 @@ function SetEnvironment {
             $EnvironmentPath += $AndroidSdkPath
         }
 
-
         $DotNetCore = '/usr/local/share/dotnet/dotnet'
         if (Test-Path -Path $DotNetCore) {
             $EnvironmentPath += $DotNetCore
