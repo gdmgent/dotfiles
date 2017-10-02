@@ -63,15 +63,25 @@ function GitConfigIgnoreGlobal {
     git config --global core.excludesfile $GitIgnoreSource
 }
 
-function GitConfigProxyOff {
-    git config --global --unset http.proxy
-    git config --global --unset https.proxy
-}
-
-function GitConfigProxyOn {
+function GitConfigProxy {
+    Param(
+        [Switch]
+        $Off,
+        [Switch]
+        $On
+    )
     $Proxy = 'http://proxy.arteveldehs.be:8080'
-    git config --global http.proxy "$Proxy"
-    git config --global https.proxy "$Proxy"
+    $Keys = @('http.proxy','https.proxy')
+    foreach ($Key in $Keys) {
+        if ($Off) {
+            git config --global --unset $Key
+        } elseif ($On) {
+            git config --global $Key "$Proxy"
+        } else {
+            WriteMessage -Message "${Key}: " -NoNewline
+            git config --global $Key
+        }
+    }
 }
 
 function GitConfigUser {

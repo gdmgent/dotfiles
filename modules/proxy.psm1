@@ -94,8 +94,11 @@ function TurnProxyOff {
         # netsh.exe winhttp reset proxy
     }
     if (ExistCommand -Name git) {
-        GitConfigProxyOff
+        GitConfigProxy -Off
     }
+    # if (ExistCommand -Name npm) {
+    #     NpmConfigProxy -Off
+    # }
 }
 
 function TurnProxyOn {
@@ -133,8 +136,11 @@ function TurnProxyOn {
         # netsh.exe winhttp set proxy proxy-server="http=myproxy;https=sproxy:88" bypass-list="*.foo.com"
     }
     if (ExistCommand -Name git) {
-        GitConfigProxyOn
+        GitConfigProxy -On
     }
+    # if (ExistCommand -Name npm) {
+    #     NpmConfigProxy -On
+    # }
 }
 
 function OpenProxySettings {

@@ -12,6 +12,27 @@ function nvm {
     }
 }
 
+function NpmConfigProxy {
+    Param(
+        [Switch]
+        $Off,
+        [Switch]
+        $On
+    )
+    $Proxy = 'http://proxy.arteveldehs.be:8080'
+    $Keys = @('proxy','https-proxy')
+    foreach ($Key in $Keys) {
+        if ($Off) {
+            npm config delete $Key
+        } elseif ($On) {
+            npm config set $Key "$Proxy"
+        } else {
+            WriteMessage -Message "${Key}: " -NoNewline
+            npm config get $Key
+        }
+    }
+}
+
 function InitNode {
     if ($IsMacOS) {
         $Version = ReadConfig -Name Node
