@@ -93,7 +93,7 @@ function PhpServeCommand {
         [Int16]
         $Port = 8080,
         [String]
-        $RouterScript = ''
+        $RouterScript = [io.path]::Combine($DotfilesInstallPath, 'scripts', 'php', 'router.php')
     )
     $Uri = "${Hostname}:$Port"
     OpenUri -Uri "http://$Uri"

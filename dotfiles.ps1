@@ -13,7 +13,7 @@ $Modules = @(
     'syllabus'
 )
 foreach ($Module in $Modules) {
-    Import-Module -Name ([io.path]::combine($Global:DotfilesInstallPath, 'modules', "$Module.psm1"))
+    Import-Module -Name ([io.path]::Combine($Global:DotfilesInstallPath, 'modules', "$Module.psm1"))
 }
 
 $Applications = @(
@@ -26,7 +26,7 @@ $Applications = @(
 )
 foreach ($Application in $Applications) {
     if (ExistCommand -Name $Application) {
-        Import-Module -Name ([io.path]::combine($Global:DotfilesInstallPath, 'apps', "$Application.psm1"))
+        Import-Module -Name ([io.path]::Combine($Global:DotfilesInstallPath, 'apps', "$Application.psm1"))
     } else {
         $Error.RemoveAt(0)
     }

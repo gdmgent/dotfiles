@@ -114,7 +114,7 @@ function ShowNodeConfig {
 }
 
 function WebpackCommand {
-    if (Test-Path -Path ($Path = [io.path]::combine('.', 'node_modules', '.bin', 'webpack'))) {
+    if (Test-Path -Path ($Path = [io.path]::Combine('.', 'node_modules', '.bin', 'webpack'))) {
         Invoke-Expression -Command "$Path $args"    
     } elseif (ExistCommand -Name webpack) {
         Invoke-Expression -Command ((Get-Command -Name webpack -Type Application).Source + " $args")
