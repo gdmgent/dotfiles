@@ -93,11 +93,22 @@ function PhpServeCommand {
         [Int16]
         $Port = 8080,
         [String]
-        $RouterScript = [io.path]::Combine($DotfilesInstallPath, 'scripts', 'php', 'router.php')
+        $RouterScript = [io.path]::Combine($DotfilesInstallPath, 'scripts', 'php', 'router.php'),
+        [Switch]
+        $NoRouterScript
     )
     $Uri = "${Hostname}:$Port"
-    OpenUri -Uri "http://$Uri"
-    Invoke-Expression -Command "php -S $Uri $RouterScript"
+    if ($NoRouterScript) {
+        OpenUri -Uri "http://$Uri"
+        Invoke-Expression -Command "php -S $Uri"
+    } else {
+        if (Test-Path -Path index.php) {
+            OpenUri -Uri "http://$Uri"
+            Invoke-Expression -Command "php -S $Uri $RouterScript"
+        } else {
+            WriteMessage -Type Warning -Message '`index.php` could not be found in this directory.'
+        }
+    }
 }
 New-Alias -Name phpserve -Value PhpServeCommand
 
