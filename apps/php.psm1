@@ -152,18 +152,13 @@ if (ExistCommand -Name composer) {
     function UpdateComposer {
         Param(
             [Switch]
+            $All,
+            [Switch]
+            $Global,
+            [Switch]
             $Local
         )
-        if ($Local) {
-            WriteMessage -Type Info -Message 'Updating locally installed Composer packages...'
-            $Directories = Get-ChildItem -Filter composer.json -Recurse | Where-Object { $_.Directory -notmatch 'vendor' } | Select-Object -Property Directory
-            foreach ($Directory in $Directories) {
-                WriteMessage -Type Mute -Message ('in ' + $Directory.Directory)
-                Push-Location $Directory.Directory
-                composer update
-                Pop-Location
-            }
-        } else {
+        if (! $Local) {
             WriteMessage -Type Info -Message 'Updating Composer...'
             composer self-update
             WriteMessage -Type Info -Message 'Updating globally installed Composer packages...'
@@ -171,6 +166,16 @@ if (ExistCommand -Name composer) {
             if (ExistCommand -Name cgr) {
                 WriteMessage -Type Info -Message 'Updating CGR installed Composer packages...'
                 cgr update
+            }
+        }
+        if ($All -or $Local) {
+            WriteMessage -Type Info -Message 'Updating locally installed Composer packages...'
+            $Directories = Get-ChildItem -Filter composer.json -Recurse | Where-Object { $_.Directory -notmatch 'vendor' } | Select-Object -Property Directory
+            foreach ($Directory in $Directories) {
+                WriteMessage -Type Mute -Message ('in ' + $Directory.Directory)
+                Push-Location $Directory.Directory
+                composer update
+                Pop-Location
             }
         }
     }
