@@ -390,17 +390,33 @@ function InstallPhp {
             Remove-Item -Path $OutFile
             WriteMessage -Type Info -Message 'Configuring PHP...'
             $ConfigFile = Get-Content -Path C:\php\php.ini-development
-            $Replacements = @(
-                'extension=php_curl'
-                'extension=php_gd2'
-                'extension=php_mbstring'
-                'extension=php_openssl'
-                'extension=php_pdo_mysql'
-                'extension=php_pdo_sqlite'
+            $Extensions = @(
+                'extension=php_curl',
+                'extension=php_gd2',
+                'extension=php_mbstring',
+                'extension=php_openssl',
+                'extension=php_pdo_mysql',
+                'extension=php_pdo_sqlite',
                 'extension=php_sqlite3'
             )
-            foreach ($Replacement in $Replacements) {
-                $ConfigFile = $ConfigFile.Replace(";$Replacement", $Replacement)
+            foreach ($Extension in $Extensions) {
+                $ConfigFile = $ConfigFile.Replace(";$Extension", $Extension)
+            }
+            $Settings = @(
+                @('max_execution_time = 30', 'max_execution_time = 999'),
+                @('memory_limit = 128M', 'memory_limit = 256M'),
+                @(';opcache.enable=1', 'opcache.enable=1'),
+                @(';opcache.enable_cli=1', 'opcache.enable_cli=1'),
+                @(';opcache.memory_consumption=128', 'opcache.memory_consumption=128'),
+                @(';opcache.interned_strings_buffer=8', 'opcache.interned_strings_buffer=8'),
+                @(';opcache.max_wasted_percentage=5', 'opcache.max_wasted_percentage=5'),
+                @(';opcache.use_cwd=1', 'opcache.use_cwd=1')
+            )
+            foreach ($Setting in $Settings) {
+                WriteMessage $Setting[0]
+                WriteMessage $Setting[1]
+                WriteMessage '----'
+                $ConfigFile = $ConfigFile.Replace($Setting[0], $Setting[1])
             }
             # Adding CA Root Certificates for SSL
             $ConfigFile = $ConfigFile.Replace(';openssl.cafile=', 'openssl.cafile=' + $Global:DotfilesInstallPath + '\ssl\cacert.pem')
