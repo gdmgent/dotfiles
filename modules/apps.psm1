@@ -404,6 +404,7 @@ function InstallPhp {
             }
             $Settings = @(
                 @('max_execution_time = 30', 'max_execution_time = 999'),
+                @('max_input_time = 60', 'max_input_time = -1'),
                 @('memory_limit = 128M', 'memory_limit = 256M'),
                 @(';opcache.enable=1', 'opcache.enable=1'),
                 @(';opcache.enable_cli=1', 'opcache.enable_cli=1'),
@@ -413,9 +414,6 @@ function InstallPhp {
                 @(';opcache.use_cwd=1', 'opcache.use_cwd=1')
             )
             foreach ($Setting in $Settings) {
-                WriteMessage $Setting[0]
-                WriteMessage $Setting[1]
-                WriteMessage '----'
                 $ConfigFile = $ConfigFile.Replace($Setting[0], $Setting[1])
             }
             # Adding CA Root Certificates for SSL
