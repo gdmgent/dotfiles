@@ -93,9 +93,9 @@ function CloneSyllabus {
     SetLocationPathSyllabi
     git clone https://$Service/$Account/$Name --branch $Branch --single-branch $DestinationName
     if ($DestinationName) {
-        SetLocationPathSyllabi $DestinationName
+        SetLocationPathSyllabi -Directory $DestinationName
     } else {
-        SetLocationPathSyllabi $Name
+        SetLocationPathSyllabi -Directory $Name
     }
     if ($Clean) {
         Remove-Item -Path '.git' -Recurse -Force
