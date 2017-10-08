@@ -6,6 +6,8 @@ New-Alias -Name ll -Value GetLongList
 function OpenHostsFile {
     if (ExistCommand -Name code) {
         if ($IsMacOS) {
+            WriteMessage -Type Warning -Message "Please close all instances of Visual Studio Code before continuing"
+            [void](Read-Host 'Press Enter to continue…')
             sudo code /etc/hosts
         } elseif ($IsWindows) {
             code C:\Windows\System32\drivers\etc\hosts
@@ -15,6 +17,41 @@ function OpenHostsFile {
     }
 }
 New-Alias -Name hosts -Value OpenHostsFile
+
+function ExtendHostsFile {
+    Param(
+        [Switch]
+        $Undo
+    )
+    if ($IsMacOS) {
+        sudo powershell -c "(Get-Content -Path /etc/hosts | Select-String -Pattern '# gdm.gent Dotfiles' -NotMatch).Line | Out-File /etc/hosts -Encoding utf8"
+    }
+    if (! $Undo) {
+        $Entries = @(
+            '',
+            '127.0.0.1       cms.localhost          # gdm.gent Dotfiles',
+            '127.0.0.1       cmsdev.localhost       # gdm.gent Dotfiles',
+            '127.0.0.1       csse.localhost         # gdm.gent Dotfiles',
+            '127.0.0.1       nmd1.localhost         # gdm.gent Dotfiles',
+            '127.0.0.1       nmd2.localhost         # gdm.gent Dotfiles',
+            '127.0.0.1       nmd3.localhost         # gdm.gent Dotfiles',
+            '127.0.0.1       nmt1.localhost         # gdm.gent Dotfiles',
+            '127.0.0.1       nmt2.localhost         # gdm.gent Dotfiles',
+            '127.0.0.1       webdev1.localhost      # gdm.gent Dotfiles',
+            '127.0.0.1       webdev2.localhost      # gdm.gent Dotfiles',
+            '127.0.0.1       webtech1.localhost     # gdm.gent Dotfiles',
+            '127.0.0.1       webtech2.localhost     # gdm.gent Dotfiles',
+            '127.0.0.1       wot.localhost          # gdm.gent Dotfiles'
+        )
+        if ($IsMacOS) {
+            $Command = '';
+            foreach ($Entry in $Entries) {
+                $Command += "Add-Content -Path /etc/hosts -Value '${Entry}';"
+            }
+            sudo powershell -c "$Command"
+        }
+    }
+}
 
 function SetLocationPath ([String] $Path, [String] $Directory) {
     $Location = Join-Path -Path $Path -ChildPath $Directory

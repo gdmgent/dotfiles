@@ -21,12 +21,25 @@ function BehatCommand {
 New-Alias -Name behat -Value BehatCommand
 
 function ComposerGlobalRequire {
-    if (ExistCommand cgr) {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [ValidatePattern("^\w+/\w+$")]
+        [String]
+        $Package,
+        [Switch]
+        $Remove
+    )
+    return $Package;
+    if (ExistCommand -Name cgr) {
         $State = ReadConfig -Name Proxy
-        if ($IsMacOS -and $State -eq 'on') {
-            cgr --prefer-source $args
+        if ($Remove) {
+            cgr remove $Package
         } else {
-            cgr $args
+            if ($IsMacOS -and $State -eq 'on') {
+                cgr --prefer-source $Package
+            } else {
+                cgr $Package
+            }
         }
     } else {
         InstallComposerCgr
@@ -34,20 +47,28 @@ function ComposerGlobalRequire {
 }
 
 function DrupalCommand {
+    Param (
+        [Switch]
+        $SuperUser # Needed to run server on port 80
+    )
     $Command = 'drupal'
     if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
         if ($IsWindows) {
             Invoke-Expression -Command "$Path $args"
+        } elseif ($SuperUser) {
+            Invoke-Expression -Command "sudo php $Path $args"
         } else {
             Invoke-Expression -Command "php $Path $args"
         }
     } elseif (Test-Path -Path ($Path = Join-Path -Path vendor -ChildPath $Path)) {
         if ($IsWindows) {
             Invoke-Expression -Command "$Path $args"
+        } elseif ($SuperUser) {
+            Invoke-Expression -Command "sudo php $Path $args"
         } else {
             Invoke-Expression -Command "php $Path $args"
         }
-    } elseif (ExistCommand -Name $Command) {
+    } elseif ( -Name $Command) {
         Invoke-Expression -Command (((Get-Command -Name $Command -Type Application).Source | Select-Object -first 1) + " --nocolor $args")
     } else {
         WriteMessage -Type Warning -Message 'Drupal is not available from this directory, nor is it installed globally.'
@@ -116,19 +137,43 @@ function PhpServeCommand {
         $Port = 8080,
         [String]
         $RouterScript = [io.path]::Combine($DotfilesInstallPath, 'scripts', 'php', 'router.php'),
+        [String]
+        [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech1')]
+        $Course,
         [Switch]
         $NoRouterScript
     )
-    $Uri = "${Hostname}:$Port"
-    if ($NoRouterScript) {
-        OpenUri -Uri "http://$Uri"
-        Invoke-Expression -Command "php -S $Uri"
-    } else {
-        if (Test-Path -Path index.php) {
+    switch ($Course) {
+        'cmsdev' {
+            $Hostname = 'cmsdev.localhost'
+            $Port = 80
+            $Uri = "${Hostname}:$Port"
             OpenUri -Uri "http://$Uri"
-            Invoke-Expression -Command "php -S $Uri $RouterScript"
-        } else {
-            WriteMessage -Type Warning -Message '`index.php` could not be found in this directory.'
+            if (ExistCommand -Name ([io.path]::Combine('vendor', 'bin', 'drupal'))) {
+                DrupalCommand -SuperUser server $Uri
+            } else {
+                PhpServeCommand -Hostname $Hostname -Port 80
+            }
+            break
+        }
+        Default {
+            $Uri = "${Hostname}:$Port"
+            if ($NoRouterScript) {
+                OpenUri -Uri "http://$Uri"
+                Invoke-Expression -Command "php -S $Uri"
+            } else {
+                if (Test-Path -Path index.php) {
+                    OpenUri -Uri "http://$Uri"
+                    if ($Port -eq 80 -and $IsMacOS) {
+                        Invoke-Expression -Command "sudo php -S $Uri $RouterScript"
+                    } else {
+                        Invoke-Expression -Command "php -S $Uri $RouterScript"
+                    }
+                } else {
+                    WriteMessage -Type Warning -Message '`index.php` could not be found in this directory.'
+                }
+            }
+            break
         }
     }
 }

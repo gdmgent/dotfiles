@@ -250,7 +250,7 @@ function FindConnectionListeningOn {
         $Port
     )
     if ($IsMacOS) {
-        (netstat -ao | Where-Object { $_ -match 'Proto' -or ($_ -match ":$Port " -and $_ -match 'LISTENING') })
+        (lsof -i ":$Port" | Where-Object { $_ -match 'LISTEN' })
     } elseif ($IsWindows) {
         (NETSTAT.EXE -ao | Where-Object { $_ -match 'Proto' -or ($_ -match ":$Port " -and $_ -match 'LISTENING') })
     }
