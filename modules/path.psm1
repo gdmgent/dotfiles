@@ -23,32 +23,59 @@ function ExtendHostsFile {
         [Switch]
         $Undo
     )
+    $Tag = '# gdm.gent Dotfiles'
     if ($IsMacOS) {
-        sudo powershell -c "(Get-Content -Path /etc/hosts | Select-String -Pattern '# gdm.gent Dotfiles' -NotMatch).Line | Out-File /etc/hosts -Encoding utf8"
+        $HostsPath = '/etc/hosts'
+        sudo powershell -c "(Get-Content -Path $HostsPath | Select-String -Pattern $Tag -NotMatch).Line | Out-File $HostsPath -Encoding utf8"
+    } elseif ($IsWindows) {
+        $HostsPath = 'C:\Windows\System32\drivers\etc\hosts'
+        (Get-Content -Path $HostsPath | Select-String -Pattern $Tag -NotMatch).Line | Out-File $HostsPath -Encoding utf8
     }
     if (! $Undo) {
-        $Entries = @(
-            '',
-            '127.0.0.1       cms.localhost          # gdm.gent Dotfiles',
-            '127.0.0.1       cmsdev.localhost       # gdm.gent Dotfiles',
-            '127.0.0.1       csse.localhost         # gdm.gent Dotfiles',
-            '127.0.0.1       nmd1.localhost         # gdm.gent Dotfiles',
-            '127.0.0.1       nmd2.localhost         # gdm.gent Dotfiles',
-            '127.0.0.1       nmd3.localhost         # gdm.gent Dotfiles',
-            '127.0.0.1       nmt1.localhost         # gdm.gent Dotfiles',
-            '127.0.0.1       nmt2.localhost         # gdm.gent Dotfiles',
-            '127.0.0.1       webdev1.localhost      # gdm.gent Dotfiles',
-            '127.0.0.1       webdev2.localhost      # gdm.gent Dotfiles',
-            '127.0.0.1       webtech1.localhost     # gdm.gent Dotfiles',
-            '127.0.0.1       webtech2.localhost     # gdm.gent Dotfiles',
-            '127.0.0.1       wot.localhost          # gdm.gent Dotfiles'
+        $Domains = @(
+            'cms.localhost     ',
+            'cmsdev.localhost  ',
+            'csse.localhost    ',
+            'nmd1.localhost    ',
+            'nmd2.localhost    ',
+            'nmd3.localhost    ',
+            'nmt1.localhost    ',
+            'nmt2.localhost    ',
+            'webdev1.localhost ',
+            'webdev2.localhost ',
+            'webtech1.localhost',
+            'webtech2.localhost',
+            'wot.localhost     '
         )
+        $DomainEntries = ''
+        foreach ($Domain in $Domains) {
+            $DomainEntries += "`n127.0.0.1    ${Domain}    ${Tag}"
+        }
+        $Command = "Add-Content -Path '$HostsPath' -Value '${DomainEntries}';"
+        # $Entries = @(
+        #     '127.0.0.1       cms.localhost          # gdm.gent Dotfiles',
+        #     '127.0.0.1       cmsdev.localhost       # gdm.gent Dotfiles',
+        #     '127.0.0.1       csse.localhost         # gdm.gent Dotfiles',
+        #     '127.0.0.1       nmd1.localhost         # gdm.gent Dotfiles',
+        #     '127.0.0.1       nmd2.localhost         # gdm.gent Dotfiles',
+        #     '127.0.0.1       nmd3.localhost         # gdm.gent Dotfiles',
+        #     '127.0.0.1       nmt1.localhost         # gdm.gent Dotfiles',
+        #     '127.0.0.1       nmt2.localhost         # gdm.gent Dotfiles',
+        #     '127.0.0.1       webdev1.localhost      # gdm.gent Dotfiles',
+        #     '127.0.0.1       webdev2.localhost      # gdm.gent Dotfiles',
+        #     '127.0.0.1       webtech1.localhost     # gdm.gent Dotfiles',
+        #     '127.0.0.1       webtech2.localhost     # gdm.gent Dotfiles',
+        #     '127.0.0.1       wot.localhost          # gdm.gent Dotfiles'
+        # )
+        # $Command = '';
+
+        # foreach ($Entry in $Entries) {
+        #     $Command += "Add-Content -Path '$HostsPath' -Value '${Entry}';"
+        # }
         if ($IsMacOS) {
-            $Command = '';
-            foreach ($Entry in $Entries) {
-                $Command += "Add-Content -Path /etc/hosts -Value '${Entry}';"
-            }
             sudo powershell -c "$Command"
+        } elseif ($IsWindows) {
+            Invoke-Expression -Command $Command
         }
     }
 }
