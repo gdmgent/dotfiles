@@ -26,7 +26,7 @@ function ExtendHostsFile {
     $Tag = '# gdm.gent Dotfiles'
     if ($IsMacOS) {
         $HostsPath = '/etc/hosts'
-        sudo powershell -c "(Get-Content -Path $HostsPath | Select-String -Pattern $Tag -NotMatch).Line | Out-File $HostsPath -Encoding utf8"
+        sudo powershell -c "(Get-Content -Path '${HostsPath}' | Select-String -Pattern '${Tag}' -NotMatch).Line | Out-File $HostsPath -Encoding utf8"
     } elseif ($IsWindows) {
         $HostsPath = 'C:\Windows\System32\drivers\etc\hosts'
         (Get-Content -Path $HostsPath | Select-String -Pattern $Tag -NotMatch).Line | Out-File $HostsPath -Encoding utf8
@@ -51,27 +51,7 @@ function ExtendHostsFile {
         foreach ($Domain in $Domains) {
             $DomainEntries += "`n127.0.0.1    ${Domain}    ${Tag}"
         }
-        $Command = "Add-Content -Path '$HostsPath' -Value '${DomainEntries}';"
-        # $Entries = @(
-        #     '127.0.0.1       cms.localhost          # gdm.gent Dotfiles',
-        #     '127.0.0.1       cmsdev.localhost       # gdm.gent Dotfiles',
-        #     '127.0.0.1       csse.localhost         # gdm.gent Dotfiles',
-        #     '127.0.0.1       nmd1.localhost         # gdm.gent Dotfiles',
-        #     '127.0.0.1       nmd2.localhost         # gdm.gent Dotfiles',
-        #     '127.0.0.1       nmd3.localhost         # gdm.gent Dotfiles',
-        #     '127.0.0.1       nmt1.localhost         # gdm.gent Dotfiles',
-        #     '127.0.0.1       nmt2.localhost         # gdm.gent Dotfiles',
-        #     '127.0.0.1       webdev1.localhost      # gdm.gent Dotfiles',
-        #     '127.0.0.1       webdev2.localhost      # gdm.gent Dotfiles',
-        #     '127.0.0.1       webtech1.localhost     # gdm.gent Dotfiles',
-        #     '127.0.0.1       webtech2.localhost     # gdm.gent Dotfiles',
-        #     '127.0.0.1       wot.localhost          # gdm.gent Dotfiles'
-        # )
-        # $Command = '';
-
-        # foreach ($Entry in $Entries) {
-        #     $Command += "Add-Content -Path '$HostsPath' -Value '${Entry}';"
-        # }
+        $Command = "Add-Content -Path '${HostsPath}' -Value '${DomainEntries}';"
         if ($IsMacOS) {
             sudo powershell -c "$Command"
         } elseif ($IsWindows) {
