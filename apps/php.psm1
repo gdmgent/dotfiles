@@ -49,7 +49,7 @@ function ComposerGlobalRequire {
 function DrupalCommand {
     Param (
         [Switch]
-        $SuperUser # Needed to run server on port 80
+        $SuperUser # Needed to run server on port 80 on macOS
     )
     $Command = 'drupal'
     if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
