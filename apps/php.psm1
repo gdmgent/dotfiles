@@ -89,7 +89,7 @@ function DrushCommand {
             # Invoke-Expression -Command "$Path $args"
             # Temp fix for Drush 9?
             Push-Location -Path ([io.path]::Combine('vendor', 'bin'))
-            Invoke-Expression -Command ".\drupal.bat $args"
+            Invoke-Expression -Command ".\drush $args"
             Pop-Location
         } else {
             Invoke-Expression -Command "php $Path $args"
