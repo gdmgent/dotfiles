@@ -68,7 +68,7 @@ function DrupalCommand {
         } else {
             Invoke-Expression -Command "php $Path $args"
         }
-    } elseif ( -Name $Command) {
+    } elseif (ExistCommand -Name $Command) {
         Invoke-Expression -Command (((Get-Command -Name $Command -Type Application).Source | Select-Object -first 1) + " --nocolor $args")
     } else {
         WriteMessage -Type Warning -Message 'Drupal is not available from this directory, nor is it installed globally.'
@@ -86,7 +86,11 @@ function DrushCommand {
         }
     } elseif (Test-Path -Path ($Path = Join-Path -Path vendor -ChildPath $Path)) {
         if ($IsWindows) {
-            Invoke-Expression -Command "$Path $args"
+            # Invoke-Expression -Command "$Path $args"
+            # Temp fix for Drush 9?
+            Push-Location -Path ([io.path]::Combine('vendor', 'bin'))
+            Invoke-Expression -Command ".\drupal.bat $args"
+            Pop-Location
         } else {
             Invoke-Expression -Command "php $Path $args"
         }
