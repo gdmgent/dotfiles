@@ -160,18 +160,18 @@ New-Alias -Name mydrdb -Value MySQLDropDatabase
 function MySQLLogin {
     Param(
         [Parameter(Mandatory=$true)]
-        [ValidateSet('cms','cmsdev','webdev1','webdev2','webdtech2')]
+        [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech2')]
         [String]
         $Course,
         [Switch]
         $Root
     )
     if ($Root) {
-        $Username          = 'root'
-        $Password          = 'secret'
+        $Username = 'root'
+        $Password = 'secret'
     } else {
-        $Username          = "${Course}-user"
-        $Password          = "${Course}-pass"
+        $Username = "${Course}-user"
+        $Password = "${Course}-pass"
     }
 
     [System.Environment]::SetEnvironmentVariable('MYSQL_PWD', $Password)
