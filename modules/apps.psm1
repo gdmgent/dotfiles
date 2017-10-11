@@ -320,8 +320,9 @@ function InstallMySQL {
         WriteMessage -Type Info -Message 'Using Homebrew to install MySQL Server...'
         sh -c 'brew install mysql'
         if (ExistCommand -Name mysql) {
+            sh -c 'brew services start mysql'
             sh -c "$(brew --prefix mysql)/bin/mysqladmin -u root password secret"
-            WriteMessage -Type Warning -Inverse -Message'Open a new PowerShell window/tab to activate the MySQL commands.'
+            WriteMessage -Type Warning -Inverse -Message'Open a new PowerShell window or tab to activate the MySQL commands.'
         } else {
             WriteMessage -Type Danger -Inverse -Message'MySQL was not correctly installed.'
         }
@@ -329,7 +330,7 @@ function InstallMySQL {
         WriteMessage -Type Info -Message 'Using the MySQL Installer to install MySQL Server...'
         WriteMessage -Type Warning -Inverse -Message 'set "root" password to "secret"'
         OpenUri -Uri https://dev.mysql.com/downloads/installer/
-        WriteMessage -Type Warning -Inverse -Message'Open a new PowerShell window/tab once MySQL is installed to activate the MySQL commands.'
+        WriteMessage -Type Warning -Inverse -Message'Open a new PowerShell window or tab once MySQL is installed to activate the MySQL commands.'
     }
 }
 
@@ -582,14 +583,22 @@ function InstallYarn {
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path -Path $InstallerFile) {
             WriteMessage -Type Info -Inverse -Message "Installing Yarn $Version..."
-            WriteMessage -Type Warning -Inverse -Message ' - [Next]'
-            WriteMessage -Type Warning -Inverse -Message " - 'I accept the terms License Agreement', [Next]"
-            WriteMessage -Type Warning -Inverse -Message " - 'C:\Program Files (x86)\Yarn\', [Next]"
-            WriteMessage -Type Warning -Inverse -Message ' - [Install]'
-            WriteMessage -Type Warning -Inverse -Message ' - [Finish]'
+            WriteMessage -Message ' - ' -NoNewline
+            WriteMessage -Type Success -Inverse -Message '[Next]'
+            WriteMessage -Message ' - ' -NoNewline
+            WriteMessage -Type Warning -Message "'I accept the terms License Agreement'" -NoNewLine
+            WriteMessage -Message ', ' -NoNewline
+            WriteMessage -Type Success -Inverse -Message '[Next]'
+            WriteMessage -Message ' - ' -NoNewline
+            WriteMessage -Type Warning -Message "'C:\Program Files (x86)\Yarn\'" -NoNewline
+            WriteMessage -Message ', ' -NoNewline
+            WriteMessage -Type Success -Inverse -Message '[Next]'
+            WriteMessage -Message ' - ' -NoNewline
+            WriteMessage -Type Success -Inverse -Message '[Install]'
+            WriteMessage -Message ' - ' -NoNewline
+            WriteMessage -Type Success -Inverse -Message '[Finish]'
             Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i $InstallerFile" -Wait
             Remove-Item -Path $InstallerFile
-            
        }
     }
     if (ExistCommand -Name yarn) {
