@@ -3,20 +3,6 @@ function GetLongList {
 }
 New-Alias -Name ll -Value GetLongList
 
-function OpenHostsFile {
-    if (ExistCommand -Name code) {
-        if ($IsMacOS) {
-            WriteMessage -Type Warning -Message "Please close all instances of Visual Studio Code before continuing"
-            [void](Read-Host 'Press Enter to continue…')
-            sudo code /etc/hosts
-        } elseif ($IsWindows) {
-            code C:\Windows\System32\drivers\etc\hosts
-        }
-    } else {
-        WriteMessage -Type Warning -Message "Please install Visual Studio Code and install the 'code' command in PATH."
-    }
-}
-New-Alias -Name hosts -Value OpenHostsFile
 
 function ExtendHostsFile {
     Param(
@@ -59,6 +45,30 @@ function ExtendHostsFile {
         }
     }
 }
+
+function OpenFolderInGui {
+    if ($IsMacOS) {
+            open .
+    } elseif ($IsWindows) {
+            explorer .
+    }
+}
+New-Alias -Name f -Value OpenFolderInGui
+
+function OpenHostsFile {
+    if (ExistCommand -Name code) {
+        if ($IsMacOS) {
+            WriteMessage -Type Warning -Message "Please close all instances of Visual Studio Code before continuing"
+            [void](Read-Host 'Press Enter to continue…')
+            sudo code /etc/hosts
+        } elseif ($IsWindows) {
+            code C:\Windows\System32\drivers\etc\hosts
+        }
+    } else {
+        WriteMessage -Type Warning -Message "Please install Visual Studio Code and install the 'code' command in PATH."
+    }
+}
+New-Alias -Name hosts -Value OpenHostsFile
 
 function SetLocationPath ([String] $Path, [String] $Directory) {
     $Location = Join-Path -Path $Path -ChildPath $Directory

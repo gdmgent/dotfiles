@@ -26,13 +26,18 @@ function HotelServerAddJekyll {
         [String]
         $Name,
         [String]
-        $BaseUrl = ''
-
+        $BaseUrl = '',
+        [Switch]
+        $Incremental
     )
     if ($Name) {
         $Name = " --name $Name"
     }
-    Invoke-Expression -Command "hotel add 'bundle exec jekyll serve --port=${HotelPort} --baseurl=${BaseUrl} --unpublished'$Name"
+    $Options = ' --unpublished'
+    if ($Incremental) {
+        $Options += ' --incremental'
+    }
+    Invoke-Expression -Command "hotel add 'bundle exec jekyll serve --port=${HotelPort} --baseurl=${BaseUrl}${Options}'$Name"
 }
 New-Alias -Name hsj -Value HotelServerAddJekyll
 
