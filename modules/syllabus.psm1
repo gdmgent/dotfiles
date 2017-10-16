@@ -10,39 +10,23 @@ function CloneProject {
         $Service = 'github.com',
         [String]
         $Account = 'gdmgent',
-        [Switch]
-        $Student
+        [ValidateSet('Code','CodeColleges','CodeStudents','CodeTest')]
+        [String]
+        $CodeFolder = 'Code'
     )
-    $StudentPath = 'students'
+    $SetLocationPath = "SetLocationPath${CodeFolder}"
     if ($Service -eq 'gitlab.com') {
         $Git = '.git'
     }
     $Name = $Name.ToLower()
-    $DestinationName = $DestinationName.ToLower()
-    if ($Student) {
-        SetLocationPathCode
-        if (! (Test-Path -Path $StudentPath)) {
-            New-Item -Path $StudentPath -ItemType Directory
-        }
-        SetLocationPathCode $StudentPath
-    } else {
-        SetLocationPathCode
-    }
-    git clone https://$Service/$Account/$Name$Git $DestinationName
+    $Command = "git clone https://${Service}/${Account}/${Name}${Git}"
     if ($DestinationName) {
-        if ($Student) {
-            SetLocationPathCode $StudentPath
-            Set-Location -Path $DestinationName
-        } else {
-            SetLocationPathCode $DestinationName
-        }
+        $DestinationName = $DestinationName.ToLower()
+        Invoke-Expression -Command "${Command} ${DestinationName}"
+        Invoke-Expression -Command "${SetLocationPath} ${DestinationName}"
     } else {
-        if ($Student) {
-            SetLocationPathCode $StudentPath
-            Set-Location -Path $Name
-        } else {
-            SetLocationPathCode $Name
-        }
+        Invoke-Expression -Command $Command
+        Invoke-Expression -Command  "${SetLocationPath} ${Name}"
     }
 }
 
