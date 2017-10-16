@@ -5,6 +5,9 @@ function CloneProject {
         $Name,
         [String]
         $DestinationName,
+        [ValidateSet('git','http','https')]
+        [String]
+        $Protocol = 'https',
         [ValidateSet('bitbucket.org','github.com','gitlab.com')]
         [String]
         $Service = 'github.com',
@@ -15,18 +18,17 @@ function CloneProject {
         $CodeFolder = 'Code'
     )
     $SetLocationPath = "SetLocationPath${CodeFolder}"
-    if ($Service -eq 'gitlab.com') {
-        $Git = '.git'
-    }
+    Invoke-Expression -Command "${SetLocationPath}"
     $Name = $Name.ToLower()
-    $Command = "git clone https://${Service}/${Account}/${Name}${Git}"
+    $Command = "git clone ${Protocol}://${Service}/${Account}/${Name}.git"
+    WriteMessage -Type Mute -Message $Command
     if ($DestinationName) {
         $DestinationName = $DestinationName.ToLower()
         Invoke-Expression -Command "${Command} ${DestinationName}"
-        Invoke-Expression -Command "${SetLocationPath} ${DestinationName}"
+        Invoke-Expression -Command "${SetLocationPath} -Directory ${DestinationName}"
     } else {
         Invoke-Expression -Command $Command
-        Invoke-Expression -Command  "${SetLocationPath} ${Name}"
+        Invoke-Expression -Command "${SetLocationPath} -Directory ${Name}"
     }
 }
 
