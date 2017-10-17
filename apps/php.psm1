@@ -156,7 +156,7 @@ function PhpServeCommand {
             if (ExistCommand -Name ([io.path]::Combine('vendor', 'bin', 'drupal'))) {
                 DrupalCommand -SuperUser server $Uri
             } else {
-                PhpServeCommand -Hostname $Hostname -Port 80
+                PhpServeCommand -Hostname $Hostname -Port $Port
             }
             break
         }
