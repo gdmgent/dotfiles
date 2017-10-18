@@ -153,7 +153,7 @@ end tell
 '@
         osascript -e $command
     } elseif ($IsWindows) {
-        OpenUri -Uri 'ms-settings:network-proxy'
+        explorer ms-settings:network-proxy
     }
 }
 
