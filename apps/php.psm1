@@ -26,6 +26,7 @@ function ComposerGlobalRequire {
         [ValidatePattern("^\w+/\w+$")]
         [String]
         $Package,
+
         [Switch]
         $Remove
     )
@@ -137,21 +138,20 @@ function PhpServeCommand {
     Param(
         [String]
         $Hostname = 'localhost',
+
         [Int16]
         $Port = 80,
+
         [String]
         $RouterScript = [io.path]::Combine($DotfilesInstallPath, 'scripts', 'php', 'router.php'),
+
         [String]
         [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech1')]
         $Course,
-        [Switch]
-        $NoIndex,
+
         [Switch]
         $NoRouterScript
     )
-    if ($NoIndex) {
-        $NoRouterScript = True
-    }
     if ($Course) {
         $Course = $Course.ToLower()
     }
@@ -163,7 +163,7 @@ function PhpServeCommand {
             if (ExistCommand -Name ([io.path]::Combine('vendor', 'bin', 'drupal'))) {
                 DrupalCommand -SuperUser server $Uri
             } else {
-                PhpServeCommand -Hostname $Hostname -Port $Port -NoIndex:$NoIndex
+                PhpServeCommand -Hostname $Hostname -Port $Port
             }
             break
         }
@@ -171,7 +171,7 @@ function PhpServeCommand {
             $Hostname = "$Course.localhost"
             $Uri = "${Hostname}:$Port"
             OpenUri -Uri "http://$Uri"
-            PhpServeCommand -Hostname $Hostname -Port $Port -NoIndex:$NoIndex
+            PhpServeCommand -Hostname $Hostname -Port $Port -NoRouterScript
             break
         }
         Default {
@@ -180,7 +180,7 @@ function PhpServeCommand {
                 OpenUri -Uri "http://$Uri"
                 Invoke-Expression -Command "php -S $Uri"
             } else {
-                if ($NoIndex -or (Test-Path -Path index.php)) {
+                if (Test-Path -Path index.php) {
                     OpenUri -Uri "http://$Uri"
                     if ($Port -eq 80 -and $IsMacOS) {
                         Invoke-Expression -Command "sudo php -S $Uri $RouterScript"
@@ -238,8 +238,10 @@ if (ExistCommand -Name composer) {
         Param(
             [Switch]
             $All,
+
             [Switch]
             $Global,
+
             [Switch]
             $Local
         )

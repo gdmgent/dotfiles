@@ -45,10 +45,13 @@ function MySQLCreateDatabase {
         [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech2')]
         [String]
         $Course,
+
         [String]
         $DatabaseName,
+
         [Int16]
         $Port = 3306,
+
         [Switch]
         $ShowSQL
     )
@@ -85,10 +88,13 @@ function MySQLCreateDatabaseUser {
         [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech2')]
         [String]
         $Course,
+
         [String]
         $DatabaseName,
+
         [Int16]
         $Port = 3306,
+
         [Switch]
         $ShowSQL
     )
@@ -134,10 +140,13 @@ function MySQLDropDatabase {
         [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech2')]
         [String]
         $Course,
+
         [String]
         $DatabaseName,
+
         [Int16]
         $Port = 3306,
+
         [Switch]
         $ShowSQL
     )
@@ -169,8 +178,10 @@ function MySQLLogin {
         [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech2')]
         [String]
         $Course,
+
         [Int16]
         $Port = 3306,
+
         [Switch]
         $Root
     )
