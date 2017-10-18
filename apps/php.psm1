@@ -138,26 +138,40 @@ function PhpServeCommand {
         [String]
         $Hostname = 'localhost',
         [Int16]
-        $Port = 8080,
+        $Port = 80,
         [String]
         $RouterScript = [io.path]::Combine($DotfilesInstallPath, 'scripts', 'php', 'router.php'),
         [String]
         [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech1')]
         $Course,
         [Switch]
+        $NoIndex,
+        [Switch]
         $NoRouterScript
     )
+    if ($NoIndex) {
+        $NoRouterScript = True
+    }
+    if ($Course) {
+        $Course = $Course.ToLower()
+    }
     switch ($Course) {
         'cmsdev' {
-            $Hostname = 'cmsdev.localhost'
-            $Port = 80
+            $Hostname = "$Course.localhost"
             $Uri = "${Hostname}:$Port"
             OpenUri -Uri "http://$Uri"
             if (ExistCommand -Name ([io.path]::Combine('vendor', 'bin', 'drupal'))) {
                 DrupalCommand -SuperUser server $Uri
             } else {
-                PhpServeCommand -Hostname $Hostname -Port $Port
+                PhpServeCommand -Hostname $Hostname -Port $Port -NoIndex:$NoIndex
             }
+            break
+        }
+        'webdev1' {
+            $Hostname = "$Course.localhost"
+            $Uri = "${Hostname}:$Port"
+            OpenUri -Uri "http://$Uri"
+            PhpServeCommand -Hostname $Hostname -Port $Port -NoIndex:$NoIndex
             break
         }
         Default {
@@ -166,7 +180,7 @@ function PhpServeCommand {
                 OpenUri -Uri "http://$Uri"
                 Invoke-Expression -Command "php -S $Uri"
             } else {
-                if (Test-Path -Path index.php) {
+                if ($NoIndex -or (Test-Path -Path index.php)) {
                     OpenUri -Uri "http://$Uri"
                     if ($Port -eq 80 -and $IsMacOS) {
                         Invoke-Expression -Command "sudo php -S $Uri $RouterScript"
