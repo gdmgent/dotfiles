@@ -130,6 +130,7 @@ function AddToEnvironmentPath {
         [Parameter(Mandatory=$true)]
         [String]
         $Path,
+
         [Switch]
         $First
     )
@@ -152,11 +153,14 @@ function WriteMessage {
         [Parameter(Mandatory=$true)]
         [String]
         $Message,
+
         [ValidateSet('Danger','Info','Mute','Primary','Strong','Success','Warning')]
         [String]
         $Type,
+
         [Switch]
         $Inverse,
+
         [Switch]
         $NoNewline
     )

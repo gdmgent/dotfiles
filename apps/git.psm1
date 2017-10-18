@@ -168,6 +168,7 @@ function GitStatus {
     Param (
         [Switch]
         $All,
+
         [Switch]
         $Submodule
     )

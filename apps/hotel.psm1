@@ -25,8 +25,10 @@ function HotelServerAddJekyll {
     Param(
         [String]
         $Name,
+
         [String]
         $BaseUrl = '',
+
         [Switch]
         $Incremental
     )

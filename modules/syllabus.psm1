@@ -108,11 +108,14 @@ function NewSyllabusV1 {
         [Parameter(Mandatory=$true)]
         [String]
         $Name,
+
         [ValidateSet('github.com','gitlab.com')]
         [String]
         $Service = 'github.com',
+
         [String]
         $Account = 'gdmgent',
+
         [Switch]
         $Master
     )
@@ -157,6 +160,7 @@ function UpdateSyllabi {
     Param(
         [Switch]
         $NoBundlerUpdate,
+
         [Switch]
         $Push
     )
@@ -176,6 +180,7 @@ function UpdateSyllabus {
     Param(
         [Switch]
         $NoBundlerUpdate,
+
         [Switch]
         $Push
     )

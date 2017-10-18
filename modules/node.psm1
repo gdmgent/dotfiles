@@ -16,6 +16,7 @@ function NpmConfigProxy {
     Param(
         [Switch]
         $Off,
+
         [Switch]
         $On
     )
