@@ -46,10 +46,20 @@ function ExtendHostsFile {
 }
 
 function OpenFolderInGui {
+    Param(
+        [Int]
+        [ValidateRange(0,9)]
+        [Alias('w')]
+        [Switch]
+        $Windows = 1
+    )
     if ($IsMacOS) {
-            open .
-    } elseif ($IsWindows) {
-            explorer .
+        $App = 'open'
+    } elseif($IsWindows) {
+        $App = 'explorer'
+    }
+    for ($I = 0; $I -lt $Windows; $I++) {
+        Invoke-Expression -Command "$App ."
     }
 }
 New-Alias -Name f -Value OpenFolderInGui
