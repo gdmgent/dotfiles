@@ -50,7 +50,6 @@ function OpenFolderInGui {
         [Int]
         [ValidateRange(0,9)]
         [Alias('w')]
-        [Switch]
         $Windows = 1
     )
     if ($IsMacOS) {

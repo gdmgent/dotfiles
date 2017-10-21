@@ -9,7 +9,7 @@ function GitAdd {
     )
     $Command = "git add $Files"
     if ($All -or $Submodule) {
-        Invoke-Expression -Command "git submodule foreach '$Command'"
+        Invoke-Expression -Command "git submodule foreach --recursive '$Command'"
     }
     if ($All -or !$Submodule) {
         Invoke-Expression -Command $Command
@@ -23,7 +23,19 @@ function GitCheckoutGitHubPages {
 New-Alias -Name pages -Value GitCheckoutGitHubPages
 
 function GitCheckoutMaster {
-    git checkout master
+    Param (
+        [Switch]
+        $All,
+        [Switch]
+        $Submodule
+    )
+    $Command = 'git checkout master'
+    if ($All -or $Submodule) {
+        Invoke-Expression -Command "git submodule foreach --recursive '$Command'"
+    }
+    if ($All -or !$Submodule) {
+        Invoke-Expression -Command $Command
+    }
 }
 New-Alias -Name master -Value GitCheckoutMaster
 
@@ -42,7 +54,7 @@ function GitCommit {
     )
     $Command = "git commit -m `"[$Type] $Message`""
     if ($All -or $Submodule) {
-        Invoke-Expression -Command "git submodule foreach '$Command'"
+        Invoke-Expression -Command "git submodule foreach --recursive '$Command'"
     }
     if ($All -or !$Submodule) {
         Invoke-Expression -Command $Command
@@ -114,7 +126,8 @@ function GitPull {
     }
     $Command = "git pull"
     if ($All -or $Submodule) {
-        Invoke-Expression -Command "git submodule foreach '$Command'"
+        git submodule update --recursive --remote
+        #Invoke-Expression -Command "git submodule foreach --recursive '$Command'"
     }
     if ($All -or !$Submodule) {
         Invoke-Expression -Command $Command
@@ -129,9 +142,9 @@ function GitPush {
         [Switch]
         $Submodule
     )
-    $Command = "git push"
+    $Command = 'git push'
     if ($All -or $Submodule) {
-        Invoke-Expression -Command "git submodule foreach '$Command'"
+        Invoke-Expression -Command "git submodule foreach --recursive '$Command'"
     }
     if ($All -or !$Submodule) {
         Invoke-Expression -Command $Command
@@ -146,9 +159,9 @@ function GitPushWorkInProgress {
         [Switch]
         $Submodule
     )
-    $Command = "git commit -a -m [WIP]"
+    $Command = 'git commit -a -m [WIP]'
     if ($All -or $Submodule) {
-        Invoke-Expression -Command "git submodule foreach '$Command'"
+        Invoke-Expression -Command "git submodule foreach --recursive '$Command'"
         GitPush -Submodules
     }
     if ($All -or !$Submodule) {
@@ -172,9 +185,9 @@ function GitStatus {
         [Switch]
         $Submodule
     )
-    $Command = "git status"
+    $Command = 'git status'
     if ($All -or $Submodule) {
-        Invoke-Expression -Command "git submodule foreach '$Command'"
+        Invoke-Expression -Command "git submodule foreach --recursive '$Command'"
     }
     if ($All -or !$Submodule) {
         Invoke-Expression -Command $Command

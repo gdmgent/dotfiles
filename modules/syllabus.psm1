@@ -94,11 +94,8 @@ function CloneSyllabus {
             git remote add origin https://github.com/gdmgent/$Name.git
         }
     } else {
-        Push-Location -Path 'syllabusv2-resources'
-        git submodule init
-        git submodule update
-        GitCheckoutMaster
-        Pop-Location
+        git submodule update --init --recursive --remote
+        GitCheckoutMaster -Submodule
     }
     UpdateBundler
 }
