@@ -7,9 +7,9 @@ function GitAdd {
         [Switch]
         $Submodule
     )
-    $Command = "git add $Files"
+    $Command = "git add ${Files}"
     if ($All -or $Submodule) {
-        Invoke-Expression -Command "git submodule foreach --recursive '$Command'"
+        Invoke-Expression -Command "git submodule foreach --recursive '${Command}'"
     }
     if ($All -or !$Submodule) {
         Invoke-Expression -Command $Command
@@ -31,7 +31,7 @@ function GitCheckoutMaster {
     )
     $Command = 'git checkout master'
     if ($All -or $Submodule) {
-        Invoke-Expression -Command "git submodule foreach --recursive '$Command'"
+        Invoke-Expression -Command "git submodule foreach --recursive '${Command}'"
     }
     if ($All -or !$Submodule) {
         Invoke-Expression -Command $Command
@@ -52,9 +52,9 @@ function GitCommit {
         [Switch]
         $Submodule
     )
-    $Command = "git commit -m `"[$Type] $Message`""
+    $Command = "git commit -m `"[${Type}] ${Message}`""
     if ($All -or $Submodule) {
-        Invoke-Expression -Command "git submodule foreach --recursive '$Command'"
+        Invoke-Expression -Command "git submodule foreach --recursive '${Command}'"
     }
     if ($All -or !$Submodule) {
         Invoke-Expression -Command $Command
@@ -88,7 +88,7 @@ function GitConfigProxy {
         if ($Off) {
             git config --global --unset $Key
         } elseif ($On) {
-            git config --global $Key "$Proxy"
+            git config --global $Key "${Proxy}"
         } else {
             WriteMessage -Message "${Key}: " -NoNewline
             git config --global $Key
@@ -126,8 +126,9 @@ function GitPull {
     }
     $Command = "git pull"
     if ($All -or $Submodule) {
-        git submodule update --recursive --remote
-        #Invoke-Expression -Command "git submodule foreach --recursive '$Command'"
+        # git submodule update --recursive --remote
+        $CommandMaster = 'git checkout master'
+        Invoke-Expression -Command "git submodule foreach --recursive '${CommandMaster};${Command}'"
     }
     if ($All -or !$Submodule) {
         Invoke-Expression -Command $Command
@@ -144,7 +145,7 @@ function GitPush {
     )
     $Command = 'git push'
     if ($All -or $Submodule) {
-        Invoke-Expression -Command "git submodule foreach --recursive '$Command'"
+        Invoke-Expression -Command "git submodule foreach --recursive '${Command}'"
     }
     if ($All -or !$Submodule) {
         Invoke-Expression -Command $Command
@@ -161,7 +162,7 @@ function GitPushWorkInProgress {
     )
     $Command = 'git commit -a -m [WIP]'
     if ($All -or $Submodule) {
-        Invoke-Expression -Command "git submodule foreach --recursive '$Command'"
+        Invoke-Expression -Command "git submodule foreach --recursive '${Command}'"
         GitPush -Submodules
     }
     if ($All -or !$Submodule) {
@@ -187,7 +188,7 @@ function GitStatus {
     )
     $Command = 'git status'
     if ($All -or $Submodule) {
-        Invoke-Expression -Command "git submodule foreach --recursive '$Command'"
+        Invoke-Expression -Command "git submodule foreach --recursive '${Command}'"
     }
     if ($All -or !$Submodule) {
         Invoke-Expression -Command $Command

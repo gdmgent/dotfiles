@@ -182,7 +182,7 @@ function UpdateSyllabus {
         $Push
     )
     if (Test-Path -Path .git) {
-        pull -All
+        GitPull -All
         UpdateSyllabusResources
         UpdateSyllabusSettings
         UpdateSyllabusSnippets
