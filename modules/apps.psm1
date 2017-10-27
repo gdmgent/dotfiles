@@ -265,7 +265,7 @@ function InstallHyperPreferences {
     $SourcePath = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath $FileName
     $DestinationPath = Join-Path -Path $HOME -ChildPath $FileName
     if ($IsMacOS) {
-        $Command = (Get-Command -Name powershell -CommandType Application).Source
+        $Command = (Get-Command -Name pwsh -CommandType Application).Source
     } elseif ($IsWindows) {
         $Command = (Get-Command -Name powershell -CommandType Application | Where-Object { $_.Source -like '*6.0.0*' } | Select-Object -First 1).Source -replace '\\', '\\' # replaces \ with \\
     }
