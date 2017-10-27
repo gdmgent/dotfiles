@@ -152,6 +152,7 @@ function StatusSyllabi {
     }
     Pop-Location
 }
+New-Alias -Name ss -Value StatusSyllabi
 
 function UpdateSyllabi {
     Param(
@@ -172,6 +173,7 @@ function UpdateSyllabi {
     }
     Pop-Location
 }
+New-Alias -Name us -Value UpdateSyllabi
 
 function UpdateSyllabus {
     Param(
