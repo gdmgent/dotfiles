@@ -49,6 +49,10 @@ function MySQLCreateDatabase {
         [String]
         $DatabaseName,
 
+        [ValidateSet('College','Default','Student','Test')]
+        [String]
+        $Mode = 'Default',
+
         [Int16]
         $Port = 3306,
 
@@ -56,7 +60,19 @@ function MySQLCreateDatabase {
         $ShowSQL
     )
     if (! $DatabaseName) {
-        $DatabaseName= "${Course}-db"
+        $DatabaseName = "${Course}-db"
+        switch ($Mode) {
+            'College' {
+                $DatabaseName = "${DatabaseName}-college"
+            }
+            'Student' {
+                $DatabaseName = "${DatabaseName}-student"
+            }
+            'Test' {
+                $DatabaseName = "${DatabaseName}-test"
+            }
+            Default {}
+        }
     } else {
         $DatabaseName = $DatabaseName.ToLower()
         $Course       = $DatabaseName
@@ -92,6 +108,10 @@ function MySQLCreateDatabaseUser {
         [String]
         $DatabaseName,
 
+        [ValidateSet('College','Default','Student','Test')]
+        [String]
+        $Mode = 'Default',
+
         [Int16]
         $Port = 3306,
 
@@ -100,6 +120,18 @@ function MySQLCreateDatabaseUser {
     )
     if (! $Database) {
         $DatabaseName = "${Course}-db"
+        switch ($Mode) {
+            'College' {
+                $DatabaseName = "${DatabaseName}-college"
+            }
+            'Student' {
+                $DatabaseName = "${DatabaseName}-student"
+            }
+            'Test' {
+                $DatabaseName = "${DatabaseName}-test"
+            }
+            Default {}
+        }
     } else {
         $DatabaseName = $DatabaseName.ToLower()
         $Course       = $DatabaseName
@@ -147,11 +179,27 @@ function MySQLDropDatabase {
         [Int16]
         $Port = 3306,
 
+        [ValidateSet('College','Default','Student','Test')]
+        [String]
+        $Mode = 'Default',
+
         [Switch]
         $ShowSQL
     )
     if (! $DatabaseName) {
         $DatabaseName= "${Course}-db"
+        switch ($Mode) {
+            'College' {
+                $DatabaseName = "${DatabaseName}-college"
+            }
+            'Student' {
+                $DatabaseName = "${DatabaseName}-student"
+            }
+            'Test' {
+                $DatabaseName = "${DatabaseName}-test"
+            }
+            Default {}
+        }
     } else {
         $DatabaseName = $DatabaseName.ToLower()
         $Course       = $DatabaseName
