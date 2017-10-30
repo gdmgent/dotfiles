@@ -11,7 +11,7 @@ function ExtendHostsFile {
     $Tag = '# gdm.gent Dotfiles'
     if ($IsMacOS) {
         $HostsPath = '/etc/hosts'
-        sudo powershell -c "(Get-Content -Path '${HostsPath}' | Select-String -Pattern '${Tag}' -NotMatch).Line | Out-File $HostsPath -Encoding utf8"
+        sudo pwsh -c "(Get-Content -Path '${HostsPath}' | Select-String -Pattern '${Tag}' -NotMatch).Line | Out-File $HostsPath -Encoding utf8"
     } elseif ($IsWindows) {
         $HostsPath = 'C:\Windows\System32\drivers\etc\hosts'
         (Get-Content -Path $HostsPath | Select-String -Pattern $Tag -NotMatch).Line | Out-File $HostsPath -Encoding utf8
@@ -38,7 +38,7 @@ function ExtendHostsFile {
         }
         $Command = "Add-Content -Path '${HostsPath}' -Value '${DomainEntries}';"
         if ($IsMacOS) {
-            sudo powershell -c "$Command"
+            sudo pwsh -c "$Command"
         } elseif ($IsWindows) {
             Invoke-Expression -Command $Command
         }

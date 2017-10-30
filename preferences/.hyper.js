@@ -1,5 +1,13 @@
+// Future versions of Hyper may add additional config options,
+// which will not automatically be merged into this file.
+// See https://hyper.is#cfg for all currently supported options.
+
 module.exports = {
   config: {
+    // Choose either "stable" for receiving highly polished,
+    // or "canary" for less polished but more frequent updates
+    updateChannel: 'stable',
+
     // default font size in pixels for all tabs
     fontSize: 18,
 
@@ -19,7 +27,7 @@ module.exports = {
     foregroundColor: '#fff',
 
     // terminal background color
-    backgroundColor: 'rgba(33, 33 , 33, .7)',
+    backgroundColor: 'rgba(33,33,33,0.7)',
 
     // border color (window, tabs)
     borderColor: '#444',
@@ -66,10 +74,17 @@ module.exports = {
 
     // the shell to run when spawning a new session (i.e. /usr/local/bin/fish)
     // if left empty, your system's login shell will be used by default
-    // make sure to use a full path if the binary name doesn't work
-    // (e.g `C:\\Windows\\System32\\bash.exe` instead of just `bash.exe`)
-    // if you're using powershell, make sure to remove the `--login` below
-    shell: 'powershell',
+    //
+    // Windows
+    // - Make sure to use a full path if the binary name doesn't work
+    // - Remove `--login` in shellArgs
+    //
+    // Bash on Windows
+    // - Example: `C:\\Windows\\System32\\bash.exe`
+    //
+    // Powershell on Windows
+    // - Example: `C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe`
+    shell: 'pwsh',
 
     // for setting shell arguments (i.e. for using interactive shellArgs: ['-i'])
     // by default ['--login'] will be used
@@ -105,5 +120,10 @@ module.exports = {
   // in development, you can create a directory under
   // `~/.hyper_plugins/local/` and include it here
   // to load it and avoid it being `npm install`ed
-  localPlugins: []
+  localPlugins: [],
+
+  keymaps: {
+    // Example
+    // 'window:devtools': 'cmd+alt+o',
+  }
 };

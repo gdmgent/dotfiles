@@ -261,16 +261,17 @@ function InstallHotel {
 
 function InstallHyperPreferences {
     WriteMessage -Type Info -Inverse -Message 'Installing Hyper.js preferences'
+    $AppName = 'pwsh'
     $FileName = '.hyper.js'
     $SourcePath = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath $FileName
     $DestinationPath = Join-Path -Path $HOME -ChildPath $FileName
     if ($IsMacOS) {
-        $Command = (Get-Command -Name pwsh -CommandType Application).Source
+        $Command = (Get-Command -Name $AppName -CommandType Application).Source
     } elseif ($IsWindows) {
-        $Command = (Get-Command -Name powershell -CommandType Application | Where-Object { $_.Source -like '*6.0.0*' } | Select-Object -First 1).Source -replace '\\', '\\' # replaces \ with \\
+        $Command = (Get-Command -Name $AppName -CommandType Application | Where-Object { $_.Source -like '*6.0.0*' } | Select-Object -First 1).Source -replace '\\', '\\' # replaces \ with \\
     }
     Copy-Item -Path $SourcePath -Destination $DestinationPath
-    $FileContent = (Get-Content -Path $DestinationPath).Replace("shell: 'powershell',", "shell: '$Command',")
+    $FileContent = (Get-Content -Path $DestinationPath).Replace("shell: '${AppName}',", "shell: '${Command}',")
     Set-Content -Path $DestinationPath -Value $FileContent
 }
 
