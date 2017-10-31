@@ -347,6 +347,47 @@ if ($IsMacOS) {
     }
 }
 
+function InstallNginx {
+    $Version = '1.13'
+    WriteMessage -Type Info -Inverse -Message "Installing NGINX $Version"
+    if ($IsMacOS) {
+
+    } elseif ($IsWindows) {
+        WriteMessage -Type Info -Message "Downloading NGINX $Version..."
+        $Url = 'https://nginx.org/en/download.html'
+        $File = "/nginx-${Version}.\d+.zip$"
+        $FileUri = "https://nginx.org"
+        $RelativeUri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match $File } | Select-Object -First 1).href
+        $Uri = "${FileUri}${RelativeUri}"
+        $OutFile = Join-Path -Path $env:TEMP -ChildPath 'nginx.zip'
+        Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+        if (Test-Path -Path $OutFile) {
+            $DestinationPath = 'C:\nginx'
+            if ((Test-Path -Path $DestinationPath) -and ! (Test-Path -Path "${DestinationPath}.bak")) {
+                WriteMessage -Type Info -Message "Making a backup of previously installed version..."
+                Move-Item -Path $DestinationPath -Destination "${DestinationPath}.bak"
+            }
+            WriteMessage -Type Info -Message 'Installing NGINX...'
+            Expand-Archive -Path $OutFile -DestinationPath 'C:\' -Force
+            if ($RelativeUri -match 'nginx-\d+.\d+.\d+') {
+                $DestinationPathTemp = 'C:\' + $Matches[0]
+                if (Test-Path -Path $DestinationPathTemp) {
+                    Move-Item -Path $DestinationPathTemp -Destination $DestinationPath
+                }
+            }
+            Remove-Item -Path $OutFile
+            WriteMessage -Type Info -Message 'Configuring NGINX...'
+
+        }
+    }
+    if (ExistCommand -Name nginx) {
+        WriteMessage -Type Success 'Installed version of NGINX: ' -NoNewline
+        nginx -v
+    } else {
+        WriteMessage -Type Danger -Message 'NGINX is not correctly installed.'
+    }
+}
+
 function InstallPhp {
     Param(
         [Switch]
@@ -355,9 +396,9 @@ function InstallPhp {
     $VersionStable      = '7.1'
     $VersionDevelopment = '7.2'
     $Version = if ($Development) { $VersionDevelopment } else { $VersionStable }
-    WriteMessage -Type Info -Inverse -Message "Installing PHP $Version"
+    WriteMessage -Type Info -Inverse -Message "Installing PHP ${Version}"
     if ($IsMacOS) {
-        WriteMessage -Type Info -Message "Using Homebrew to install PHP $Version..."
+        WriteMessage -Type Info -Message "Using Homebrew to install PHP ${Version}..."
         $V = $Version.replace('.', '')
         sh -c "brew tap homebrew/php && brew install php${V} php${V}-mcrypt php${V}-opcache php${V}-xdebug"
         $ConfigFilePath = "/usr/local/etc/php/${Version}/conf.d/ext-xdebug.ini"
@@ -368,14 +409,14 @@ function InstallPhp {
             }
         }
     } elseif ($IsWindows) {
-        WriteMessage -Type Info -Message "Downloading PHP $Version..."
+        WriteMessage -Type Info -Message "Downloading PHP ${Version}..."
         $Url =  'http://windows.php.net'
         if ($Development) {
-            $File = "/php-$Version.\d+RC\d+-nts-Win32-VC15-x64.zip$"
-            $FileUri = "$Url/downloads/qa"
+            $File = "/php-${Version}.\d+RC\d+-nts-Win32-VC15-x64.zip$"
+            $FileUri = "${Url}/downloads/qa"
         } else {
-            $File = "/php-$Version.\d+-nts-Win32-VC14-x64.zip$"
-            $FileUri = "$Url/downloads/releases"
+            $File = "/php-${Version}.\d+-nts-Win32-VC14-x64.zip$"
+            $FileUri = "${Url}/downloads/releases"
         }
         $RelativeUri = ((Invoke-WebRequest -Uri $FileUri).Links | Where-Object { $_.href -match $File } | Select-Object -First 1).href
         $Uri = "$Url$RelativeUri"
@@ -383,9 +424,9 @@ function InstallPhp {
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
         if (Test-Path -Path $OutFile) {
             $DestinationPath = 'C:\php'
-            if ((Test-Path -Path $DestinationPath) -and ! (Test-Path -Path "$DestinationPath.bak")) {
+            if ((Test-Path -Path $DestinationPath) -and ! (Test-Path -Path "${DestinationPath}.bak")) {
                 WriteMessage -Type Info -Message "Making a backup of previously installed version..."
-                Move-Item -Path $DestinationPath -Destination "$DestinationPath.bak"
+                Move-Item -Path $DestinationPath -Destination "${DestinationPath}.bak"
             }
             WriteMessage -Type Info -Message 'Installing PHP...'
             Expand-Archive -Path $OutFile -DestinationPath $DestinationPath -Force
@@ -402,7 +443,7 @@ function InstallPhp {
                 'extension=php_sqlite3'
             )
             foreach ($Extension in $Extensions) {
-                $ConfigFile = $ConfigFile.Replace(";$Extension", $Extension)
+                $ConfigFile = $ConfigFile.Replace(";${Extension}", $Extension)
             }
             $Settings = @(
                 @('max_execution_time = 30', 'max_execution_time = 999'),
@@ -428,8 +469,8 @@ function InstallPhp {
                 # Xdebug
                 WriteMessage -Type Info -Message 'Downloading Xdebug for PHP...'
                 $Url = 'https://xdebug.org'
-                $RelativeUrl = ((Invoke-WebRequest -Uri "$Url/download.php").Links | Where-Object { $_.href -match "/php_xdebug-\d.\d.\d-$Version-vc14-nts-x86_64.dll$" } | Select-Object -First 1).href
-                $Uri = "$Url/$RelativeUrl"
+                $RelativeUrl = ((Invoke-WebRequest -Uri "${Url}/download.php").Links | Where-Object { $_.href -match "/php_xdebug-\d.\d.\d-${Version}-vc14-nts-x86_64.dll$" } | Select-Object -First 1).href
+                $Uri = "${Url}/${RelativeUrl}"
                 $OutFile = 'C:\php\ext\php_xdebug.dll'
                 Invoke-WebRequest -Uri $Uri -OutFile $OutFile
                 WriteMessage -Type Info -Message 'Configuring PHP to use Xdebug...'

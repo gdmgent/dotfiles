@@ -102,6 +102,7 @@ function SetEnvironment {
         $EnvironmentPath += @(
             'C:\cygwin64\bin',
             "$HOME\AppData\Roaming\Composer\vendor\bin",
+            'C:\nginx',
             'C:\php',
             'C:\Program Files\MySQL\MySQL Server 5.7\bin',
             'C:\Ruby23-x64\bin',
@@ -247,7 +248,7 @@ function Dotfiles {
 }
 New-Alias -Name dot -Value Dotfiles
 
-function FindConnectionListeningOn {
+function FindListeners {
     Param(
         [Parameter(Mandatory=$true)]
         [Int16]

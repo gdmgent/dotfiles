@@ -25,6 +25,7 @@ $Applications = @(
     'hotel'
     'jekyll'
     'mysql'
+    'nginx'
     'php'
     'vagrant'
 )
