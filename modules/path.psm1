@@ -17,6 +17,12 @@ function ExtendHostsFile {
         (Get-Content -Path $HostsPath | Select-String -Pattern $Tag -NotMatch).Line | Out-File $HostsPath -Encoding utf8
     }
     if (! $Undo) {
+        $SubDomains = @(
+            '        ',
+            'college.',
+            'student.',
+            '   test.'
+        )
         $Domains = @(
             'cms.localhost     ',
             'cmsdev.localhost  ',
@@ -34,7 +40,9 @@ function ExtendHostsFile {
         )
         $DomainEntries = ''
         foreach ($Domain in $Domains) {
-            $DomainEntries += "`n127.0.0.1    ${Domain}    ${Tag}"
+            foreach ($SubDomain in $SubDomains) {
+                $DomainEntries += "`n127.0.0.1    ${SubDomain}${Domain}    ${Tag}"
+            }
         }
         $Command = "Add-Content -Path '${HostsPath}' -Value '${DomainEntries}';"
         if ($IsMacOS) {
