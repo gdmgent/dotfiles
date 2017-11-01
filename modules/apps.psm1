@@ -215,14 +215,27 @@ function InstallGit {
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path -Path $InstallerFile) {
-            WriteMessage -Type Info -Message 'Running Git installer...'
-            WriteMessage -Type Warning -Message ' - [Next >]'
-            WriteMessage -Type Warning -Message ' - [Next >]'
-            WriteMessage -Type Warning -Message " - 'Use Git and optional Unix tools from the Windows Command Prompt', [Next >]"
-            WriteMessage -Type Warning -Message " - 'Checkout Windows-style, commit Unix-style line endings', [Next >]"
-            WriteMessage -Type Warning -Message " - 'Use Windows' default console window', [Next >]"
-            WriteMessage -Type Warning -Message ' - [Install]'
-            WriteMessage -Type Warning -Message ' - [Finish]'
+            WriteMessage -Type Info -Inverse -Message 'Running Git installer...'
+            WriteMessage -Message ' - ' -NoNewline
+            WriteMessage -Type Success -Inverse -Message '[Next >]'
+            WriteMessage -Message ' - ' -NoNewline
+            WriteMessage -Type Success -Inverse -Message '[Next >]'
+            WriteMessage -Message ' - ' -NoNewline
+            WriteMessage -Type Warning -Message "'Use Git and optional Unix tools from the Windows Command Prompt'" -NoNewLine
+            WriteMessage -Message ', ' -NoNewline
+            WriteMessage -Type Success -Inverse -Message '[Next >]'
+            WriteMessage -Message ' - ' -NoNewline
+            WriteMessage -Type Warning -Message "'Checkout Windows-style, commit Unix-style line endings'" -NoNewLine
+            WriteMessage -Message ', ' -NoNewline
+            WriteMessage -Type Success -Inverse -Message '[Next >]'
+            WriteMessage -Message ' - ' -NoNewline
+            WriteMessage -Type Warning -Message "'Use Windows' default console window'" -NoNewLine
+            WriteMessage -Message ', ' -NoNewline
+            WriteMessage -Type Success -Inverse -Message '[Next >]'
+            WriteMessage -Message ' - ' -NoNewline
+            WriteMessage -Type Success -Inverse -Message '[Install]'
+            WriteMessage -Message ' - ' -NoNewline
+            WriteMessage -Type Success -Inverse -Message '[Finish]'
             Start-Process -FilePath $InstallerFile -Wait
             Remove-Item -Path $InstallerFile
         }
@@ -323,35 +336,24 @@ function InstallMySQL {
         if (ExistCommand -Name mysql) {
             sh -c 'brew services start mysql'
             sh -c "$(brew --prefix mysql)/bin/mysqladmin -u root password secret"
-            WriteMessage -Type Warning -Inverse -Message'Open a new PowerShell window or tab to activate the MySQL commands.'
-        } else {
-            WriteMessage -Type Danger -Inverse -Message'MySQL was not correctly installed.'
+            WriteMessage -Type Warning -Inverse -Message 'Open a new PowerShell window or tab to activate the MySQL commands.'
+        } else { 
+            WriteMessage -Type Danger -Inverse -Message 'MySQL was not correctly installed.'
         }
     } elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Using the MySQL Installer to install MySQL Server...'
         WriteMessage -Type Warning -Inverse -Message 'set "root" password to "secret"'
         OpenUri -Uri https://dev.mysql.com/downloads/installer/
-        WriteMessage -Type Warning -Inverse -Message'Open a new PowerShell window or tab once MySQL is installed to activate the MySQL commands.'
-    }
-}
-
-if ($IsMacOS) {
-    function InstallOhMyZsh {
-        WriteMessage -Type Info -Inverse -Message 'Installing OhMyZsh'
-        WriteMessage -Type Info -Message 'Using Homebrew to install Zsh...'
-        sh -c 'brew install zsh'
-        WriteMessage -Type Success -Message 'Installed version of Zsh: ' -NoNewline
-        zsh --version
-        WriteMessage -Type Info -Message 'Using Bash to install Oh-My-Zsh...'
-        sh -c '$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)'
+        WriteMessage -Type Warning -Inverse -Message 'Open a new PowerShell window or tab once MySQL is installed to activate the MySQL commands.'
     }
 }
 
 function InstallNginx {
-    $Version = '1.13'
-    WriteMessage -Type Info -Inverse -Message "Installing NGINX $Version"
+    $Version = '1.12'
+    WriteMessage -Type Info -Inverse -Message 'Installing NGINX'
     if ($IsMacOS) {
-
+        WriteMessage -Type Info -Message 'Using Homebrew to install NGINX...'
+        sh -c 'brew install nginx'
     } elseif ($IsWindows) {
         WriteMessage -Type Info -Message "Downloading NGINX $Version..."
         $Url = 'https://nginx.org/en/download.html'
@@ -376,15 +378,37 @@ function InstallNginx {
                 }
             }
             Remove-Item -Path $OutFile
-            WriteMessage -Type Info -Message 'Configuring NGINX...'
-
         }
     }
+    WriteMessage -Type Info -Message 'Configuring NGINX...'
+    $FileName = 'nginx.conf'
+    $SourcePath = [io.path]::Combine($HOME, 'dotfiles', 'settings', $FileName)
+    $DestinationPath = [io.path]::Combine($HOME, '.dotfiles', $FileName)
+    Copy-Item -Path $SourcePath -Destination $DestinationPath
+    if ($IsMacOS) {
+        $NginxConfigDirectory = (brew --prefix nginx) + '/.bottle/etc/nginx'
+    } else {
+        $NginxConfigDirectory = '/nginx/conf'
+    }
+    $FileContent = (Get-Content -Path $DestinationPath).Replace('»NGINX-CONFIG-DIRECTORY«', $NginxConfigDirectory)
+    Set-Content -Path $DestinationPath -Value $FileContent
     if (ExistCommand -Name nginx) {
         WriteMessage -Type Success 'Installed version of NGINX: ' -NoNewline
         nginx -v
     } else {
         WriteMessage -Type Danger -Message 'NGINX is not correctly installed.'
+    }
+}
+
+if ($IsMacOS) {
+    function InstallOhMyZsh {
+        WriteMessage -Type Info -Inverse -Message 'Installing OhMyZsh'
+        WriteMessage -Type Info -Message 'Using Homebrew to install Zsh...'
+        sh -c 'brew install zsh'
+        WriteMessage -Type Success -Message 'Installed version of Zsh: ' -NoNewline
+        zsh --version
+        WriteMessage -Type Info -Message 'Using Bash to install Oh-My-Zsh...'
+        sh -c '$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)'
     }
 }
 
@@ -598,16 +622,6 @@ if ($IsMacOS) {
         } else {
             WriteMessage -Type Danger -Message 'Laravel Valet was not installed.'
         }
-    }
-}
-
-function InstallVisualStudioCode {
-    if ($IsMacOS) {
-        # Fixes a PowerShell extension in Visual Studio Code
-        $Path = '/usr/local/Cellar/openssl/1.0.2h_1/lib'
-        $Destination = '/usr/local/lib'
-        Copy-Item -Path $Path/libcrypto.dylib -Destination $Destination/libcrypto.1.0.0.dylib
-        Copy-Item -Path $Path/libssl.dylib -Destination $Destination/libssl.1.0.0.dylib
     }
 }
 

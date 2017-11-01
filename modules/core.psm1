@@ -255,7 +255,7 @@ function FindListeners {
         $Port
     )
     if ($IsMacOS) {
-        (lsof -i ":$Port" | Where-Object { $_ -match 'LISTEN' })
+        (sudo lsof -i ":$Port" | Where-Object { $_ -match 'LISTEN' })
     } elseif ($IsWindows) {
         (NETSTAT.EXE -ao | Where-Object { $_ -match 'Proto' -or ($_ -match ":$Port " -and $_ -match 'LISTENING') })
     }
