@@ -6,7 +6,7 @@ if ($IsMacOS) {
 # Node Version Manager
 function nvm {
     if ($IsMacOS) {
-        Invoke-Expression "sh -c 'export NVM_DIR=~/.nvm && source $(brew --prefix nvm)/nvm.sh && nvm $args'"
+        Invoke-Expression "sh -c 'export NVM_DIR=~/.nvm && source $(brew --prefix nvm)/nvm.sh && nvm ${args}'"
     } elseif ($IsWindows) {
         nvm.exe $args
     }
@@ -38,33 +38,20 @@ function InitNode {
     if ($IsMacOS) {
         $Version = ReadConfig -Name Node
         if ($Version) {
-            UseNode -Version $Version
+            SetNode -Version $Version
         }
     }
 }
 
 function InstallNode {
     if ($IsMacOS) {
-        nvm install stable
+        nvm install --lts
     } elseif ($IsWindows) {
         nvm install latest
     }
 }
 
-function UseNode8 {
-    $NodeVersion = 8
-    if ($IsMacOS) {
-        # $Version = (Get-ChildItem $NodeJsPath).Name | Where-Object { $_ -match "(v$NodeVersion(.\d+){2})" } | Select-Object -Last 1
-        $Version = "$(nvm current)"
-    } elseif ($IsWindows) {
-        $Version = nvm.exe list | Select-String -Pattern "($NodeVersion(.\d+){2})" -AllMatches | ForEach-Object { ($_.Matches).Value } | Select-Object -First 1
-    }
-    if ($Version) {
-        UseNode -Version $Version
-    }
-}
-
-function UseNode {
+function SetNode {
     Param(
         [Parameter(Mandatory=$true)]
         [String]
@@ -72,34 +59,43 @@ function UseNode {
     )
     if ($IsMacOS) {
         $Versions = (Get-ChildItem $NodeJsPath).Name
-        switch ($Version) {
-            { $Versions -contains "$Version" } {
-                $nodePath = "$NodeJsPath/$Version/bin"
-                if (Test-Path $nodePath) {
-                    WriteConfig -Name Node -Value $Version
-                    $env:PATH = @($nodePath, $env:PATH) -join ':'
-                    Set-Alias -Name node -Value $(Get-Command -Name node -Type Application | Select-Object -First 1).Source -Scope Global
-                } else {
-                    WriteConfig -Name Node -Value $null
-                }
-            }
-            Default {
+        if ($Versions -contains "${Version}") {
+            $nodePath = "${NodeJsPath}/${Version}/bin"
+            if (Test-Path -Path $nodePath) {
+                WriteConfig -Name Node -Value $Version
+                nvm alias default $Version
+                $env:PATH = @($nodePath, $env:PATH) -join ':'
+                Set-Alias -Name node -Value $(Get-Command -Name node -Type Application | Select-Object -First 1).Source -Scope Global
+            } else {
                 WriteConfig -Name Node -Value $null
-                WriteMessage -Type Warning -Message "Version '$Version' of Node.js is not installed. Please install with nvm."
             }
+            return
         }
     } elseif ($IsWindows) {
         $Versions = nvm.exe list | Select-String -Pattern '(\d+(.\d+){2})' | ForEach-Object { ($_.Matches).Value }
-        switch ($Version) {
-            { $Versions -contains "$Version" } {
-                WriteConfig -Name Node -Value $Version
-                nvm.exe use $Version
-            }
-            Default {
-                WriteConfig -Name Node -Value $null
-                WriteMessage -Type Warning -Message "Version '$Version' of Node.js is not installed. Please install with nvm."
-            }
+        if ($Versions -contains "${Version}") {
+            WriteConfig -Name Node -Value $Version
+            nvm.exe use $Version
+            return
         }
+    }
+    WriteConfig -Name Node -Value $null
+    WriteMessage -Type Warning -Message "Version '${Version}' of Node.js is not installed. Please install with nvm."
+}
+
+function UseNode {
+    Param(
+        [ValidateSet(8, 9)]
+        [Int16]
+        $Version = 8
+    )
+    if ($IsMacOS) {
+        $NodeVersion = $(nvm version $Version)
+    } elseif ($IsWindows) {
+        $NodeVersion = nvm.exe list | Select-String -Pattern "(${Version}(.\d+){2})" -AllMatches | ForEach-Object { ($_.Matches).Value } | Select-Object -First 1
+    }
+    if ($NodeVersion) {
+        SetNode -Version $NodeVersion
     }
 }
 
