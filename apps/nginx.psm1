@@ -1,6 +1,6 @@
 function NginxServeCommand {
     Param(
-        [ValidateSet('Edit', 'Reload','Start','Stop')]
+        [ValidateSet('Edit', 'Force-Stop', 'Reload', 'Start', 'Stop')]
         [String]
         $Command = 'Start'
     )
@@ -12,18 +12,27 @@ function NginxServeCommand {
         'Edit' {
             code ([io.path]::Combine($HOME, '.dotfiles', 'sites-enabled'))
         }
-        'Reload' {
+        'Force-Stop' {
+            $Expression = 'Get-Process -Name nginx -ErrorAction SilentlyContinue | Stop-Process'
             if ($IsMacOS) {
-                sudo nginx -s reload
+                sudo pwsh -c $Expression
             } elseif ($IsWindows) {
-                nginx -s reload
+                Invoke-Expression -Command $Expression
             }
         }
-        'Stop' {
+        'Reload' {
+            $Expression = 'nginx -s reload'
             if ($IsMacOS) {
-                sudo nginx -s quit
+                $Expression = "sudo ${Expression}"
+            }
+            Invoke-Expression -Command $Expression
+        }
+        'Stop' {
+            $Expression = 'nginx -s quit'
+            if ($IsMacOS) {
+                Invoke-Expression -Command "sudo ${Expression}"
             } elseif ($IsWindows) {
-                nginx -s quit
+                Invoke-Expression -Command $Expression
                 Get-Job -Name 'nginx-job' -ErrorAction SilentlyContinue | Stop-Job
             }
             Get-Job -Name 'php-job' -ErrorAction SilentlyContinue | Stop-Job
