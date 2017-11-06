@@ -109,18 +109,18 @@ function ConfigureNginxSite {
 
 function GenerateDomainName($Directories) {
     $SubDomains = @(
-        'college',
-        'student',
+        'colleges',
+        'students',
         'test'
     )
     $Domains = @(
         'cms',
-        'csse',
         'cmsdev',
-        'webdev1',
-        'webdev2',
+        'csse',
         'nmtech1',
-        'nmtech2'
+        'nmtech2',
+        'webdev1',
+        'webdev2'
     )
     $DomainName = '.localhost';
     foreach ($Domain in $Domains) {

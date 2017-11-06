@@ -18,10 +18,10 @@ function ExtendHostsFile {
     }
     if (! $Undo) {
         $SubDomains = @(
-            '        ',
-            'college.',
-            'student.',
-            '   test.'
+            '         ',
+            'colleges.',
+            'students.',
+            '    test.'
         )
         $Domains = @(
             'cms.localhost     ',
