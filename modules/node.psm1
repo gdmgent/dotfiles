@@ -64,7 +64,7 @@ function SetNode {
             if (Test-Path -Path $nodePath) {
                 WriteConfig -Name Node -Value $Version
                 nvm alias default $Version
-                $env:PATH = @($nodePath, $env:PATH) -join ':'
+                $env:PATH = @($nodePath, $env:PATH) -join [io.path]::PathSeparator
                 Set-Alias -Name node -Value $(Get-Command -Name node -Type Application | Select-Object -First 1).Source -Scope Global
             } else {
                 WriteConfig -Name Node -Value $null

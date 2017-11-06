@@ -98,7 +98,7 @@ function SetEnvironment {
 
         [System.Environment]::SetEnvironmentVariable('PATH', $EnvironmentPath -join ':')
     } elseif ($IsWindows) {
-        $EnvironmentPath = [System.Environment]::GetEnvironmentVariable('Path') -split ';'
+        $EnvironmentPath = [System.Environment]::GetEnvironmentVariable('Path').Split([io.path]::PathSeparator)
         $EnvironmentPath += @(
             'C:\cygwin64\bin',
             "$HOME\AppData\Roaming\Composer\vendor\bin",
@@ -121,7 +121,7 @@ function SetEnvironment {
             $EnvironmentPath += $DotNetCorePath
         }
 
-        [System.Environment]::SetEnvironmentVariable('Path', $EnvironmentPath -join ';')
+        [System.Environment]::SetEnvironmentVariable('Path', $EnvironmentPath -join [io.path]::PathSeparator)
     }
 }
 SetEnvironment
@@ -135,7 +135,7 @@ function AddToEnvironmentPath {
         [Switch]
         $First
     )
-    $EnvironmentPath = [System.Environment]::GetEnvironmentVariable('Path') -split ';'
+    $EnvironmentPath = [System.Environment]::GetEnvironmentVariable('Path').Split([io.path]::PathSeparator)
 
     if ($First) {
         $EnvironmentPath = @($Path) + $EnvironmentPath
@@ -143,7 +143,7 @@ function AddToEnvironmentPath {
         $EnvironmentPath += @($Path)
     }
     
-    [System.Environment]::SetEnvironmentVariable('Path', $EnvironmentPath -join ';')
+    [System.Environment]::SetEnvironmentVariable('Path', $EnvironmentPath -join [io.path]::PathSeparator)
 }
 
 # Message Functions

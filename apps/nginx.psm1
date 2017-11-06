@@ -62,11 +62,11 @@ function ConfigureNginxSite {
     )
     $AcceptedParentDirectories = @(
         'Code',
-        'CodeCollege',
-        'CodeStudent',
+        'CodeColleges',
+        'CodeStudents',
         'CodeTest'
     )
-    $Directories = $ExecutionContext.SessionState.Path.CurrentLocation.Path -split [io.path]::DirectorySeparatorChar
+    $Directories = $ExecutionContext.SessionState.Path.CurrentLocation.Path.Split([io.path]::DirectorySeparatorChar)
     if (! ($Directories.Length -gt 2 -and $AcceptedParentDirectories -contains $Directories[-2])) {
         WriteMessage -Type Danger -Message 'This command cannot be executed in this directory.'
         return
@@ -78,7 +78,7 @@ function ConfigureNginxSite {
         WriteMessage -Type Warning -Message 'No configurable site found.'
         return
     }
-    $WebRootDirectory = $Directories -join '/'
+    $WebRootDirectory = $Directories -join [io.path]::AltDirectorySeparatorChar
     if ($IsMacOS) {
         $NginxConfigDirectory = (brew --prefix nginx) + '/.bottle/etc/nginx'
     } else {
