@@ -17,7 +17,7 @@ $Modules = @(
     'syllabus'
 )
 foreach ($Module in $Modules) {
-    Import-Module -Name ([io.path]::Combine($Global:DotfilesInstallPath, 'modules', "$Module.psm1"))
+    Import-Module -Name ([io.path]::Combine($Global:DotfilesInstallPath, 'modules', "${Module}.psm1"))
 }
 
 $Applications = @(
