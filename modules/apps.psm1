@@ -366,6 +366,7 @@ function InstallNginx {
         if (Test-Path -Path $OutFile) {
             $DestinationPath = 'C:\nginx'
             if ((Test-Path -Path $DestinationPath) -and ! (Test-Path -Path "${DestinationPath}.bak")) {
+                Remove-Item -Path "${DestinationPath}.bak" -Recurse -Force
                 WriteMessage -Type Info -Message "Making a backup of previously installed version..."
                 Move-Item -Path $DestinationPath -Destination "${DestinationPath}.bak"
             }
