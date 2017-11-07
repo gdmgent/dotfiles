@@ -365,17 +365,20 @@ function InstallNginx {
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
         if (Test-Path -Path $OutFile) {
             $DestinationPath = 'C:\nginx'
-            if ((Test-Path -Path $DestinationPath) -and ! (Test-Path -Path "${DestinationPath}.bak")) {
-                Remove-Item -Path "${DestinationPath}.bak" -Recurse -Force
+            if (Test-Path -Path $DestinationPath) {
+                if (Test-Path -Path "${DestinationPath}.bak") {
+                    WriteMessage -Type Info -Message "Removing a backup of previously installed version..."
+                    Remove-Item -Path "${DestinationPath}.bak" -Recurse -Force
+                }
                 WriteMessage -Type Info -Message "Making a backup of previously installed version..."
-                Move-Item -Path $DestinationPath -Destination "${DestinationPath}.bak"
+                Rename-Item $DestinationPath -NewName "${DestinationPath}.bak"
             }
             WriteMessage -Type Info -Message 'Installing NGINX...'
             Expand-Archive -Path $OutFile -DestinationPath 'C:\' -Force
             if ($RelativeUri -match 'nginx-\d+.\d+.\d+') {
                 $DestinationPathTemp = 'C:\' + $Matches[0]
                 if (Test-Path -Path $DestinationPathTemp) {
-                    Move-Item -Path $DestinationPathTemp -Destination $DestinationPath
+                    Rename-Item $DestinationPathTemp -NewName $DestinationPath
                 }
             }
             Remove-Item -Path $OutFile

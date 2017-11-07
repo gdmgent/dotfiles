@@ -24,22 +24,30 @@ function NginxServeCommand {
             $Expression = 'nginx -s reload'
             if ($IsMacOS) {
                 $Expression = "sudo ${Expression}"
+                Invoke-Expression -Command $Expression
+            } elseif ($IsWindows) {
+                Push-Location \nginx
+                Invoke-Expression -Command $Expression
+                Pop-Location
             }
-            Invoke-Expression -Command $Expression
         }
         'Status' {
-            Get-Job -Name php-job
-            Get-Job -Name nginx-job
+            Get-Job -Name php-job -ErrorAction SilentlyContinue
+            Get-Job -Name nginx-job -ErrorAction SilentlyContinue
         }
         'Stop' {
             $Expression = 'nginx -s quit'
             if ($IsMacOS) {
                 Invoke-Expression -Command "sudo ${Expression}"
             } elseif ($IsWindows) {
+                Push-Location \nginx
                 Invoke-Expression -Command $Expression
-                Get-Job -Name 'nginx-job' -ErrorAction SilentlyContinue | Stop-Job
+                Pop-Location
             }
-            Get-Job -Name 'php-job' -ErrorAction SilentlyContinue | Stop-Job
+            Get-Job -Name nginx-job -ErrorAction SilentlyContinue | Stop-Job
+            Get-Job -Name nginx-job -ErrorAction SilentlyContinue | Remove-Job
+            Get-Job -Name php-job -ErrorAction SilentlyContinue | Stop-Job
+            Get-Job -Name php-job -ErrorAction SilentlyContinue | Remove-Job
         }
         Default {
             WriteMessage -Type Info -Message 'Starting NGINX for ports 80 and 443 with PHP CGI on port 9999'
@@ -84,6 +92,7 @@ function ConfigureNginxSite {
         WriteMessage -Type Warning -Message 'No configurable site found.'
         return
     }
+    $HomeDirectory = $HOME.Split([io.path]::DirectorySeparatorChar) -join [io.path]::AltDirectorySeparatorChar
     $WebRootDirectory = $Directories -join [io.path]::AltDirectorySeparatorChar
     if ($IsMacOS) {
         $NginxConfigDirectory = (brew --prefix nginx) + '/.bottle/etc/nginx'
@@ -95,7 +104,7 @@ function ConfigureNginxSite {
     $FileContent = Get-Content -Path $SourcePath
     $Settings = @(
         @('»DOMAIN-NAME«'           , $DomainName),
-        @('»HOME-DIRECTORY«'        , $HOME),
+        @('»HOME-DIRECTORY«'        , $HomeDirectory),
         @('»NGINX-CONFIG-DIRECTORY«', $NginxConfigDirectory),
         @('»WEB-ROOT-DIRECTORY«'    , $WebRootDirectory)
     )
