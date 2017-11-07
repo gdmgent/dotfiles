@@ -15,12 +15,12 @@ function VagrantBoxAdd {
         [String]
         $Version
     )
-    vagrant box add laravel/homestead --box-version "$Version" --provider virtualbox --clean
+    vagrant box add laravel/homestead --box-version "${Version}" --provider virtualbox --clean
 }
 New-Alias -Name vba -Value VagrantBoxAdd
 
 function VagrantBoxList {
-    vagrant box list "$args"
+    vagrant box list "${args}"
 }
 New-Alias -Name vbl -Value VagrantBoxList
 
@@ -30,73 +30,73 @@ function VagrantBoxRemove {
         [String]
         $Version
     )
-    vagrant box remove laravel/homestead --box-version "$Version"
+    vagrant box remove laravel/homestead --box-version "${Version}"
 }
 New-Alias -Name vbr -Value VagrantBoxRemove
 
 function VagrantBoxUpdate {
-    vagrant box update "$args"
+    vagrant box update "${args}"
 }
 New-Alias -Name vbu -Value VagrantBoxUpdate
 
 function VagrantDestroy {
     if (HasVagrantfile) {
-        vagrant destroy "$args"
+        vagrant destroy "${args}"
     }
 }
 New-Alias -Name vd -Value VagrantDestroy
 
 function VagrantGlobalStatus {
-    vagrant global-status "$args"
+    vagrant global-status "${args}"
 }
 New-Alias -Name vg -Value VagrantGlobalStatus
 
 function VagrantGlobalStatusPrune {
-    vagrant global-status --prune "$args"
+    vagrant global-status --prune "${args}"
 }
 New-Alias -Name vgp -Value VagrantGlobalStatusPrune
 
 function VagrantHalt {
     if (HasVagrantfile) {
-        vagrant halt "$args"
+        vagrant halt "${args}"
     }
 }
 New-Alias -Name vh -Value VagrantHalt
 
 function VagrantLogin {
-    vagrant login "$args"
+    vagrant login "${args}"
 }
 New-Alias -Name vl -Value VagrantLogin
 
 function VagrantPluginUpdate {
-    vagrant plugin update "$args"
+    vagrant plugin update "${args}"
 }
 New-Alias -Name vpu -Value VagrantPluginUpdate
 
 function VagrantProvision {
     if (HasVagrantfile) {
-        vagrant provision "$args"
+        vagrant provision "${args}"
     }
 }
 New-Alias -Name vp -Value VagrantProvision
 
 function VagrantReload {
     if (HasVagrantfile) {
-        vagrant reload "$args"
+        vagrant reload "${args}"
     }
 }
 New-Alias -Name vr -Value VagrantReload
 
 function VagrantReloadProvision {
     if (HasVagrantfile) {
-        vagrant reload --provision "$args"
+        vagrant reload --provision "${args}"
     }
 }
 New-Alias -Name vrp -Value VagrantReloadProvision
 
 function VagrantStatus {
     if (HasVagrantfile) {
-        vagrant status "$args"
+        vagrant status "${args}"
     }
 }
 New-Alias -Name vs -Value VagrantStatus
@@ -123,28 +123,28 @@ function VagrantSsh {
         } else {
             Remove-Item -Path .proxy -ErrorAction SilentlyContinue
         }
-        vagrant ssh "$args"
+        vagrant ssh "${args}"
     }
 }
 New-Alias -Name vss -Value VagrantSsh
 
 function VagrantSuspend {
     if (HasVagrantfile) {
-        vagrant suspend "$args"
+        vagrant suspend "${args}"
     }
 }
 New-Alias -Name vsu -Value VagrantSuspend
 
 function VagrantUp {
     if (HasVagrantfile) {
-        vagrant up "$args"
+        vagrant up "${args}"
     }
 }
 New-Alias -Name vu -Value VagrantUp
 
 function VagrantUpProvision {
     if (HasVagrantfile) {
-        vagrant up --provision "$args"
+        vagrant up --provision "${args}"
     }
 }
 New-Alias -Name vup -Value VagrantUpProvision
@@ -169,6 +169,6 @@ function HasVagrantfile {
     if (Test-Path -Path $File) {
         return $true
     } else {
-        WriteMessage -Type Warning -Message "Cannot run Vagrant in this directory because a '$File' is required."
+        WriteMessage -Type Warning -Message "Cannot run Vagrant in this directory because a '${File}' is required."
     }
 }

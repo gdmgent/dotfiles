@@ -1,4 +1,4 @@
-Set-Variable -Name DotfilesConfigPath -Value (Join-Path -Path $Home -ChildPath .dotfiles | Join-Path -ChildPath config.json) -Option Constant -Scope Global -ErrorAction SilentlyContinue
+Set-Variable -Name DotfilesConfigPath -Value ([io.path]::Combine($HOME, '.dotfiles', 'config.json')) -Option Constant -Scope Global -ErrorAction SilentlyContinue
 Set-Variable -Name DotfilesVersion -Value (Get-Content -Path (Join-Path -Path $Global:DotfilesInstallPath -ChildPath VERSION) | Select-Object -First 1 -Skip 1) -Option Constant -Scope Global -ErrorAction SilentlyContinue
 
 function ExistCommand {
@@ -63,10 +63,10 @@ function SetEnvironment {
 
         # First
         $EnvironmentPath += @(
-            # "$HOME/.rbenv/shims"
+            # "${HOME}/.rbenv/shims"
         )
 
-        $AndroidSdkPath = "$HOME/Library/Android/sdk/tools"
+        $AndroidSdkPath = "${HOME}/Library/Android/sdk/tools"
         if (Test-Path -Path $AndroidSdkPath) {
             $EnvironmentPath += $AndroidSdkPath
         }
@@ -92,8 +92,8 @@ function SetEnvironment {
 
         # Last
         $EnvironmentPath += @(
-            "$HOME/.config/yarn/global/node_modules/.bin",
-            "$HOME/.composer/vendor/bin"
+            "${HOME}/.config/yarn/global/node_modules/.bin",
+            "${HOME}/.composer/vendor/bin"
         )
 
         [System.Environment]::SetEnvironmentVariable('PATH', $EnvironmentPath -join ':')
@@ -101,12 +101,12 @@ function SetEnvironment {
         $EnvironmentPath = [System.Environment]::GetEnvironmentVariable('Path').Split([io.path]::PathSeparator)
         $EnvironmentPath += @(
             'C:\cygwin64\bin',
-            "$HOME\AppData\Roaming\Composer\vendor\bin",
+            "${HOME}\AppData\Roaming\Composer\vendor\bin",
             'C:\nginx',
             'C:\php',
             'C:\Program Files\MySQL\MySQL Server 5.7\bin',
             'C:\Ruby23-x64\bin',
-            "$HOME\AppData\Local\Yarn\config\global\node_modules\.bin"
+            "${HOME}\AppData\Local\Yarn\config\global\node_modules\.bin"
         )
 
         # PowerShell Paths @TODO replace with $PSPATH ?
@@ -226,9 +226,9 @@ function WriteMessage {
         }
     }
     if ($Background) {
-        Write-Host " $Message " -BackgroundColor $Background -ForegroundColor $Foreground -NoNewline:$NoNewline;
+        Write-Host " ${Message} " -BackgroundColor $Background -ForegroundColor $Foreground -NoNewline:$NoNewline;
     } else {
-        Write-Host "$Message" -ForegroundColor $Foreground -NoNewline:$NoNewline;
+        Write-Host "${Message}" -ForegroundColor $Foreground -NoNewline:$NoNewline;
     }
 }
 
@@ -242,9 +242,9 @@ function Dotfiles {
     } else {
         $OS = 'unknown operating system'
     }
-    WriteMessage -Type Info -Inverse -Message "gdm.gent Dotfiles $Global:DotfilesVersion" -NoNewline
+    WriteMessage -Type Info -Inverse -Message "gdm.gent Dotfiles ${Global:DotfilesVersion}" -NoNewline
     $PSVersion = $PSVersionTable.GitCommitId # $PSVersionTable.PSVersion.ToString()
-    WriteMessage -Type Mute -Message " on PowerShell $PSVersion for $OS"
+    WriteMessage -Type Mute -Message " on PowerShell ${PSVersion} for ${OS}"
 }
 New-Alias -Name dot -Value Dotfiles
 
@@ -255,15 +255,15 @@ function FindListeners {
         $Port
     )
     if ($IsMacOS) {
-        (sudo lsof -i ":$Port" | Where-Object { $_ -match 'LISTEN' })
+        (sudo lsof -i ":${Port}" | Where-Object { $_ -match 'LISTEN' })
     } elseif ($IsWindows) {
-        (NETSTAT.EXE -ao | Where-Object { $_ -match 'Proto' -or ($_ -match ":$Port " -and $_ -match 'LISTENING') })
+        (NETSTAT.EXE -ao | Where-Object { $_ -match 'Proto' -or ($_ -match ":${Port} " -and $_ -match 'LISTENING') })
     }
 }
 
 function SearchDotfilesCommands {
-    Get-Command "$args" | Where-Object { $_.Source -eq 'dotfiles' }
-    Get-Alias   "$args" | Where-Object { $_.Source -eq 'dotfiles' -or $_.Source -like 'aliases*' }
+    Get-Command "${args}" | Where-Object { $_.Source -eq 'dotfiles' }
+    Get-Alias   "${args}" | Where-Object { $_.Source -eq 'dotfiles' -or $_.Source -like 'aliases*' }
 }
 
 function X {

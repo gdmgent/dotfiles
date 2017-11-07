@@ -31,7 +31,7 @@ $Applications = @(
 )
 foreach ($Application in $Applications) {
     if (ExistCommand -Name $Application) {
-        Import-Module -Name ([io.path]::Combine($Global:DotfilesInstallPath, 'apps', "$Application.psm1"))
+        Import-Module -Name ([io.path]::Combine($Global:DotfilesInstallPath, 'apps', "${Application}.psm1"))
     } else {
         $Error.RemoveAt(0)
     }

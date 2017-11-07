@@ -37,7 +37,7 @@ function ShowProxy {
             $Type = 'Success'
         }
         Default {
-            $State = "unrecognized ($State)"
+            $State = "unrecognized (${State})"
             $Type = 'Warning'
         }
     }
@@ -145,13 +145,13 @@ function TurnProxyOn {
 
 function OpenProxySettings {
     if ($IsMacOS) {
-        $command = @'
+        $Command = @'
 tell application \"System Preferences\"
     activate
     set the current pane to pane id \"com.apple.preference.network\"
 end tell
 '@
-        osascript -e $command
+        osascript -e $Command
     } elseif ($IsWindows) {
         explorer ms-settings:network-proxy
     }

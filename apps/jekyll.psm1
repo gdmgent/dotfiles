@@ -39,7 +39,7 @@ function JekyllServe {
         $Unpublished
     )
     if (IsJekyllSite) {
-        $Command = "bundle exec jekyll serve"
+        $Command = 'bundle exec jekyll serve'
         if ($AtomEditor) {
             atom .
         }
@@ -57,7 +57,7 @@ function JekyllServe {
         }
         if ($PortOffset) {
             $Port = 4000 + $PortOffset
-            $Command +=  " --port=$Port"
+            $Command +=  " --port=${Port}"
         }
         if ($Unpublished) {
             $Command += ' --unpublished'
@@ -72,18 +72,18 @@ function JekyllServe {
                     $Port = 4000;
                 }
             }
-            OpenUri -Uri "http://localhost:$Port/$Directory"
+            OpenUri -Uri "http://localhost:${Port}/${Directory}"
         }
-        Invoke-Expression -Command "Clear-Host;$Command"
+        Invoke-Expression -Command "Clear-Host;${Command}"
     }
 }
 New-Alias -Name js -Value JekyllServe
 
 function IsJekyllSite {
-    $File = "_config.yml"
+    $File = '_config.yml'
     if (Test-Path -Path $File) {
         return $true
     } else {
-        WriteMessage -Type Warning -Message "Cannot run Jekyll in this directory because a '$File' is required."
+        WriteMessage -Type Warning -Message "Cannot run Jekyll in this directory because a '${File}' is required."
     }
 }

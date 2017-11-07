@@ -47,7 +47,7 @@ function InstallComposer {
     } elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Downloading Composer installer...'
         $Urn = 'Composer-Setup.exe'
-        $Uri = "https://getcomposer.org/$Urn"
+        $Uri = "https://getcomposer.org/${Urn}"
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path -Path $InstallerFile) {
@@ -71,7 +71,7 @@ function InstallComposerCgr {
         InstallComposer
     }
     $State = ReadConfig -Name Proxy
-    if ($IsMacOS -and $State -eq 'on') {
+    if ($IsMacOS -and $State.Equals('on')) {
         composer global require --prefer-source consolidation/cgr
     } else {
         composer global require consolidation/cgr
@@ -90,7 +90,7 @@ function InstallComposerPrestissimo {
         InstallComposer
     }
     $State = ReadConfig -Name Proxy
-    if ($IsMacOS -and $State -eq 'on') {
+    if ($IsMacOS -and $State.Equals('on')) {
         composer global require --prefer-source hirak/prestissimo
     } else {
         composer global require hirak/prestissimo
@@ -102,15 +102,15 @@ function InstallFontFiraCode {
     WriteMessage -Type Info -Message 'Downloading Fira Code typeface ...'
     $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/tonsky/FiraCode/releases/latest
     $Name = 'FiraCode'
-    $Urn = "$Name.zip"
+    $Urn = "${Name}.zip"
     $Uri = $Response.assets.browser_download_url
     if ($IsMacOS) {
         $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
         if (Test-Path -Path $OutFile) {
             WriteMessage -Type Info -Message 'Installing Fira Code typeface...'
-            $DestinationPath = "$HOME/Library/Fonts/"
-            $TempPath = "$env:TMPDIR$Name/"
+            $DestinationPath = "${HOME}/Library/Fonts/"
+            $TempPath = "${env:TMPDIR}${Name}/"
             $output = unzip $OutFile **/*.otf -d $TempPath -o
             Remove-Item -Path $OutFile
             Move-Item -Path ${TempPath}otf/*.otf -Destination $DestinationPath -Force
@@ -122,7 +122,7 @@ function InstallFontFiraCode {
         if (Test-Path -Path $OutFile) {
             WriteMessage -Type Info -Message 'Installing Fira Code typeface...'
             $DestinationPath = "C:\Windows\Fonts\"
-            $TempPath = "$env:TEMP$Name\"
+            $TempPath = "${env:TEMP}${Name}\"
             Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
             Remove-Item -Path $OutFile
             $Output = Get-ChildItem -Path ${TempPath}otf\*.otf | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
@@ -136,15 +136,15 @@ function InstallFontHack {
     WriteMessage -Type Info -Message 'Downloading Hack typeface'
     $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/chrissimpkins/Hack/releases/latest
     $Name = 'Hack'
-    $Urn = "$Name.zip"
+    $Urn = "${Name}.zip"
     $Uri = ($Response.assets | Where-Object { $_.name -match '^Hack-(.+)-otf.zip$' }).browser_download_url
     if ($IsMacOS) {
         $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
         if (Test-Path -Path $OutFile) {
             Write-WriteMessage -Type Info -Message 'Installing Hack typeface...'
-            $DestinationPath = "$HOME/Library/Fonts/"
-            $TempPath = "$env:TMPDIR$Name/"
+            $DestinationPath = "${HOME}/Library/Fonts/"
+            $TempPath = "${env:TMPDIR}${Name}/"
             $output = unzip $OutFile *.otf -d $TempPath -o
             Remove-Item -Path $OutFile
             Move-Item -Path ${TempPath}*.otf -Destination $DestinationPath -Force
@@ -156,7 +156,7 @@ function InstallFontHack {
         if (Test-Path -Path $OutFile) {
             WriteMessage -Type Info -Message 'Installing Hack typeface...'
             $DestinationPath = "C:\Windows\Fonts\"
-            $TempPath = "$env:TEMP$Name\"
+            $TempPath = "${env:TEMP}${Name}\"
             Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
             Remove-Item -Path $OutFile
             $Output = Get-ChildItem -Path ${TempPath}*.otf | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
@@ -171,15 +171,15 @@ function InstallFontHasklig {
     $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/i-tu/Hasklig/releases?per_page=1
     # $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/i-tu/Hasklig/releases/latest
     $Name = 'Hasklig'
-    $Urn = "$Name.zip"
+    $Urn = "${Name}.zip"
     $Uri = $Response.assets.browser_download_url
     if ($IsMacOS) {
         $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
         if (Test-Path -Path $OutFile) {
             WriteMessage -Type Info -Message 'Installing Hasklig typeface...'
-            $DestinationPath = "$HOME/Library/Fonts/"
-            $TempPath = "$env:TMPDIR$Name/"
+            $DestinationPath = "${HOME}/Library/Fonts/"
+            $TempPath = "${env:TMPDIR}${Name}/"
             $output = unzip $OutFile *.otf -d $TempPath -o
             Remove-Item -Path $OutFile
             Move-Item -Path ${TempPath}*.otf -Destination $DestinationPath -Force
@@ -191,7 +191,7 @@ function InstallFontHasklig {
         if (Test-Path -Path $OutFile) {
             WriteMessage -Type Info -Message 'Installing Hasklig typeface...'
             $DestinationPath = "C:\Windows\Fonts\"
-            $TempPath = "$env:TEMP$Name\"
+            $TempPath = "${env:TEMP}${Name}\"
             Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
             Remove-Item -Path $OutFile
             $Output = Get-ChildItem -Path ${TempPath}*.otf | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
@@ -304,7 +304,7 @@ function InstallNvm {
             $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/coreybutler/nvm-windows/releases/latest
         }
         $Version = $Response.name
-        WriteMessage -Type Info -Message "Downloading Node Version Manager $Version..."
+        WriteMessage -Type Info -Message "Downloading Node Version Manager ${Version}..."
         $Urn = 'nvm-setup.zip'
         $Uri = ($Response.assets | Where-Object { $_.name.Equals($Urn) }).browser_download_url
         $InstallerArchive = Join-Path -Path $env:TEMP -ChildPath $Urn
@@ -355,7 +355,7 @@ function InstallNginx {
         WriteMessage -Type Info -Message 'Using Homebrew to install NGINX...'
         sh -c 'brew install nginx'
     } elseif ($IsWindows) {
-        WriteMessage -Type Info -Message "Downloading NGINX $Version..."
+        WriteMessage -Type Info -Message "Downloading NGINX ${Version}..."
         $Url = 'https://nginx.org/en/download.html'
         $File = "/nginx-${Version}.\d+.zip$"
         $FileUri = "https://nginx.org"
@@ -528,13 +528,13 @@ function InstallPowerShell {
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path -Path $InstallerFile) {
-            WriteMessage -Type Info -Message "Installing PowerShell $Version..."
+            WriteMessage -Type Info -Message "Installing PowerShell ${Version}..."
             WriteMessage -Type Warning -Inverse -Message ' - [Next]'
             WriteMessage -Type Warning -Inverse -Message " - 'I accept the terms in the License Agreement', [next]"
             WriteMessage -Type Warning -Inverse -Message " - 'C:\Program Files\PowerShell\', [Next]"
             WriteMessage -Type Warning -Inverse -Message ' - [Finish]'
             WriteMessage -Type Warning -Inverse -Message 'Run InstallHyperPreferences and reopen Hyper'
-            Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i $InstallerFile" -Wait
+            Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i ${InstallerFile}" -Wait
             Remove-Item -Path $InstallerFile
        }
     } elseif ($IsLinux) {
@@ -560,15 +560,15 @@ function InstallRuby {
         WriteMessage -Type Info -Message 'Downloading Ruby installer...'
         $Version = '2.3.\d+' # Jekyll is not compatible with newer versions of Ruby
         $RubyDirectoryName = 'Ruby23-x64'
-        $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "rubyinstaller-$Version-x64.exe$" } | Select-Object -First 1).href
-        $Urn = "$RubyDirectoryName.exe"
+        $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "rubyinstaller-${Version}-x64.exe$" } | Select-Object -First 1).href
+        $Urn = "${RubyDirectoryName}.exe"
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path -Path $InstallerFile) {
             WriteMessage -Type Info -Message 'Running Ruby installer...'
             WriteMessage -Type Warning -Inverse -Message " - 'English', [OK]"
             WriteMessage -Type Warning -Inverse -Message " - 'I accept the License', [Next>]"
-            WriteMessage -Type Warning -Inverse -Message " - 'C:\$RubyDirectoryName', 'Add Ruby executables to your PATH', [Install]"
+            WriteMessage -Type Warning -Inverse -Message " - 'C:\${RubyDirectoryName}', 'Add Ruby executables to your PATH', [Install]"
             WriteMessage -Type Warning -Inverse -Message ' - [Finish]'
             Start-Process -FilePath $InstallerFile -Wait
             Remove-Item -Path $InstallerFile
@@ -596,17 +596,17 @@ if ($IsWindows) {
             $RubyDirectoryName = 'Ruby23-x64'
             $Version = 'mingw64-64'
             $DevKitDirectoryName = 'DevKit'
-            $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "DevKit-$Version-(\S+)-sfx.exe$" } | Select-Object -First 1).href
-            $Urn = "$DevKitDirectoryName.exe"
+            $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "DevKit-${Version}-(\S+)-sfx.exe$" } | Select-Object -First 1).href
+            $Urn = "${DevKitDirectoryName}.exe"
             $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
             Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
             if (Test-Path -Path $InstallerFile) {
                 WriteMessage -Type Info -Message 'Running Ruby DevKit installer...'
-                Start-Process -FilePath $InstallerFile -ArgumentList "-oC:\$DevKitDirectoryName -y" -Wait
+                Start-Process -FilePath $InstallerFile -ArgumentList "-oC:\${DevKitDirectoryName} -y" -Wait
                 Remove-Item -Path $InstallerFile
                 Set-Location -Path C:\$DevKitDirectoryName
                 # ruby dk.rb init
-                "---`n- C:\$RubyDirectoryName`n" | Out-File -FilePath 'config.yml' -Encoding utf8
+                "---`n- C:\${RubyDirectoryName}`n" | Out-File -FilePath 'config.yml' -Encoding utf8
                 ruby dk.rb install
             }
         } else {
@@ -642,7 +642,7 @@ function InstallYarn {
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path -Path $InstallerFile) {
-            WriteMessage -Type Info -Inverse -Message "Installing Yarn $Version..."
+            WriteMessage -Type Info -Inverse -Message "Installing Yarn ${Version}..."
             WriteMessage -Message ' - ' -NoNewline
             WriteMessage -Type Success -Inverse -Message '[Next]'
             WriteMessage -Message ' - ' -NoNewline
@@ -657,7 +657,7 @@ function InstallYarn {
             WriteMessage -Type Success -Inverse -Message '[Install]'
             WriteMessage -Message ' - ' -NoNewline
             WriteMessage -Type Success -Inverse -Message '[Finish]'
-            Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i $InstallerFile" -Wait
+            Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i ${InstallerFile}" -Wait
             Remove-Item -Path $InstallerFile
        }
     }
@@ -675,13 +675,13 @@ function InstallYarn {
 function RemoveLocalArtestead {
     WriteMessage -Type Info -Inverse -Message 'Removing local Artestead'
     $File = 'Artestead'
-    if ((Test-Path -Path "$File.json") -or (Test-Path -Path "$File.yaml")) {
+    if ((Test-Path -Path "${File}.json") -or (Test-Path -Path "${File}.yaml")) {
         WriteMessage -Type Info -Message 'Removing files...'
         $ToRemove = @(
-            "$File.json",
-            "$File.json.example",
-            "$File.yaml",
-            "$File.yaml.example"
+            "${File}.json",
+            "${File}.json.example",
+            "${File}.yaml",
+            "${File}.yaml.example"
         )
         if (Test-Path -Path Vagrantfile) {
             vagrant destroy
@@ -696,7 +696,7 @@ function RemoveLocalArtestead {
         )
         Remove-Item -Path $ToRemove -Recurse -Force -ErrorAction SilentlyContinue
     } else {
-        WriteMessage -Type Warning -Message "This is not an Artestead project. Could not find '$File' in this directory."
+        WriteMessage -Type Warning -Message "This is not an Artestead project. Could not find '${File}' in this directory."
     }
 }
 
@@ -801,6 +801,6 @@ function UpdateBundler {
             UpdateBundler
         }
     } else {
-        WriteMessage -Type Warning -Message "Cannot run Bundler in this directory because a '$File' is required."
+        WriteMessage -Type Warning -Message "Cannot run Bundler in this directory because a '${File}' is required."
     }
 }

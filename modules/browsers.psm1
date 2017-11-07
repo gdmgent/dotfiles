@@ -57,10 +57,10 @@ function OpenUri {
         if ($Secure) {
             $Protocol += 's' 
         }
-        $Uri = $Protocol + '://' + $Uri
+        $Uri = "${Protocol}://${Uri}"
     }
     if ($IsMacOS) {
-        $Command = "open $Uri"
+        $Command = "open ${Uri}"
         if ($Blisk) {
             $Command += ' -a Blisk'
         } elseif ($Chrome) {
@@ -91,7 +91,7 @@ function OpenUri {
         } elseif ($ChromeCanary) {
             $Browser = "$HOME\AppData\Local\Google\Chrome SxS\Application\chrome.exe"
         } elseif ($Edge) {
-            $Command = "microsoft-edge:$Uri"
+            $Command = "microsoft-edge:${Uri}"
         } elseif ($Firefox) {
             $Browser = "${env:ProgramFiles}\Mozilla Firefox\firefox.exe"
         } elseif ($FirefoxDeveloperEdition) {

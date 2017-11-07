@@ -1,6 +1,6 @@
 if ($IsMacOS) {
     New-Alias -Name node -Value Node -Scope Global
-    Set-Variable -Name NodeJsPath -Value "$HOME/.nvm/versions/node" -Option Constant -Scope Global
+    Set-Variable -Name NodeJsPath -Value "${HOME}/.nvm/versions/node" -Option Constant -Scope Global
 }
 
 # Node Version Manager
@@ -26,7 +26,7 @@ function NpmConfigProxy {
         if ($Off) {
             npm config delete $Key
         } elseif ($On) {
-            npm config set $Key "$Proxy"
+            npm config set $Key "${Proxy}"
         } else {
             WriteMessage -Message "${Key}: " -NoNewline
             npm config get $Key
@@ -112,9 +112,9 @@ function ShowNodeConfig {
 
 function WebpackCommand {
     if (Test-Path -Path ($Path = [io.path]::Combine('.', 'node_modules', '.bin', 'webpack'))) {
-        Invoke-Expression -Command "$Path $args"    
+        Invoke-Expression -Command "${Path} ${args}"    
     } elseif (ExistCommand -Name webpack) {
-        Invoke-Expression -Command ((Get-Command -Name webpack -Type Application).Source + " $args")
+        Invoke-Expression -Command ((Get-Command -Name webpack -Type Application).Source + " ${args}")
     } else {
         WriteMessage -Type Warning -Message "Webpack is not available from this directory, nor is it installed globally."
     }

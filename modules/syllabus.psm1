@@ -228,9 +228,9 @@ function UpdateSyllabusSnippets {
         WriteMessage -Type Info -Message 'Updating Syllabus Snippets...'
         $Origin = [io.path]::Combine('syllabusv2-resources', '__tools', 'snippets', '*.json')
         if ($IsMacOS) {
-            $Destination = "$HOME/Library/Application Support/Code/User/snippets/"
+            $Destination = "${HOME}/Library/Application Support/Code/User/snippets/"
         } elseif ($IsWindows) {
-            $Destination = "$env:APPDATA\Code\User\snippets\"
+            $Destination = "${env:APPDATA}\Code\User\snippets\"
         } else {
             $Destination =  $MyInvocation.MyCommand.Path
         }

@@ -11,9 +11,9 @@ function PromptGit {
             if ($HasChanged) {
                 $Prompt = [char]::ConvertFromUtf32(0x26A0)
             }
-            return "$Prompt ($Branch) "
+            return "${Prompt} (${Branch}) "
         } elseif ($IsWindows) {
-            Write-Host "$Prompt (" -NoNewline
+            Write-Host "${Prompt} (" -NoNewline
             Write-Host $Branch -NoNewline -ForegroundColor $(if ($HasChanged) { 'Red' } else { 'Green' })
             Write-Host ') ' -NoNewline
         }
@@ -21,5 +21,5 @@ function PromptGit {
 }
 
 function Prompt {
-    $(PromptGit) + "$($ExecutionContext.SessionState.Path.CurrentLocation)$('>' * ($NestedPromptLevel + 1)) "
+    $(PromptGit) + "$($ExecutionContext.SessionState.Path.CurrentLocation)$('>' * (${NestedPromptLevel} + 1)) "
 }

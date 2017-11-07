@@ -66,7 +66,7 @@ function OpenFolderInGui {
         $App = 'explorer'
     }
     for ($I = 0; $I -lt $Windows; $I++) {
-        Invoke-Expression -Command "$App ."
+        Invoke-Expression -Command "${App} ."
     }
 }
 New-Alias -Name f -Value OpenFolderInGui
@@ -91,7 +91,7 @@ function SetLocationPath ([String] $Path, [String] $Directory) {
     if (Test-Path -Path $Location) {
         Set-Location $Location
     } else {
-        WriteMessage -Type Danger -Message "Cannot find path '$Location' because it does not exist."
+        WriteMessage -Type Danger -Message "Cannot find path '${Location}' because it does not exist."
         WriteMessage -Type Info -Message 'Available directories:'
         Get-ChildItem -Name $Path | Write-Host -ForegroundColor DarkGray
     }

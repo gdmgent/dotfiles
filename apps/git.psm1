@@ -46,7 +46,7 @@ function GitCommit {
         $Message,
         [ValidateSet('CHORE','ENHANCEMENT','FEATURE','FIX','REFACTOR','STYLE','TEST')]
         [String]
-        $Type = "WIP",
+        $Type = 'WIP',
         [Switch]
         $All,
         [Switch]
@@ -100,10 +100,10 @@ function GitConfigUser {
     Param(
         [Parameter(Mandatory=$true)]
         [String]
-        $Email = "olivier.parent@arteveldehs.be",
+        $Email = 'olivier.parent@arteveldehs.be',
         [Parameter(Mandatory=$true)]
         [String]
-        $User = "OlivierParent"
+        $User = 'OlivierParent'
     )
     git config --global user.email $Email
     git config --global user.name $User
@@ -124,7 +124,7 @@ function GitPull {
     if ($Force) {
         GitStashDrop
     }
-    $Command = "git pull"
+    $Command = 'git pull'
     if ($All -or $Submodule) {
         # git submodule update --recursive --remote
         $CommandMaster = 'git checkout master'
