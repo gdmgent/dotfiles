@@ -1,6 +1,6 @@
 function NginxServeCommand {
     Param(
-        [ValidateSet('Edit', 'Force-Stop', 'Reload', 'Start', 'Stop')]
+        [ValidateSet('Edit', 'Force-Stop', 'Reload', 'Start', 'Status', 'Stop')]
         [String]
         $Command = 'Start'
     )
@@ -27,6 +27,10 @@ function NginxServeCommand {
             }
             Invoke-Expression -Command $Expression
         }
+        'Status' {
+            Get-Job -Name php-job
+            Get-Job -Name nginx-job
+        }
         'Stop' {
             $Expression = 'nginx -s quit'
             if ($IsMacOS) {
@@ -42,14 +46,16 @@ function NginxServeCommand {
             Start-Job -Name 'php-job' -ScriptBlock {
                 php-cgi -b 127.0.0.1:9999
             } | Out-Null
-            if ($IsMacOS) {
-                sudo nginx -c $NginxConfig
-            } elseif ($IsWindows) {
-                Start-Job -Name 'nginx-job' -ScriptBlock {
+            $Expression = "nginx -c ${NginxConfig}"
+            Start-Job -Name 'nginx-job' -ArgumentList $Expression -ScriptBlock {
+                $Expression = $args[0]
+                if ($IsMacOS) {
+                    Invoke-Expression -Command "sudo ${Expression}"
+                } elseif ($IsWindows) {
                     Set-Location \nginx
-                    nginx -c $NginxConfig
+                    Invoke-Expression -Command $Expression
                 }
-            }
+            } | Out-Null
         }
     }
 }
