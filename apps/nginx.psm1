@@ -1,4 +1,4 @@
-function NginxServeCommand {
+function ServeNginx {
     Param(
         [ValidateSet('Edit', 'Force-Stop', 'Reload', 'Start', 'Status', 'Stop')]
         [String]
@@ -51,6 +51,10 @@ function NginxServeCommand {
         }
         Default {
             WriteMessage -Type Info -Message 'Starting NGINX for ports 80 and 443 with PHP CGI on port 9999'
+            if ($IsMacOS) {
+                # Trigger Super User Do login.
+                sudo cd .
+            }
             Start-Job -Name 'php-job' -ScriptBlock {
                 php-cgi -b 127.0.0.1:9999
             } | Out-Null
@@ -67,7 +71,7 @@ function NginxServeCommand {
         }
     }
 }
-New-Alias -Name nginxserve -Value NginxServeCommand
+New-Alias -Name nginxserve -Value ServeNginx
 
 function ConfigureNginxSite {
     Param(
