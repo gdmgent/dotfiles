@@ -88,6 +88,12 @@ function ConfigureNginxSite {
     if (Test-Path -Path drupal -PathType Container) {
         $Directories += 'drupal'
         $SourceFileName = 'nginx-drupal.conf'
+    } elseif (Test-Path -Path laravel -PathType Container) {
+        $Directories += 'laravel/public'
+        $SourceFileName = 'nginx-laravel.conf'
+    } elseif (Test-Path -Path lumen -PathType Container) {
+        $Directories += 'lumen/public'
+        $SourceFileName = 'nginx-laravel.conf'
     } else {
         WriteMessage -Type Warning -Message 'No configurable site found.'
         return
