@@ -134,7 +134,29 @@ function LaravelArtisanCommand {
 New-Alias -Name artisan -Value LaravelArtisanCommand
 New-Alias -Name art -Value LaravelArtisanCommand
 
-function PhpServeCommand {
+function PHPUnitCommand {
+    $Command = 'phpunit'
+    if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
+        if ($IsWindows) {
+            Invoke-Expression -Command "${Path} ${args}"
+        } else {
+            Invoke-Expression -Command "php ${Path} ${args}"
+        }
+    } elseif (Test-Path -Path ($Path = Join-Path -Path vendor -ChildPath $Path)) {
+        if ($IsWindows) {
+            Invoke-Expression -Command "${Path} ${args}"
+        } else {
+            Invoke-Expression -Command "php ${Path} ${args}"
+        }
+    } elseif (ExistCommand -Name $Command) {
+        Invoke-Expression -Command ((Get-Command -Name $Command -Type Application).Source + " ${args}")
+    } else {
+        WriteMessage -Type Warning -Message 'PHPUnit is not available from this directory, nor is it installed globally.'
+    }
+}
+New-Alias -Name phpunit -Value PHPUnitCommand
+
+function ServePhp {
     Param(
         [String]
         $Hostname = 'localhost',
@@ -163,7 +185,7 @@ function PhpServeCommand {
             if (ExistCommand -Name ([io.path]::Combine('vendor', 'bin', 'drupal'))) {
                 DrupalCommand -SuperUser server $Uri
             } else {
-                PhpServeCommand -Hostname $Hostname -Port $Port
+                ServePhp -Hostname $Hostname -Port $Port
             }
             break
         }
@@ -171,7 +193,7 @@ function PhpServeCommand {
             $Hostname = "$Course.localhost"
             $Uri = "${Hostname}:${Port}"
             OpenUri -Uri "http://${Uri}"
-            PhpServeCommand -Hostname $Hostname -Port $Port -NoRouterScript
+            ServePhp -Hostname $Hostname -Port $Port -NoRouterScript
             break
         }
         Default {
@@ -195,29 +217,7 @@ function PhpServeCommand {
         }
     }
 }
-New-Alias -Name phpserve -Value PhpServeCommand
-
-function PHPUnitCommand {
-    $Command = 'phpunit'
-    if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
-        if ($IsWindows) {
-            Invoke-Expression -Command "${Path} ${args}"
-        } else {
-            Invoke-Expression -Command "php ${Path} ${args}"
-        }
-    } elseif (Test-Path -Path ($Path = Join-Path -Path vendor -ChildPath $Path)) {
-        if ($IsWindows) {
-            Invoke-Expression -Command "${Path} ${args}"
-        } else {
-            Invoke-Expression -Command "php ${Path} ${args}"
-        }
-    } elseif (ExistCommand -Name $Command) {
-        Invoke-Expression -Command ((Get-Command -Name $Command -Type Application).Source + " ${args}")
-    } else {
-        WriteMessage -Type Warning -Message 'PHPUnit is not available from this directory, nor is it installed globally.'
-    }
-}
-New-Alias -Name phpunit -Value PHPUnitCommand
+New-Alias -Name phpserve -Value ServePhp
 
 function SymfonyConsoleCommand {
     $Command = 'console'
