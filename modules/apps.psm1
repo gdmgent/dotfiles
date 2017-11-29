@@ -548,11 +548,30 @@ function InstallPowerShell {
     }
 }
 
+function InstallCmake {
+    WriteMessage -Type Info -Inverse -Message 'Installing CMake'
+    if ($IsMacOS) {
+        WriteMessage -Type Info -Message 'Using Homebrew to install CMake...'
+        if (ExistCommand -Name brew) {
+            sh -c 'brew install cmake'
+        }
+    } elseif ($IsWindows) {
+        $Url = 'https://cmake.org/download/'
+        WriteMessage -Type Info -Message 'Downloading CMake installer...'
+        $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "cmake-\d+.\d+.\d+-win64-x64.msi$" } | Select-Object -First 1).href
+        WriteMessage -Message $Uri
+        
+        $Urn = "${RubyDirectoryName}.exe"
+        
+    }
+}
+
 function InstallRuby {
     WriteMessage -Type Info -Inverse -Message 'Installing Ruby'
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install Ruby...'
         if (ExistCommand -Name brew) {
+            InstallCmake 
             sh -c 'brew install ruby'
         }
     } elseif ($IsWindows) {
@@ -754,7 +773,7 @@ function UninstallRuby {
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to uninstall Ruby...'
         if (ExistCommand -Name brew) {
-            brew uninstall ruby
+            sh -c 'brew uninstall ruby'
         }
     } elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Removing Ruby files...'
