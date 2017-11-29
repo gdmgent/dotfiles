@@ -428,7 +428,7 @@ function InstallPhp {
     if ($IsMacOS) {
         WriteMessage -Type Info -Message "Using Homebrew to install PHP ${Version}..."
         $V = $Version.replace('.', '')
-        sh -c "brew tap homebrew/php && brew install php${V} php${V}-mcrypt php${V}-opcache php${V}-xdebug"
+        sh -c "brew tap homebrew/php && brew install php${V} php${V}-opcache php${V}-xdebug"
         $ConfigFilePath = "/usr/local/etc/php/${Version}/conf.d/ext-xdebug.ini"
         if (Test-Path -Path $ConfigFilePath) {
             $ConfigFile = Get-Content -Path $ConfigFilePath
