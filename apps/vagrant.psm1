@@ -117,12 +117,6 @@ New-Alias -Name vsn -Value VagrantShareName
 
 function VagrantSsh {
     if (HasVagrantfile) {
-        $State = ReadConfig -Name Proxy
-        if ($State.equals('on')) {
-            $File = New-Item -Path .proxy -ItemType File -Force
-        } else {
-            Remove-Item -Path .proxy -ErrorAction SilentlyContinue
-        }
         vagrant ssh "${args}"
     }
 }
