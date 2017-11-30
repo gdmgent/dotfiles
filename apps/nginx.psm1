@@ -26,7 +26,7 @@ function ServeNginx {
                 $Expression = "sudo ${Expression}"
                 Invoke-Expression -Command $Expression
             } elseif ($IsWindows) {
-                Push-Location \nginx
+                Set-Location $HOME\scoop\apps\nginx\current
                 Invoke-Expression -Command $Expression
                 Pop-Location
             }
@@ -40,7 +40,7 @@ function ServeNginx {
             if ($IsMacOS) {
                 Invoke-Expression -Command "sudo ${Expression}"
             } elseif ($IsWindows) {
-                Push-Location \nginx
+                Set-Location $HOME\scoop\apps\nginx\current
                 Invoke-Expression -Command $Expression
                 Pop-Location
             }
@@ -64,7 +64,7 @@ function ServeNginx {
                 if ($IsMacOS) {
                     Invoke-Expression -Command "sudo ${Expression}"
                 } elseif ($IsWindows) {
-                    Set-Location \nginx
+                    Set-Location $HOME\scoop\apps\nginx\current
                     Invoke-Expression -Command $Expression
                 }
             } | Out-Null

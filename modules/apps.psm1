@@ -288,24 +288,24 @@ function InstallNginx {
         WriteMessage -Type Info -Message 'Using Scoop to install NGINX...'
         cmd /c 'scoop install nginx'
     }
-    # WriteMessage -Type Info -Message 'Configuring NGINX...'
-    # $FileName = 'nginx.conf'
-    # $SourcePath = [io.path]::Combine($HOME, 'dotfiles', 'settings', $FileName)
-    # $DestinationPath = [io.path]::Combine($HOME, '.dotfiles', $FileName)
-    # Copy-Item -Path $SourcePath -Destination $DestinationPath
-    # if ($IsMacOS) {
-    #     $NginxConfigDirectory = (brew --prefix nginx) + '/.bottle/etc/nginx'
-    # } else {
-    #     $NginxConfigDirectory = '/nginx/conf'
-    # }
-    # $FileContent = (Get-Content -Path $DestinationPath).Replace('»NGINX-CONFIG-DIRECTORY«', $NginxConfigDirectory)
-    # Set-Content -Path $DestinationPath -Value $FileContent
-    # if (ExistCommand -Name nginx) {
-    #     WriteMessage -Type Success 'Installed version of NGINX: ' -NoNewline
-    #     nginx -v
-    # } else {
-    #     WriteMessage -Type Danger -Message 'NGINX is not correctly installed.'
-    # }
+    WriteMessage -Type Info -Message 'Configuring NGINX...'
+    $FileName = 'nginx.conf'
+    $SourcePath = [io.path]::Combine($HOME, 'dotfiles', 'settings', $FileName)
+    $DestinationPath = [io.path]::Combine($HOME, '.dotfiles', $FileName)
+    Copy-Item -Path $SourcePath -Destination $DestinationPath
+    if ($IsMacOS) {
+        $NginxConfigDirectory = (brew --prefix nginx) + '/.bottle/etc/nginx'
+    } else {
+        $NginxConfigDirectory = "${HOME}/scoop/apps/nginx/current/conf".replace('\', '/')
+    }
+    $FileContent = (Get-Content -Path $DestinationPath).Replace('»NGINX-CONFIG-DIRECTORY«', $NginxConfigDirectory)
+    Set-Content -Path $DestinationPath -Value $FileContent
+    if (ExistCommand -Name nginx) {
+        WriteMessage -Type Success 'Installed version of NGINX: ' -NoNewline
+        nginx -v
+    } else {
+        WriteMessage -Type Danger -Message 'NGINX is not correctly installed.'
+    }
 }
 
 if ($IsMacOS) {
