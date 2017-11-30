@@ -92,7 +92,6 @@ function SetEnvironment {
 
         # Last
         $EnvironmentPath += @(
-            # "${HOME}/.config/yarn/global/node_modules/.bin",
             "${HOME}/.composer/vendor/bin"
         )
 

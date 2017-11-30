@@ -107,7 +107,7 @@ function ConfigureNginxSite {
     if ($IsMacOS) {
         $NginxConfigDirectory = (brew --prefix nginx) + '/.bottle/etc/nginx'
     } else {
-        $NginxConfigDirectory = '/nginx/conf'
+        $NginxConfigDirectory = "${HOME}/scoop/apps/nginx/current/conf".replace('\', '/')
     }
     $DomainName = GenerateDomainName($Directories)
     $SourcePath = [io.path]::Combine($HOME, 'dotfiles', 'settings', $SourceFileName)
