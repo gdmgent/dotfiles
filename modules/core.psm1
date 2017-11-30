@@ -92,7 +92,7 @@ function SetEnvironment {
 
         # Last
         $EnvironmentPath += @(
-            "${HOME}/.config/yarn/global/node_modules/.bin",
+            # "${HOME}/.config/yarn/global/node_modules/.bin",
             "${HOME}/.composer/vendor/bin"
         )
 
@@ -102,11 +102,9 @@ function SetEnvironment {
         $EnvironmentPath += @(
             'C:\cygwin64\bin',
             "${HOME}\AppData\Roaming\Composer\vendor\bin",
-            'C:\nginx',
-            'C:\php',
-            'C:\Program Files\MySQL\MySQL Server 5.7\bin',
-            'C:\Ruby23-x64\bin',
-            "${HOME}\AppData\Local\Yarn\config\global\node_modules\.bin"
+            # 'C:\nginx',
+            # 'C:\php',
+            'C:\Program Files\MySQL\MySQL Server 5.7\bin'
         )
 
         # PowerShell Paths @TODO replace with $PSPATH ?

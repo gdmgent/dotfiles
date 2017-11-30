@@ -13,7 +13,6 @@ $Modules = @(
     'node'
     'path'
     'prompt'
-    'proxy'
     'syllabus'
 )
 foreach ($Module in $Modules) {

@@ -45,16 +45,8 @@ function InstallComposer {
         WriteMessage -Type Info -Message 'Using PHP to install Composer...'
         sh -c 'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer'
     } elseif ($IsWindows) {
-        WriteMessage -Type Info -Message 'Downloading Composer installer...'
-        $Urn = 'Composer-Setup.exe'
-        $Uri = "https://getcomposer.org/${Urn}"
-        $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
-        Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
-        if (Test-Path -Path $InstallerFile) {
-            WriteMessage -Type Info -Message 'Running Composer Installer...'
-            Start-Process -FilePath $InstallerFile -Wait
-            Remove-Item -Path $InstallerFile
-        }
+        WriteMessage -Type Info -Message 'Using Scoop to install Composer...'
+        cmd /c 'scoop install composer'
     }
     if (ExistCommand -Name composer) {
         WriteMessage -Type Success -Message 'Installed version of Composer: ' -NoNewline
@@ -70,12 +62,7 @@ function InstallComposerCgr {
     if (! (ExistCommand -Name composer)) {
         InstallComposer
     }
-    $State = ReadConfig -Name Proxy
-    if ($IsMacOS -and $State.Equals('on')) {
-        composer global require --prefer-source consolidation/cgr
-    } else {
-        composer global require consolidation/cgr
-    }
+    composer global require consolidation/cgr
     if (ExistCommand -Name cgr) {
         WriteMessage -Type Success -Message 'CGR is installed.'
     } else {
@@ -89,12 +76,7 @@ function InstallComposerPrestissimo {
     if (! (ExistCommand -Name composer)) {
         InstallComposer
     }
-    $State = ReadConfig -Name Proxy
-    if ($IsMacOS -and $State.Equals('on')) {
-        composer global require --prefer-source hirak/prestissimo
-    } else {
-        composer global require hirak/prestissimo
-    }
+    composer global require hirak/prestissimo
 }
 
 function InstallFontFiraCode {
@@ -206,42 +188,13 @@ function InstallGit {
         WriteMessage -Type Info -Message 'Using Homebrew to install Git...'
         sh -c 'brew install git'
     } elseif ($IsWindows) {
-        WriteMessage -Type Info -Message 'Downloading Git installer...'
-        $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/git-for-windows/git/releases/latest
-        $Version = $Response.tag_name
-        $OS = '-64-bit.exe$'
-        $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
-        $Urn = 'git-64-bit.exe'
-        $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
-        Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
-        if (Test-Path -Path $InstallerFile) {
-            WriteMessage -Type Info -Inverse -Message 'Running Git installer...'
-            WriteMessage -Message ' - ' -NoNewline
-            WriteMessage -Type Success -Inverse -Message '[Next >]'
-            WriteMessage -Message ' - ' -NoNewline
-            WriteMessage -Type Success -Inverse -Message '[Next >]'
-            WriteMessage -Message ' - ' -NoNewline
-            WriteMessage -Type Warning -Message "'Use Git and optional Unix tools from the Windows Command Prompt'" -NoNewLine
-            WriteMessage -Message ', ' -NoNewline
-            WriteMessage -Type Success -Inverse -Message '[Next >]'
-            WriteMessage -Message ' - ' -NoNewline
-            WriteMessage -Type Warning -Message "'Checkout Windows-style, commit Unix-style line endings'" -NoNewLine
-            WriteMessage -Message ', ' -NoNewline
-            WriteMessage -Type Success -Inverse -Message '[Next >]'
-            WriteMessage -Message ' - ' -NoNewline
-            WriteMessage -Type Warning -Message "'Use Windows' default console window'" -NoNewLine
-            WriteMessage -Message ', ' -NoNewline
-            WriteMessage -Type Success -Inverse -Message '[Next >]'
-            WriteMessage -Message ' - ' -NoNewline
-            WriteMessage -Type Success -Inverse -Message '[Install]'
-            WriteMessage -Message ' - ' -NoNewline
-            WriteMessage -Type Success -Inverse -Message '[Finish]'
-            Start-Process -FilePath $InstallerFile -Wait
-            Remove-Item -Path $InstallerFile
-        }
+        WriteMessage -Type Info -Message 'Using Scoop to install Git...'
+        cmd /c 'scoop install git'
     }
     if (ExistCommand -Name git) {
-        git config --global credential.helper wincred
+        if ($IsWindows) {
+            git config --global credential.helper wincred
+        }
         WriteMessage -Type Success -Message 'Installed version of Git: ' -NoNewline
         git --version
     } else {
@@ -289,36 +242,13 @@ function InstallHyperPreferences {
 }
 
 function InstallNvm {
-    Param(
-        [Switch]
-        $Prerelease
-    )
     WriteMessage -Type Info -Inverse -Message 'Installing NVM (Node Version Manager)'
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install NVM...'
         sh -c 'brew install nvm'
     } elseif ($IsWindows) {
-        if ($Prerelease) {
-            $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/coreybutler/nvm-windows/releases?per_page=1
-        } else {
-            $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/coreybutler/nvm-windows/releases/latest
-        }
-        $Version = $Response.name
-        WriteMessage -Type Info -Message "Downloading Node Version Manager ${Version}..."
-        $Urn = 'nvm-setup.zip'
-        $Uri = ($Response.assets | Where-Object { $_.name.Equals($Urn) }).browser_download_url
-        $InstallerArchive = Join-Path -Path $env:TEMP -ChildPath $Urn
-        Invoke-WebRequest -Uri $Uri -OutFile $InstallerArchive
-        if (Test-Path -Path $InstallerArchive) {
-            WriteMessage -Type Info -Message 'Running Node Version Manager installer...'
-            Expand-Archive -Path $InstallerArchive -DestinationPath $env:TEMP -Force
-            $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn.Replace('zip', 'exe')
-            if (Test-Path -Path $InstallerFile) {
-                Remove-Item -Path $InstallerArchive
-                Start-Process -FilePath $InstallerFile -Wait
-                Remove-Item -Path $InstallerFile
-            }
-        }
+        WriteMessage -Type Info -Message 'Using Scoop to install NVM...'
+        cmd /c 'scoop install nvm'
     }
     WriteMessage -Type Success -Message 'Installed version of NVM: ' -NoNewline
     if ($IsMacOS) {
@@ -349,59 +279,33 @@ function InstallMySQL {
 }
 
 function InstallNginx {
-    $Version = '1.12'
+    # $Version = '1.12'
     WriteMessage -Type Info -Inverse -Message 'Installing NGINX'
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install NGINX...'
         sh -c 'brew install nginx'
     } elseif ($IsWindows) {
-        WriteMessage -Type Info -Message "Downloading NGINX ${Version}..."
-        $Url = 'https://nginx.org/en/download.html'
-        $File = "/nginx-${Version}.\d+.zip$"
-        $FileUri = "https://nginx.org"
-        $RelativeUri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match $File } | Select-Object -First 1).href
-        $Uri = "${FileUri}${RelativeUri}"
-        $OutFile = Join-Path -Path $env:TEMP -ChildPath 'nginx.zip'
-        Invoke-WebRequest -Uri $Uri -OutFile $OutFile
-        if (Test-Path -Path $OutFile) {
-            $DestinationPath = 'C:\nginx'
-            if (Test-Path -Path $DestinationPath) {
-                if (Test-Path -Path "${DestinationPath}.bak") {
-                    WriteMessage -Type Info -Message "Removing a backup of previously installed version..."
-                    Remove-Item -Path "${DestinationPath}.bak" -Recurse -Force
-                }
-                WriteMessage -Type Info -Message "Making a backup of previously installed version..."
-                Rename-Item $DestinationPath -NewName "${DestinationPath}.bak"
-            }
-            WriteMessage -Type Info -Message 'Installing NGINX...'
-            Expand-Archive -Path $OutFile -DestinationPath 'C:\' -Force
-            if ($RelativeUri -match 'nginx-\d+.\d+.\d+') {
-                $DestinationPathTemp = 'C:\' + $Matches[0]
-                if (Test-Path -Path $DestinationPathTemp) {
-                    Rename-Item $DestinationPathTemp -NewName $DestinationPath
-                }
-            }
-            Remove-Item -Path $OutFile
-        }
+        WriteMessage -Type Info -Message 'Using Scoop to install NGINX...'
+        cmd /c 'scoop install nginx'
     }
-    WriteMessage -Type Info -Message 'Configuring NGINX...'
-    $FileName = 'nginx.conf'
-    $SourcePath = [io.path]::Combine($HOME, 'dotfiles', 'settings', $FileName)
-    $DestinationPath = [io.path]::Combine($HOME, '.dotfiles', $FileName)
-    Copy-Item -Path $SourcePath -Destination $DestinationPath
-    if ($IsMacOS) {
-        $NginxConfigDirectory = (brew --prefix nginx) + '/.bottle/etc/nginx'
-    } else {
-        $NginxConfigDirectory = '/nginx/conf'
-    }
-    $FileContent = (Get-Content -Path $DestinationPath).Replace('»NGINX-CONFIG-DIRECTORY«', $NginxConfigDirectory)
-    Set-Content -Path $DestinationPath -Value $FileContent
-    if (ExistCommand -Name nginx) {
-        WriteMessage -Type Success 'Installed version of NGINX: ' -NoNewline
-        nginx -v
-    } else {
-        WriteMessage -Type Danger -Message 'NGINX is not correctly installed.'
-    }
+    # WriteMessage -Type Info -Message 'Configuring NGINX...'
+    # $FileName = 'nginx.conf'
+    # $SourcePath = [io.path]::Combine($HOME, 'dotfiles', 'settings', $FileName)
+    # $DestinationPath = [io.path]::Combine($HOME, '.dotfiles', $FileName)
+    # Copy-Item -Path $SourcePath -Destination $DestinationPath
+    # if ($IsMacOS) {
+    #     $NginxConfigDirectory = (brew --prefix nginx) + '/.bottle/etc/nginx'
+    # } else {
+    #     $NginxConfigDirectory = '/nginx/conf'
+    # }
+    # $FileContent = (Get-Content -Path $DestinationPath).Replace('»NGINX-CONFIG-DIRECTORY«', $NginxConfigDirectory)
+    # Set-Content -Path $DestinationPath -Value $FileContent
+    # if (ExistCommand -Name nginx) {
+    #     WriteMessage -Type Success 'Installed version of NGINX: ' -NoNewline
+    #     nginx -v
+    # } else {
+    #     WriteMessage -Type Danger -Message 'NGINX is not correctly installed.'
+    # }
 }
 
 if ($IsMacOS) {
@@ -417,17 +321,11 @@ if ($IsMacOS) {
 }
 
 function InstallPhp {
-    Param(
-        [Switch]
-        $Development
-    )
-    $VersionStable      = '7.1'
-    $VersionDevelopment = '7.2'
-    $Version = if ($Development) { $VersionDevelopment } else { $VersionStable }
+    $Version      = '7.1'
+    $V = $Version.replace('.', '')
     WriteMessage -Type Info -Inverse -Message "Installing PHP ${Version}"
     if ($IsMacOS) {
         WriteMessage -Type Info -Message "Using Homebrew to install PHP ${Version}..."
-        $V = $Version.replace('.', '')
         sh -c "brew tap homebrew/php && brew install php${V} php${V}-opcache php${V}-xdebug"
         $ConfigFilePath = "/usr/local/etc/php/${Version}/conf.d/ext-xdebug.ini"
         if (Test-Path -Path $ConfigFilePath) {
@@ -437,74 +335,108 @@ function InstallPhp {
             }
         }
     } elseif ($IsWindows) {
-        WriteMessage -Type Info -Message "Downloading PHP ${Version}..."
-        $Url =  'http://windows.php.net'
-        if ($Development) {
-            $File = "/php-${Version}.\d+RC\d+-nts-Win32-VC15-x64.zip$"
-            $FileUri = "${Url}/downloads/qa"
-        } else {
-            $File = "/php-${Version}.\d+-nts-Win32-VC14-x64.zip$"
-            $FileUri = "${Url}/downloads/releases"
+        WriteMessage -Type Info -Message "Using Scoop to install PHP ${Version}..."
+        cmd /c "scoop install php-nts php-nts-xdebug"
+        WriteMessage -Type Info -Message "Configuring PHP ${Version}..."
+        $PhpInstallPath = "${HOME}\scoop\apps\php-nts\current\"
+        $ConfigFile = Get-Content -Path "${PhpInstallPath}php.ini-development"
+        $Extensions = @(
+            'extension=php_curl',
+            'extension=php_gd2',
+            'extension=php_mbstring',
+            'extension=php_openssl',
+            'extension=php_pdo_mysql',
+            'extension=php_pdo_sqlite',
+            'extension=php_sqlite3'
+        )
+        foreach ($Extension in $Extensions) {
+            $ConfigFile = $ConfigFile.Replace(";${Extension}", $Extension)
         }
-        $RelativeUri = ((Invoke-WebRequest -Uri $FileUri).Links | Where-Object { $_.href -match $File } | Select-Object -First 1).href
-        $Uri = "$Url$RelativeUri"
-        $OutFile = Join-Path -Path $env:TEMP -ChildPath 'php.zip'
-        Invoke-WebRequest -Uri $Uri -OutFile $OutFile
-        if (Test-Path -Path $OutFile) {
-            $DestinationPath = 'C:\php'
-            if ((Test-Path -Path $DestinationPath) -and ! (Test-Path -Path "${DestinationPath}.bak")) {
-                WriteMessage -Type Info -Message "Making a backup of previously installed version..."
-                Move-Item -Path $DestinationPath -Destination "${DestinationPath}.bak"
-            }
-            WriteMessage -Type Info -Message 'Installing PHP...'
-            Expand-Archive -Path $OutFile -DestinationPath $DestinationPath -Force
-            Remove-Item -Path $OutFile
-            WriteMessage -Type Info -Message 'Configuring PHP...'
-            $ConfigFile = Get-Content -Path C:\php\php.ini-development
-            $Extensions = @(
-                'extension=php_curl',
-                'extension=php_gd2',
-                'extension=php_mbstring',
-                'extension=php_openssl',
-                'extension=php_pdo_mysql',
-                'extension=php_pdo_sqlite',
-                'extension=php_sqlite3'
-            )
-            foreach ($Extension in $Extensions) {
-                $ConfigFile = $ConfigFile.Replace(";${Extension}", $Extension)
-            }
-            $Settings = @(
-                @('max_execution_time = 30', 'max_execution_time = 999'),
-                @('max_input_time = 60', 'max_input_time = -1'),
-                @('memory_limit = 128M', 'memory_limit = 256M'),
-                @(';opcache.enable=1', 'opcache.enable=1'),
-                @(';opcache.enable_cli=1', 'opcache.enable_cli=1'),
-                @(';opcache.memory_consumption=128', 'opcache.memory_consumption=128'),
-                @(';opcache.interned_strings_buffer=8', 'opcache.interned_strings_buffer=8'),
-                @(';opcache.max_wasted_percentage=5', 'opcache.max_wasted_percentage=5'),
-                @(';opcache.use_cwd=1', 'opcache.use_cwd=1')
-            )
-            foreach ($Setting in $Settings) {
-                $ConfigFile = $ConfigFile.Replace($Setting[0], $Setting[1])
-            }
-            # Adding CA Root Certificates for SSL
-            $ConfigFile = $ConfigFile.Replace(';openssl.cafile=', 'openssl.cafile=' + $Global:DotfilesInstallPath + '\ssl\cacert.pem')
-            Set-Content -Path ($ConfigFilePath = Join-Path -Path $DestinationPath -ChildPath 'php.ini') -Value $ConfigFile
-            if (!$Development) {
-                # OPcache
-                WriteMessage -Type Info 'Configuring PHP to use OPcache...'
-                Add-Content -Path $ConfigFilePath -Value "`nzend_extension=C:\php\ext\php_opcache.dll"
-                # Xdebug
-                WriteMessage -Type Info -Message 'Downloading Xdebug for PHP...'
-                $Url = 'https://xdebug.org'
-                $RelativeUrl = ((Invoke-WebRequest -Uri "${Url}/download.php").Links | Where-Object { $_.href -match "/php_xdebug-\d.\d.\d-${Version}-vc14-nts-x86_64.dll$" } | Select-Object -First 1).href
-                $Uri = "${Url}/${RelativeUrl}"
-                $OutFile = 'C:\php\ext\php_xdebug.dll'
-                Invoke-WebRequest -Uri $Uri -OutFile $OutFile
-                WriteMessage -Type Info -Message 'Configuring PHP to use Xdebug...'
-                Add-Content -Path $ConfigFilePath -Value "`nzend_extension=C:\php\ext\php_xdebug.dll"
-            }
+        $Settings = @(
+            @('max_execution_time = 30', 'max_execution_time = 999'),
+            @('max_input_time = 60', 'max_input_time = -1'),
+            @('memory_limit = 128M', 'memory_limit = 256M'),
+            @(';opcache.enable=1', 'opcache.enable=1'),
+            @(';opcache.enable_cli=1', 'opcache.enable_cli=1'),
+            @(';opcache.memory_consumption=128', 'opcache.memory_consumption=128'),
+            @(';opcache.interned_strings_buffer=8', 'opcache.interned_strings_buffer=8'),
+            @(';opcache.max_wasted_percentage=5', 'opcache.max_wasted_percentage=5'),
+            @(';opcache.use_cwd=1', 'opcache.use_cwd=1')
+        )
+        foreach ($Setting in $Settings) {
+            $ConfigFile = $ConfigFile.Replace($Setting[0], $Setting[1])
         }
+        # Adding CA Root Certificates for SSL
+        $ConfigFile = $ConfigFile.Replace(';openssl.cafile=', 'openssl.cafile=' + $Global:DotfilesInstallPath + '\ssl\cacert.pem')
+        Set-Content -Path ($ConfigFilePath = Join-Path -Path $PhpInstallPath -ChildPath 'php.ini') -Value $ConfigFile
+        # WriteMessage -Type Info -Message "Downloading PHP ${Version}..."
+        # $Url =  'http://windows.php.net'
+        # if ($Development) {
+        #     $File = "/php-${Version}.\d+RC\d+-nts-Win32-VC15-x64.zip$"
+        #     $FileUri = "${Url}/downloads/qa"
+        # } else {
+        #     $File = "/php-${Version}.\d+-nts-Win32-VC14-x64.zip$"
+        #     $FileUri = "${Url}/downloads/releases"
+        # }
+        # $RelativeUri = ((Invoke-WebRequest -Uri $FileUri).Links | Where-Object { $_.href -match $File } | Select-Object -First 1).href
+        # $Uri = "$Url$RelativeUri"
+        # $OutFile = Join-Path -Path $env:TEMP -ChildPath 'php.zip'
+        # Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+        # if (Test-Path -Path $OutFile) {
+        #     $DestinationPath = 'C:\php'
+        #     if ((Test-Path -Path $DestinationPath) -and ! (Test-Path -Path "${DestinationPath}.bak")) {
+        #         WriteMessage -Type Info -Message "Making a backup of previously installed version..."
+        #         Move-Item -Path $DestinationPath -Destination "${DestinationPath}.bak"
+        #     }
+        #     WriteMessage -Type Info -Message 'Installing PHP...'
+        #     Expand-Archive -Path $OutFile -DestinationPath $DestinationPath -Force
+        #     Remove-Item -Path $OutFile
+        #     WriteMessage -Type Info -Message 'Configuring PHP...'
+        #     $ConfigFile = Get-Content -Path C:\php\php.ini-development
+        #     $Extensions = @(
+        #         'extension=php_curl',
+        #         'extension=php_gd2',
+        #         'extension=php_mbstring',
+        #         'extension=php_openssl',
+        #         'extension=php_pdo_mysql',
+        #         'extension=php_pdo_sqlite',
+        #         'extension=php_sqlite3'
+        #     )
+        #     foreach ($Extension in $Extensions) {
+        #         $ConfigFile = $ConfigFile.Replace(";${Extension}", $Extension)
+        #     }
+        #     $Settings = @(
+        #         @('max_execution_time = 30', 'max_execution_time = 999'),
+        #         @('max_input_time = 60', 'max_input_time = -1'),
+        #         @('memory_limit = 128M', 'memory_limit = 256M'),
+        #         @(';opcache.enable=1', 'opcache.enable=1'),
+        #         @(';opcache.enable_cli=1', 'opcache.enable_cli=1'),
+        #         @(';opcache.memory_consumption=128', 'opcache.memory_consumption=128'),
+        #         @(';opcache.interned_strings_buffer=8', 'opcache.interned_strings_buffer=8'),
+        #         @(';opcache.max_wasted_percentage=5', 'opcache.max_wasted_percentage=5'),
+        #         @(';opcache.use_cwd=1', 'opcache.use_cwd=1')
+        #     )
+        #     foreach ($Setting in $Settings) {
+        #         $ConfigFile = $ConfigFile.Replace($Setting[0], $Setting[1])
+        #     }
+        #     # Adding CA Root Certificates for SSL
+        #     $ConfigFile = $ConfigFile.Replace(';openssl.cafile=', 'openssl.cafile=' + $Global:DotfilesInstallPath + '\ssl\cacert.pem')
+        #     Set-Content -Path ($ConfigFilePath = Join-Path -Path $DestinationPath -ChildPath 'php.ini') -Value $ConfigFile
+        #     if (!$Development) {
+        #         # OPcache
+        #         WriteMessage -Type Info 'Configuring PHP to use OPcache...'
+        #         Add-Content -Path $ConfigFilePath -Value "`nzend_extension=C:\php\ext\php_opcache.dll"
+        #         # Xdebug
+        #         WriteMessage -Type Info -Message 'Downloading Xdebug for PHP...'
+        #         $Url = 'https://xdebug.org'
+        #         $RelativeUrl = ((Invoke-WebRequest -Uri "${Url}/download.php").Links | Where-Object { $_.href -match "/php_xdebug-\d.\d.\d-${Version}-vc14-nts-x86_64.dll$" } | Select-Object -First 1).href
+        #         $Uri = "${Url}/${RelativeUrl}"
+        #         $OutFile = 'C:\php\ext\php_xdebug.dll'
+        #         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+        #         WriteMessage -Type Info -Message 'Configuring PHP to use Xdebug...'
+        #         Add-Content -Path $ConfigFilePath -Value "`nzend_extension=C:\php\ext\php_xdebug.dll"
+        #     }
+        # }
     }
     if (ExistCommand -Name php) {
         WriteMessage -Type Success 'Installed version of PHP: ' -NoNewline
@@ -556,44 +488,46 @@ function InstallCmake {
             sh -c 'brew install cmake'
         }
     } elseif ($IsWindows) {
-        $Url = 'https://cmake.org/download/'
-        WriteMessage -Type Info -Message 'Downloading CMake installer...'
-        $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "cmake-\d+.\d+.\d+-win64-x64.msi$" } | Select-Object -First 1).href
-        WriteMessage -Message $Uri
-        
-        $Urn = "${RubyDirectoryName}.exe"
-        
+        WriteMessage -Type Info -Message 'Using Scoop to install CMake...'
+        if (ExistCommand -Name scoop) {
+            cmd /c 'scoop install cmake'
+        }
     }
 }
 
 function InstallRuby {
     WriteMessage -Type Info -Inverse -Message 'Installing Ruby'
+    InstallCmake
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install Ruby...'
         if (ExistCommand -Name brew) {
-            InstallCmake 
             sh -c 'brew install ruby'
         }
     } elseif ($IsWindows) {
-        $Url = 'http://rubyinstaller.org/downloads/'
-        WriteMessage -Type Info -Message 'Downloading Ruby installer...'
-        $Version = '2.3.\d+' # Jekyll is not compatible with newer versions of Ruby
-        $RubyDirectoryName = 'Ruby23-x64'
-        $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "rubyinstaller-${Version}-x64.exe$" } | Select-Object -First 1).href
-        $Urn = "${RubyDirectoryName}.exe"
-        $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
-        Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
-        if (Test-Path -Path $InstallerFile) {
-            WriteMessage -Type Info -Message 'Running Ruby installer...'
-            WriteMessage -Type Warning -Inverse -Message " - 'English', [OK]"
-            WriteMessage -Type Warning -Inverse -Message " - 'I accept the License', [Next>]"
-            WriteMessage -Type Warning -Inverse -Message " - 'C:\${RubyDirectoryName}', 'Add Ruby executables to your PATH', [Install]"
-            WriteMessage -Type Warning -Inverse -Message ' - [Finish]'
-            Start-Process -FilePath $InstallerFile -Wait
-            Remove-Item -Path $InstallerFile
+        WriteMessage -Type Info -Message 'Using Scoop to install Ruby...'
+        if (ExistCommand -Name brew) {
+            cmd /c 'scoop install ruby'
+            cmd /c 'scoop install msys2'
         }
-        AddToEnvironmentPath -Path C:\$RubyDirectoryName\bin -First
-        InstallRubyDevKit
+        # $Url = 'http://rubyinstaller.org/downloads/'
+        # WriteMessage -Type Info -Message 'Downloading Ruby installer...'
+        # $Version = '2.3.\d+' # Jekyll is not compatible with newer versions of Ruby
+        # $RubyDirectoryName = 'Ruby23-x64'
+        # $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "rubyinstaller-${Version}-x64.exe$" } | Select-Object -First 1).href
+        # $Urn = "${RubyDirectoryName}.exe"
+        # $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
+        # Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
+        # if (Test-Path -Path $InstallerFile) {
+        #     WriteMessage -Type Info -Message 'Running Ruby installer...'
+        #     WriteMessage -Type Warning -Inverse -Message " - 'English', [OK]"
+        #     WriteMessage -Type Warning -Inverse -Message " - 'I accept the License', [Next>]"
+        #     WriteMessage -Type Warning -Inverse -Message " - 'C:\${RubyDirectoryName}', 'Add Ruby executables to your PATH', [Install]"
+        #     WriteMessage -Type Warning -Inverse -Message ' - [Finish]'
+        #     Start-Process -FilePath $InstallerFile -Wait
+        #     Remove-Item -Path $InstallerFile
+        # }
+        # AddToEnvironmentPath -Path C:\$RubyDirectoryName\bin -First
+        # InstallRubyDevKit
     }
     if (ExistCommand -Name ruby) {
         WriteMessage -Type Success -Message 'Installed version of Ruby: ' -NoNewline
@@ -607,29 +541,39 @@ function InstallRuby {
     }
 }
 
+# if ($IsWindows) {
+#     function InstallRubyDevKit {
+#         if (ExistCommand -Name ruby) {
+#             WriteMessage -Type Info -Inverse -Message 'Installing Ruby DevKit...'
+#             WriteMessage -Type Info -Message 'Downloading Ruby DevKit installer...'
+#             $RubyDirectoryName = 'Ruby23-x64'
+#             $Version = 'mingw64-64'
+#             $DevKitDirectoryName = 'DevKit'
+#             $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "DevKit-${Version}-(\S+)-sfx.exe$" } | Select-Object -First 1).href
+#             $Urn = "${DevKitDirectoryName}.exe"
+#             $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
+#             Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
+#             if (Test-Path -Path $InstallerFile) {
+#                 WriteMessage -Type Info -Message 'Running Ruby DevKit installer...'
+#                 Start-Process -FilePath $InstallerFile -ArgumentList "-oC:\${DevKitDirectoryName} -y" -Wait
+#                 Remove-Item -Path $InstallerFile
+#                 Set-Location -Path C:\$DevKitDirectoryName
+#                 # ruby dk.rb init
+#                 "---`n- C:\${RubyDirectoryName}`n" | Out-File -FilePath 'config.yml' -Encoding utf8
+#                 ruby dk.rb install
+#             }
+#         } else {
+#             WriteMessage -Type Danger -Message 'Ruby is not correctly installed.'
+#         }
+#     }
+# }
+
 if ($IsWindows) {
-    function InstallRubyDevKit {
-        if (ExistCommand -Name ruby) {
-            WriteMessage -Type Info -Inverse -Message 'Installing Ruby DevKit...'
-            WriteMessage -Type Info -Message 'Downloading Ruby DevKit installer...'
-            $RubyDirectoryName = 'Ruby23-x64'
-            $Version = 'mingw64-64'
-            $DevKitDirectoryName = 'DevKit'
-            $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "DevKit-${Version}-(\S+)-sfx.exe$" } | Select-Object -First 1).href
-            $Urn = "${DevKitDirectoryName}.exe"
-            $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
-            Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
-            if (Test-Path -Path $InstallerFile) {
-                WriteMessage -Type Info -Message 'Running Ruby DevKit installer...'
-                Start-Process -FilePath $InstallerFile -ArgumentList "-oC:\${DevKitDirectoryName} -y" -Wait
-                Remove-Item -Path $InstallerFile
-                Set-Location -Path C:\$DevKitDirectoryName
-                # ruby dk.rb init
-                "---`n- C:\${RubyDirectoryName}`n" | Out-File -FilePath 'config.yml' -Encoding utf8
-                ruby dk.rb install
-            }
-        } else {
-            WriteMessage -Type Danger -Message 'Ruby is not correctly installed.'
+    function InstallScoop {
+        WriteMessage -Type Info -Inverse -Message 'Installing Scoop...'
+        iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+        if (ExistCommand -Name scoop) {
+            cmd /c 'scoop bucket add extras'
         }
     }
 }
@@ -653,32 +597,34 @@ function InstallYarn {
         WriteMessage -Type Info -Inverse -Message "Using Homebrew to install Yarn..."
         sh -c 'brew install yarn --without-node'
     } elseif ($IsWindows) {
-        $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/yarnpkg/yarn/releases/latest
-        $Version = $Response.tag_name
-        $OS = '.msi$'
-        $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
-        $Urn = 'yarn.msi'
-        $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
-        Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
-        if (Test-Path -Path $InstallerFile) {
-            WriteMessage -Type Info -Inverse -Message "Installing Yarn ${Version}..."
-            WriteMessage -Message ' - ' -NoNewline
-            WriteMessage -Type Success -Inverse -Message '[Next]'
-            WriteMessage -Message ' - ' -NoNewline
-            WriteMessage -Type Warning -Message "'I accept the terms License Agreement'" -NoNewLine
-            WriteMessage -Message ', ' -NoNewline
-            WriteMessage -Type Success -Inverse -Message '[Next]'
-            WriteMessage -Message ' - ' -NoNewline
-            WriteMessage -Type Warning -Message "'C:\Program Files (x86)\Yarn\'" -NoNewline
-            WriteMessage -Message ', ' -NoNewline
-            WriteMessage -Type Success -Inverse -Message '[Next]'
-            WriteMessage -Message ' - ' -NoNewline
-            WriteMessage -Type Success -Inverse -Message '[Install]'
-            WriteMessage -Message ' - ' -NoNewline
-            WriteMessage -Type Success -Inverse -Message '[Finish]'
-            Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i ${InstallerFile}" -Wait
-            Remove-Item -Path $InstallerFile
-       }
+        WriteMessage -Type Info -Inverse -Message "Using Scoop to install Yarn..."
+        cmd /c 'scoop install yarn'
+    #     $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/yarnpkg/yarn/releases/latest
+    #     $Version = $Response.tag_name
+    #     $OS = '.msi$'
+    #     $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
+    #     $Urn = 'yarn.msi'
+    #     $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
+    #     Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
+    #     if (Test-Path -Path $InstallerFile) {
+    #         WriteMessage -Type Info -Inverse -Message "Installing Yarn ${Version}..."
+    #         WriteMessage -Message ' - ' -NoNewline
+    #         WriteMessage -Type Success -Inverse -Message '[Next]'
+    #         WriteMessage -Message ' - ' -NoNewline
+    #         WriteMessage -Type Warning -Message "'I accept the terms License Agreement'" -NoNewLine
+    #         WriteMessage -Message ', ' -NoNewline
+    #         WriteMessage -Type Success -Inverse -Message '[Next]'
+    #         WriteMessage -Message ' - ' -NoNewline
+    #         WriteMessage -Type Warning -Message "'C:\Program Files (x86)\Yarn\'" -NoNewline
+    #         WriteMessage -Message ', ' -NoNewline
+    #         WriteMessage -Type Success -Inverse -Message '[Next]'
+    #         WriteMessage -Message ' - ' -NoNewline
+    #         WriteMessage -Type Success -Inverse -Message '[Install]'
+    #         WriteMessage -Message ' - ' -NoNewline
+    #         WriteMessage -Type Success -Inverse -Message '[Finish]'
+    #         Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i ${InstallerFile}" -Wait
+    #         Remove-Item -Path $InstallerFile
+    #    }
     }
     if (ExistCommand -Name yarn) {
         WriteMessage -Type Success -Message 'Installed version of Yarn: ' -NoNewline
@@ -776,8 +722,13 @@ function UninstallRuby {
             sh -c 'brew uninstall ruby'
         }
     } elseif ($IsWindows) {
-        WriteMessage -Type Info -Message 'Removing Ruby files...'
-        Remove-Item -Path @('C:\DevKit', 'C:\Ruby23-x64') -Recurse -Force
+        WriteMessage -Type Info -Message 'Using Scoop to uninstall Ruby...'
+        if (ExistCommand -Name brew) {
+            cmd /c 'scoop uninstall ruby'
+            cmd /c 'scoop uninstall msys2'
+        }
+        # WriteMessage -Type Info -Message 'Removing Ruby files...'
+        # Remove-Item -Path @('C:\DevKit', 'C:\Ruby23-x64') -Recurse -Force
     }
 }
 

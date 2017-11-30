@@ -23,27 +23,21 @@ New-Alias -Name behat -Value BehatCommand
 function ComposerGlobalRequire {
     Param(
         [Parameter(Mandatory=$true)]
-        [ValidatePattern("^\w+/\w+$")]
         [String]
         $Package,
 
         [Switch]
         $Remove
     )
-    return $Package;
-    if (ExistCommand -Name cgr) {
-        $State = ReadConfig -Name Proxy
-        if ($Remove) {
-            cgr remove $Package
-        } else {
-            if ($IsMacOS -and $State -eq 'on') {
-                cgr --prefer-source $Package
-            } else {
-                cgr $Package
-            }
-        }
-    } else {
+    if (! (ExistCommand -Name composer)) {
         InstallComposerCgr
+    }
+    if ($Remove) {
+        WriteMessage -Type Info -Message "Removing ${Package}..."
+        Invoke-Expression -Command "cgr remove ${Package}"
+    } else {
+        WriteMessage -Type Info -Message "Installing ${Package}..."
+        Invoke-Expression -Command "cgr ${Package}"
     }
 }
 
