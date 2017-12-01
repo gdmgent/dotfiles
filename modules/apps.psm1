@@ -321,7 +321,7 @@ if ($IsMacOS) {
 }
 
 function InstallPhp {
-    $Version      = '7.1'
+    $Version      = '7.2'
     $V = $Version.replace('.', '')
     WriteMessage -Type Info -Inverse -Message "Installing PHP ${Version}"
     if ($IsMacOS) {
@@ -335,46 +335,69 @@ function InstallPhp {
             }
         }
     } elseif ($IsWindows) {
-        WriteMessage -Type Info -Message "Using Scoop to install PHP ${Version}..."
-        cmd /c "scoop install php-nts php-nts-xdebug"
-        WriteMessage -Type Info -Message "Configuring PHP ${Version}..."
-        $PhpInstallPath = "${HOME}\scoop\apps\php-nts\current\"
-        $ConfigFile = Get-Content -Path "${PhpInstallPath}php.ini-development"
-        $Extensions = @(
-            'extension=php_curl',
-            'extension=php_gd2',
-            'extension=php_mbstring',
-            'extension=php_openssl',
-            'extension=php_pdo_mysql',
-            'extension=php_pdo_sqlite',
-            'extension=php_sqlite3'
-        )
-        foreach ($Extension in $Extensions) {
-            $ConfigFile = $ConfigFile.Replace(";${Extension}", $Extension)
+        WriteMessage -Type Info -Message "Downloading PHP ${Version}..."
+        $Url =  'http://windows.php.net'
+        $File = "/php-${Version}.\d+-nts-Win32-VC15-x64.zip$"
+        $FileUri = "${Url}/downloads/releases"
+        $RelativeUri = ((Invoke-WebRequest -Uri $FileUri).Links | Where-Object { $_.href -match $File } | Select-Object -First 1).href
+        $Uri = "$Url$RelativeUri"
+        $OutFile = Join-Path -Path $env:TEMP -ChildPath 'php.zip'
+        Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+        if (Test-Path -Path $OutFile) {
+            $DestinationPath = 'C:\php'
+            if ((Test-Path -Path $DestinationPath) -and ! (Test-Path -Path "${DestinationPath}.bak")) {
+                WriteMessage -Type Info -Message "Making a backup of previously installed version..."
+                Move-Item -Path $DestinationPath -Destination "${DestinationPath}.bak"
+            }
+            WriteMessage -Type Info -Message 'Installing PHP...'
+            Expand-Archive -Path $OutFile -DestinationPath $DestinationPath -Force
+            Remove-Item -Path $OutFile
+            WriteMessage -Type Info -Message 'Configuring PHP...'
+            $ConfigFile = Get-Content -Path C:\php\php.ini-development
+            $Extensions = @(
+                'extension=curl',
+                'extension=gd2',
+                'extension=mbstring',
+                'extension=openssl',
+                'extension=pdo_mysql',
+                'extension=pdo_sqlite',
+                'extension=sqlite3'
+            )
+            foreach ($Extension in $Extensions) {
+                $ConfigFile = $ConfigFile.Replace(";${Extension}", $Extension)
+            }
+            $Settings = @(
+                @('max_execution_time = 30', 'max_execution_time = 999'),
+                @('max_input_time = 60', 'max_input_time = -1'),
+                @('memory_limit = 128M', 'memory_limit = 256M'),
+                @(';opcache.enable=1', 'opcache.enable=1'),
+                @(';opcache.enable_cli=1', 'opcache.enable_cli=1'),
+                @(';opcache.memory_consumption=128', 'opcache.memory_consumption=128'),
+                @(';opcache.interned_strings_buffer=8', 'opcache.interned_strings_buffer=8'),
+                @(';opcache.max_wasted_percentage=5', 'opcache.max_wasted_percentage=5'),
+                @(';opcache.use_cwd=1', 'opcache.use_cwd=1')
+            )
+            foreach ($Setting in $Settings) {
+                $ConfigFile = $ConfigFile.Replace($Setting[0], $Setting[1])
+            }
+            # Adding CA Root Certificates for SSL
+            $ConfigFile = $ConfigFile.Replace(';openssl.cafile=', 'openssl.cafile=' + $Global:DotfilesInstallPath + '\ssl\cacert.pem')
+            Set-Content -Path ($ConfigFilePath = Join-Path -Path $DestinationPath -ChildPath 'php.ini') -Value $ConfigFile
+            WriteMessage -Type Info 'Configuring PHP to use Sodium...'
+            Add-Content -Path $ConfigFilePath -Value "`nextension=sodium"
+            # OPcache
+            WriteMessage -Type Info 'Configuring PHP to use OPcache...'
+            Add-Content -Path $ConfigFilePath -Value "`nzend_extension=opcache"
+            # Xdebug
+            # WriteMessage -Type Info -Message 'Downloading Xdebug for PHP...'
+            # $Url = 'https://xdebug.org'
+            # $RelativeUrl = ((Invoke-WebRequest -Uri "${Url}/download.php").Links | Where-Object { $_.href -match "/php_xdebug-\d.\d.\d-${Version}-vc14-nts-x86_64.dll$" } | Select-Object -First 1).href
+            # $Uri = "${Url}/${RelativeUrl}"
+            # $OutFile = 'C:\php\ext\php_xdebug.dll'
+            # Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+            # WriteMessage -Type Info -Message 'Configuring PHP to use Xdebug...'
+            # Add-Content -Path $ConfigFilePath -Value "`nzend_extension=C:\php\ext\php_xdebug.dll"
         }
-        $Settings = @(
-            @('max_execution_time = 30', 'max_execution_time = 999'),
-            @('max_input_time = 60', 'max_input_time = -1'),
-            @('memory_limit = 128M', 'memory_limit = 256M'),
-            @(';opcache.enable=1', 'opcache.enable=1'),
-            @(';opcache.enable_cli=1', 'opcache.enable_cli=1'),
-            @(';opcache.memory_consumption=128', 'opcache.memory_consumption=128'),
-            @(';opcache.interned_strings_buffer=8', 'opcache.interned_strings_buffer=8'),
-            @(';opcache.max_wasted_percentage=5', 'opcache.max_wasted_percentage=5'),
-            @(';opcache.use_cwd=1', 'opcache.use_cwd=1')
-        )
-        foreach ($Setting in $Settings) {
-            $ConfigFile = $ConfigFile.Replace($Setting[0], $Setting[1])
-        }
-        # Adding CA Root Certificates for SSL
-        $ConfigFile = $ConfigFile.Replace(';openssl.cafile=', 'openssl.cafile=' + $Global:DotfilesInstallPath + '\ssl\cacert.pem')
-        Set-Content -Path ($ConfigFilePath = Join-Path -Path $PhpInstallPath -ChildPath 'php.ini') -Value $ConfigFile
-    }
-    if (ExistCommand -Name php) {
-        WriteMessage -Type Success 'Installed version of PHP: ' -NoNewline
-        php -v
-    } else {
-        WriteMessage -Type Danger -Message 'PHP is not correctly installed.'
     }
 }
 
@@ -471,6 +494,13 @@ if ($IsWindows) {
         if (ExistCommand -Name scoop) {
             cmd /c 'scoop bucket add extras'
         }
+    }
+}
+
+if ($IsWindows) {
+    function InstallUbuntu {
+        WriteMessage -Type Info -Inverse -Message 'Installing Ubuntu Bash for Windows...'
+        LxRun.exe /install /y
     }
 }
 
@@ -599,6 +629,18 @@ function UninstallRuby {
         }
         # WriteMessage -Type Info -Message 'Removing Ruby files...'
         # Remove-Item -Path @('C:\DevKit', 'C:\Ruby23-x64') -Recurse -Force
+    }
+}
+
+if ($IsWindows) {
+    function UninstallUbuntu {
+        WriteMessage -Type Info -Inverse -Message 'Uninstalling Bash on Ubuntu on Windows...'
+        LxRun.exe /uninstall /y
+    }
+    function ResetUbuntu {
+    WriteMessage -Type Info -Inverse -Message 'Resetting Bash on Ubuntu on Windows...'
+        LxRun.exe /uninstall /full /y
+        LxRun.exe /install /y
     }
 }
 

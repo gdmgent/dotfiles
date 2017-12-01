@@ -241,7 +241,11 @@ if (ExistCommand -Name composer) {
         )
         if (! $Local) {
             WriteMessage -Type Info -Message 'Updating Composer...'
-            composer self-update
+            if ($IsWindows) {
+                cmd /c 'scoop update composer'
+            } else {
+                composer self-update
+            }
             WriteMessage -Type Info -Message 'Updating globally installed Composer packages...'
             composer global update
             if (ExistCommand -Name cgr) {

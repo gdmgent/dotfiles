@@ -20,6 +20,7 @@ foreach ($Module in $Modules) {
 }
 
 $Applications = @(
+    'bash'
     'git'
     'hotel'
     'jekyll'
