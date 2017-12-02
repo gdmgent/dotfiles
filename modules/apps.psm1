@@ -293,7 +293,8 @@ function InstallNginx {
     $DestinationPath = [io.path]::Combine($HOME, '.dotfiles', $FileName)
     Copy-Item -Path $SourcePath -Destination $DestinationPath
     if ($IsMacOS) {
-        $NginxConfigDirectory = (brew --prefix nginx) + '/.bottle/etc/nginx'
+        # $NginxConfigDirectory = (brew --prefix nginx) + '/.bottle/etc/nginx'
+        $NginxConfigDirectory = '/usr/local/etc/nginx'
     } else {
         $NginxConfigDirectory = "${HOME}/scoop/apps/nginx/current/conf".replace('\', '/')
     }

@@ -105,7 +105,8 @@ function ConfigureNginxSite {
     $HomeDirectory = $HOME.Split([io.path]::DirectorySeparatorChar) -join [io.path]::AltDirectorySeparatorChar
     $WebRootDirectory = $Directories -join [io.path]::AltDirectorySeparatorChar
     if ($IsMacOS) {
-        $NginxConfigDirectory = (brew --prefix nginx) + '/.bottle/etc/nginx'
+        # $NginxConfigDirectory = (brew --prefix nginx) + '/.bottle/etc/nginx'
+        $NginxConfigDirectory = '/usr/local/etc/nginx'
     } else {
         $NginxConfigDirectory = "${HOME}/scoop/apps/nginx/current/conf".replace('\', '/')
     }
