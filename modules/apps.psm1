@@ -279,11 +279,10 @@ function InstallMySQL {
 }
 
 function InstallNginx {
-    # $Version = '1.12'
     WriteMessage -Type Info -Inverse -Message 'Installing NGINX'
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install NGINX...'
-        sh -c 'brew install nginx'
+        sh -c 'brew install nginx --devel'
     } elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Using Scoop to install NGINX...'
         cmd /c 'scoop install nginx'
@@ -321,12 +320,13 @@ if ($IsMacOS) {
 }
 
 function InstallPhp {
-    $Version      = '7.2'
+    $Version = '7.2'
     $V = $Version.replace('.', '')
     WriteMessage -Type Info -Inverse -Message "Installing PHP ${Version}"
     if ($IsMacOS) {
         WriteMessage -Type Info -Message "Using Homebrew to install PHP ${Version}..."
-        sh -c "brew tap homebrew/php && brew install php${V} php${V}-opcache php${V}-xdebug"
+        sh -c "brew tap homebrew/php && brew install php${V} php${V}-opcache"
+        # sh -c "brew tap homebrew/php && brew install php${V} --with-argon2 && brew install php${V}-opcache"
         $ConfigFilePath = "/usr/local/etc/php/${Version}/conf.d/ext-xdebug.ini"
         if (Test-Path -Path $ConfigFilePath) {
             $ConfigFile = Get-Content -Path $ConfigFilePath
@@ -656,6 +656,10 @@ if ($IsMacOS) {
 
 if ($IsMacOS) {
     function UpdateBrew {
+        Param(
+            [Switch]
+            $Force
+        )
         WriteMessage -Type Primary -Inverse -Message 'Updating Homebrew'
         if (ExistCommand -Name brew) {
             WriteMessage -Type Info -Message 'Updating Homebrew...'
@@ -663,7 +667,11 @@ if ($IsMacOS) {
             WriteMessage -Type Info -Message 'Upgrading Homebrew...'
             sh -c 'brew upgrade'
             WriteMessage -Type Info -Message 'Cleaning up Homebrew...'
-            sh -c 'brew cleanup'
+            if ($Force) {
+                sh -c 'brew cleanup -s'
+            } else {
+                sh -c 'brew cleanup'
+            }
         }
     }
 }

@@ -3,42 +3,6 @@ function MySQLAliases {
 }
 New-Alias -Name my -Value MySQLAliases 
 
-if ($IsMacOS) {
-    function MySQLStart {
-        Param(
-            [Switch]
-            $Service
-        )
-        if ($Service) {
-            brew services start mysql
-        } else {
-            mysql.server start
-        }
-    }
-    New-Alias -Name myon -Value MySQLStart
-}
-
-if ($IsMacOS) {
-    function MySQLStop {
-        Param(
-            [Switch]
-            $Service
-        )
-        if ($Service) {
-            brew services stop mysql
-        } else {
-            mysql.server stop
-        }
-    }
-    New-Alias -Name myoff -Value MySQLStop
-}
-if ($IsMacOS) {
-    function MySQLStatus {
-        mysql.server status
-    }
-    New-Alias -Name mysts -Value MySQLStatus
-}
-
 function MySQLCreateDatabase {
     Param(
         [Parameter(Mandatory=$true)]
@@ -49,7 +13,7 @@ function MySQLCreateDatabase {
         [String]
         $DatabaseName,
 
-        [ValidateSet('College','Default','Student','Test')]
+        [ValidateSet('Colleges','Default','Student','Test')]
         [String]
         $Mode = 'Default',
 
@@ -62,8 +26,8 @@ function MySQLCreateDatabase {
     if (! $DatabaseName) {
         $DatabaseName = "${Course}-db"
         switch ($Mode) {
-            'College' {
-                $DatabaseName = "${DatabaseName}-college"
+            'Colleges' {
+                $DatabaseName = "${DatabaseName}-colleges"
             }
             'Student' {
                 $DatabaseName = "${DatabaseName}-student"
@@ -108,7 +72,7 @@ function MySQLCreateDatabaseUser {
         [String]
         $DatabaseName,
 
-        [ValidateSet('College','Default','Student','Test')]
+        [ValidateSet('Colleges','Default','Student','Test')]
         [String]
         $Mode = 'Default',
 
@@ -121,8 +85,8 @@ function MySQLCreateDatabaseUser {
     if (! $Database) {
         $DatabaseName = "${Course}-db"
         switch ($Mode) {
-            'College' {
-                $DatabaseName = "${DatabaseName}-college"
+            'Colleges' {
+                $DatabaseName = "${DatabaseName}-colleges"
             }
             'Student' {
                 $DatabaseName = "${DatabaseName}-student"
@@ -179,7 +143,7 @@ function MySQLDropDatabase {
         [Int16]
         $Port = 3306,
 
-        [ValidateSet('College','Default','Student','Test')]
+        [ValidateSet('Colleges','Default','Student','Test')]
         [String]
         $Mode = 'Default',
 
@@ -189,8 +153,8 @@ function MySQLDropDatabase {
     if (! $DatabaseName) {
         $DatabaseName= "${Course}-db"
         switch ($Mode) {
-            'College' {
-                $DatabaseName = "${DatabaseName}-college"
+            'Colleges' {
+                $DatabaseName = "${DatabaseName}-colleges"
             }
             'Student' {
                 $DatabaseName = "${DatabaseName}-student"
@@ -220,6 +184,22 @@ function MySQLDropDatabase {
 }
 New-Alias -Name mydrdb -Value MySQLDropDatabase
 
+function MySQLCreateDatabaseUserAndDatabase {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech2')]
+        [String]
+        $Course,
+
+        [ValidateSet('Colleges','Default','Student','Test')]
+        [String]
+        $Mode = 'Default'
+    )
+    MySQLCreateDatabaseUser -Course $Course -Mode $Mode
+    MySQLCreateDatabase -Course $Course -Mode $Mode
+}
+New-Alias -Name mycr -Value MySQLCreateDatabaseUserAndDatabase
+
 function MySQLLogin {
     Param(
         [Parameter(Mandatory=$true)]
@@ -245,3 +225,41 @@ function MySQLLogin {
     mysql --host=127.0.0.1 --port=${Port} --user="${Username}"
 }
 New-Alias -Name mylog -Value MySQLLogin
+
+
+if ($IsMacOS) {
+    function MySQLStart {
+        Param(
+            [Switch]
+            $Service
+        )
+        if ($Service) {
+            brew services start mysql
+        } else {
+            mysql.server start
+        }
+    }
+    New-Alias -Name myon -Value MySQLStart
+}
+
+if ($IsMacOS) {
+    function MySQLStatus {
+        mysql.server status
+    }
+    New-Alias -Name mysts -Value MySQLStatus
+}
+
+if ($IsMacOS) {
+    function MySQLStop {
+        Param(
+            [Switch]
+            $Service
+        )
+        if ($Service) {
+            brew services stop mysql
+        } else {
+            mysql.server stop
+        }
+    }
+    New-Alias -Name myoff -Value MySQLStop
+}
