@@ -326,15 +326,14 @@ function InstallPhp {
     WriteMessage -Type Info -Inverse -Message "Installing PHP ${Version}"
     if ($IsMacOS) {
         WriteMessage -Type Info -Message "Using Homebrew to install PHP ${Version}..."
-        sh -c "brew tap homebrew/php && brew install php${V} php${V}-opcache"
-        # sh -c "brew tap homebrew/php && brew install php${V} --with-argon2 && brew install php${V}-opcache"
-        $ConfigFilePath = "/usr/local/etc/php/${Version}/conf.d/ext-xdebug.ini"
-        if (Test-Path -Path $ConfigFilePath) {
-            $ConfigFile = Get-Content -Path $ConfigFilePath
-            if (! [bool]($ConfigFile -match "xdebug.remote_enable")) {
-                Add-Content -Path $ConfigFilePath -Value "`nxdebug.remote_enable=1"
-            }
-        }
+        sh -c "brew tap homebrew/php && brew install php${V} --with-argon2 && brew install php${V}-opcache"
+        # $ConfigFilePath = "/usr/local/etc/php/${Version}/conf.d/ext-xdebug.ini"
+        # if (Test-Path -Path $ConfigFilePath) {
+        #     $ConfigFile = Get-Content -Path $ConfigFilePath
+        #     if (! [bool]($ConfigFile -match "xdebug.remote_enable")) {
+        #         Add-Content -Path $ConfigFilePath -Value "`nxdebug.remote_enable=1"
+        #     }
+        # }
     } elseif ($IsWindows) {
         WriteMessage -Type Info -Message "Downloading PHP ${Version}..."
         $Url =  'http://windows.php.net'
