@@ -460,7 +460,7 @@ function InstallRuby {
         }
     } elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Using Scoop to install Ruby...'
-        if (ExistCommand -Name brew) {
+        if (ExistCommand -Name scoop) {
             cmd /c 'scoop install ruby'
         }
     }
