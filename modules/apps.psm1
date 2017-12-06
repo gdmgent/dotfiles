@@ -126,7 +126,7 @@ function InstallFontHack {
         $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
         if (Test-Path -Path $OutFile) {
-            Write-WriteMessage -Type Info -Message 'Installing Hack typeface...'
+            WriteMessage -Type Info -Message 'Installing Hack typeface...'
             $DestinationPath = "${HOME}/Library/Fonts/"
             $TempPath = "${env:TMPDIR}${Name}/"
             $output = unzip $OutFile *.${FontFormat} -d $TempPath -o
