@@ -83,6 +83,7 @@ function InstallFontFiraCode {
     WriteMessage -Type Info -Inverse -Message 'Installing Fira Code typeface by Nikita Prokopov'
     WriteMessage -Type Info -Message 'Downloading Fira Code typeface ...'
     $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/tonsky/FiraCode/releases/latest
+    $FontFormat = 'otf'
     $Name = 'FiraCode'
     $Urn = "${Name}.zip"
     $Uri = $Response.assets.browser_download_url
@@ -93,9 +94,9 @@ function InstallFontFiraCode {
             WriteMessage -Type Info -Message 'Installing Fira Code typeface...'
             $DestinationPath = "${HOME}/Library/Fonts/"
             $TempPath = "${env:TMPDIR}${Name}/"
-            $output = unzip $OutFile **/*.otf -d $TempPath -o
+            $output = unzip $OutFile **/*.$FontFormat -d $TempPath -o
             Remove-Item -Path $OutFile
-            Move-Item -Path ${TempPath}otf/*.otf -Destination $DestinationPath -Force
+            Move-Item -Path ${TempPath}${FontFormat}/*.${FontFormat} -Destination $DestinationPath -Force
             Remove-Item -Path $TempPath -Recurse -Force
         }
     } elseif ($IsWindows) {
@@ -107,7 +108,7 @@ function InstallFontFiraCode {
             $TempPath = "${env:TEMP}${Name}\"
             Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
             Remove-Item -Path $OutFile
-            $Output = Get-ChildItem -Path ${TempPath}otf\*.otf | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
+            $Output = Get-ChildItem -Path ${TempPath}${FontFormat}\*.${FontFormat} | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
             Remove-Item -Path $TempPath -Recurse -Force
         }
     }
@@ -116,10 +117,11 @@ function InstallFontFiraCode {
 function InstallFontHack {
     WriteMessage -Type Info -Inverse -Message 'Installing Hack typeface by Chris Simpkins'
     WriteMessage -Type Info -Message 'Downloading Hack typeface'
+    $FontFormat = 'ttf'
     $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/source-foundry/Hack/releases/latest
     $Name = 'Hack'
     $Urn = "${Name}.zip"
-    $Uri = ($Response.assets | Where-Object { $_.name -match '^Hack-(.+)-ttf.zip$' }).browser_download_url
+    $Uri = ($Response.assets | Where-Object { $_.name -match "^Hack-(.+)-${FontFormat}.zip$" }).browser_download_url
     if ($IsMacOS) {
         $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
@@ -127,9 +129,9 @@ function InstallFontHack {
             Write-WriteMessage -Type Info -Message 'Installing Hack typeface...'
             $DestinationPath = "${HOME}/Library/Fonts/"
             $TempPath = "${env:TMPDIR}${Name}/"
-            $output = unzip $OutFile *.otf -d $TempPath -o
+            $output = unzip $OutFile *.${FontFormat} -d $TempPath -o
             Remove-Item -Path $OutFile
-            Move-Item -Path ${TempPath}*.otf -Destination $DestinationPath -Force
+            Move-Item -Path ${TempPath}*.${FontFormat} -Destination $DestinationPath -Force
             Remove-Item -Path $TempPath -Recurse -Force
         }
     } elseif ($IsWindows) {
@@ -141,7 +143,7 @@ function InstallFontHack {
             $TempPath = "${env:TEMP}${Name}\"
             Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
             Remove-Item -Path $OutFile
-            $Output = Get-ChildItem -Path ${TempPath}*.otf | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
+            $Output = Get-ChildItem -Path ${TempPath}*.${FontFormat} | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
             Remove-Item -Path $TempPath -Recurse -Force
         }
     }
@@ -150,6 +152,7 @@ function InstallFontHack {
 function InstallFontHasklig {
     WriteMessage -Type Info -Inverse -Message 'Installing Hasklig typeface by Ian Tuomi...'
     WriteMessage -Type Info -Message 'Downloading Hasklig typeface...'
+    $FontFormat = 'otf'
     $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/i-tu/Hasklig/releases?per_page=1
     # $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/i-tu/Hasklig/releases/latest
     $Name = 'Hasklig'
@@ -176,7 +179,7 @@ function InstallFontHasklig {
             $TempPath = "${env:TEMP}${Name}\"
             Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
             Remove-Item -Path $OutFile
-            $Output = Get-ChildItem -Path ${TempPath}*.otf | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
+            $Output = Get-ChildItem -Path "${TempPath}*.${FontFormat}" | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
             Remove-Item -Path $TempPath -Recurse -Force
         }
     }
