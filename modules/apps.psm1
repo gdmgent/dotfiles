@@ -116,10 +116,10 @@ function InstallFontFiraCode {
 function InstallFontHack {
     WriteMessage -Type Info -Inverse -Message 'Installing Hack typeface by Chris Simpkins'
     WriteMessage -Type Info -Message 'Downloading Hack typeface'
-    $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/chrissimpkins/Hack/releases/latest
+    $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/source-foundry/Hack/releases/latest
     $Name = 'Hack'
     $Urn = "${Name}.zip"
-    $Uri = ($Response.assets | Where-Object { $_.name -match '^Hack-(.+)-otf.zip$' }).browser_download_url
+    $Uri = ($Response.assets | Where-Object { $_.name -match '^Hack-(.+)-ttf.zip$' }).browser_download_url
     if ($IsMacOS) {
         $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
