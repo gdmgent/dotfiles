@@ -1,7 +1,7 @@
 function MySQLAliases {
     Get-Alias -Name my* | Select-Object -Property Name, ReferencedCommand
 }
-New-Alias -Name my -Value MySQLAliases 
+New-Alias -Name my -Value MySQLAliases
 
 function MySQLCreateDatabase {
     Param(
@@ -170,7 +170,7 @@ function MySQLDropDatabase {
     }
     $DatabaseUserUsername = "${Course}-user"
     $DatabaseUserPassword = "${Course}-pass"
-    WriteMessage -Type Info -Message 'Creating Database for User...'
+    WriteMessage -Type Info -Message 'Dropping Database...'
     [System.Environment]::SetEnvironmentVariable('MYSQL_PWD', $DatabaseUserPassword)
     $SQL = "DROP DATABASE IF EXISTS ``${DatabaseName}``;";
     if ($ShowSQL) {
