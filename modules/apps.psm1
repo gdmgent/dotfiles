@@ -8,7 +8,6 @@ function Removers {
 }
 New-Alias -Name remove -Value Removers
 
-
 function Uninstallers {
     Get-Command -Name Uninstall* -CommandType Function | Where-Object { $_.Source -eq 'apps' -and $_.Name -ne 'Uninstallers' } | Format-Table -Property Name
 }
@@ -18,7 +17,6 @@ function Updaters {
     Get-Command -Name Update* -CommandType Function | Where-Object { $_.Source -eq 'apps' -and $_.Name -ne 'Updaters' } | Format-Table -Property Name
 }
 New-Alias -Name update -Value Updaters
-
 
 # Install Functions
 # -----------------
@@ -716,5 +714,21 @@ function UpdateBundler {
         }
     } else {
         WriteMessage -Type Warning -Message "Cannot run Bundler in this directory because a '${File}' is required."
+    }
+}
+
+if ($IsWindows) {
+    function UpdateScoop {
+        WriteMessage -Type Primary -Inverse -Message 'Updating Scoop'
+        if (ExistCommand -Name scoop) {
+            WriteMessage -Type Info -Message 'Updating Scoop...'
+            cmd /c 'scoop update'
+            WriteMessage -Type Info -Message 'Updating Scoop apps...'
+            cmd /c 'scoop update *'
+            WriteMessage -Type Info -Message 'Cleaning up Scoop apps...'
+            cmd /c 'scoop cleanup *'
+            WriteMessage -Type Info -Message 'Clearing Scoop cache...'
+            cmd /c 'scoop cache rm *'
+        }
     }
 }
