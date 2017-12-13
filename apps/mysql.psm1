@@ -1,5 +1,5 @@
 function MySQLAliases {
-    Get-Alias -Name my* | Select-Object -Property Name, ReferencedCommand
+    Get-Alias -Name my* | Where-Object { $_.Name -ne 'my' } | Select-Object -Property Name, ReferencedCommand
 }
 New-Alias -Name my -Value MySQLAliases
 

@@ -1,6 +1,27 @@
+function Installers {
+    Get-Command -Name Install* -CommandType Function | Where-Object { $_.Source -eq 'apps' -and $_.Name -ne 'Installers' } | Format-Table -Property Name
+}
+New-Alias -Name install -Value Installers
+
+function Removers {
+    Get-Command -Name Remove* -CommandType Function | Where-Object { $_.Source -eq 'apps' -and $_.Name -ne 'Removers' } | Format-Table -Property Name
+}
+New-Alias -Name remove -Value Removers
+
+
+function Uninstallers {
+    Get-Command -Name Uninstall* -CommandType Function | Where-Object { $_.Source -eq 'apps' -and $_.Name -ne 'Uninstallers' } | Format-Table -Property Name
+}
+New-Alias -Name uninstall -Value Uninstallers
+
+function Updaters {
+    Get-Command -Name Update* -CommandType Function | Where-Object { $_.Source -eq 'apps' -and $_.Name -ne 'Updaters' } | Format-Table -Property Name
+}
+New-Alias -Name update -Value Updaters
+
+
 # Install Functions
 # -----------------
-
 function InstallArtestead {
     WriteMessage -Type Info -Inverse -Message 'Installing Artestead (Artevelde Laravel Homestead)...'
     if (ExistCommand -Name vagrant) {
