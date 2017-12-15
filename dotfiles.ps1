@@ -36,12 +36,17 @@ foreach ($Application in $Applications) {
         $Error.RemoveAt(0)
     }
 }
+$CustomModule = [io.path]::Combine($HOME, '.dotfiles', 'custom.psm1')
+if (Test-Path -Path $CustomModule) {
+    Import-Module -Name $CustomModule
+}
 
 if (ExistCommand -Name git) {
     git pull
 } else {
     $Error.RemoveAt(0)
 }
+
 
 Pop-Location
 

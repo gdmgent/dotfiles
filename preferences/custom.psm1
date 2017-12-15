@@ -1,0 +1,1 @@
+WriteMessage -Type Info -Inverse -Message 'Custom PowerShell Module Loaded'
