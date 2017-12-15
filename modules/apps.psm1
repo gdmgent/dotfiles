@@ -98,6 +98,18 @@ function InstallComposerPrestissimo {
     composer global require hirak/prestissimo
 }
 
+function InstallCustomDotfilesPowerShellModule {
+    WriteMessage -Type Info -Inverse -Message 'Installing Custom Dotfiles PowerShell Module'
+    $CustomModule = [io.path]::Combine($DotfilesInstallPath, 'settings', 'custom.psm1')
+    $CustomModuleDestination = [io.path]::Combine($HOME, '.dotfiles', 'custom.psm1')
+    if (! (Test-Path -Path $CustomModuleDestination)) {
+        WriteMessage -Type Info -Message 'Copying file...'
+        Copy-Item -Path $CustomModule -Destination $CustomModuleDestination
+    } else {
+        WriteMessage -Type Warning -Message 'Custom Dotfiles PowerShell Module already installed.'
+    }
+}
+
 function InstallFontFiraCode {
     WriteMessage -Type Info -Inverse -Message 'Installing Fira Code typeface by Nikita Prokopov'
     WriteMessage -Type Info -Message 'Downloading Fira Code typeface ...'
