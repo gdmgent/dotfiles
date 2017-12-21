@@ -96,10 +96,23 @@ function SetLocationPath ([String] $Path, [String] $Directory) {
         Get-ChildItem -Name $Path | Write-Host -ForegroundColor DarkGray
     }
 }
-function SetLocationPathDotfiles {
-     Set-Location -Path $DotfilesInstallPath
+
+function SetLocationPathDotfilesInstall {
+    Param(
+        [Switch]
+        [Alias('c')]
+        $Config
+    )
+    if ($Config) {
+        $DotfilesConfigPath = [io.path]::Combine($HOME, '.dotfiles')
+        if (Test-Path -Path $DotfilesConfigPath) {
+            Set-Location -Path $DotfilesConfigPath
+        }
+    } else {
+        Set-Location -Path $DotfilesInstallPath
+    }
 }
-New-Alias -Name d -Value SetLocationPathDotfiles
+New-Alias -Name d -Value SetLocationPathDotfilesInstall
 
 function SetLocationPathCode {
     [CmdletBinding()]
