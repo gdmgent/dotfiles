@@ -226,6 +226,11 @@ function MySQLLogin {
 }
 New-Alias -Name mylog -Value MySQLLogin
 
+function MySQLResetRootPassword {
+    $SQL = "ALTER USER 'root'@'localhost' IDENTIFIED BY 'secret'";
+    mysql --execute "ALTER USER 'root'@'localhost' IDENTIFIED BY 'secret'" --password
+}
+New-Alias -Name myres -Value MySQLResetRootPassword
 
 if ($IsMacOS) {
     function MySQLStart {
