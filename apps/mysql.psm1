@@ -232,20 +232,28 @@ function MySQLResetRootPassword {
 }
 New-Alias -Name myres -Value MySQLResetRootPassword
 
-if ($IsMacOS) {
-    function MySQLStart {
-        Param(
-            [Switch]
-            $Service
-        )
+function MySQLStart {
+    Param(
+        [Switch]
+        $Service
+    )
+    if ($IsMacOS) {
         if ($Service) {
             brew services start mysql
         } else {
             mysql.server start
         }
+    } elseif ($IsWindows) {
+        if ($Service) {
+            mysqld.exe --install
+        }
+        else {
+            mysqld.exe
+        }
     }
-    New-Alias -Name myon -Value MySQLStart
 }
+New-Alias -Name myon -Value MySQLStart
+
 
 if ($IsMacOS) {
     function MySQLStatus {
@@ -254,17 +262,24 @@ if ($IsMacOS) {
     New-Alias -Name mysts -Value MySQLStatus
 }
 
-if ($IsMacOS) {
-    function MySQLStop {
-        Param(
-            [Switch]
-            $Service
-        )
+
+function MySQLStop {
+    Param(
+        [Switch]
+        $Service
+    )
+    if ($IsMacOS) {
         if ($Service) {
             brew services stop mysql
         } else {
             mysql.server stop
         }
+    } elseif ($IsWindows) {
+        if ($Service) {
+            mysqld.exe --remove
+        } else {
+            mysqladmin.exe -u root -p shutdown
+        }
     }
-    New-Alias -Name myoff -Value MySQLStop
 }
+New-Alias -Name myoff -Value MySQLStop
