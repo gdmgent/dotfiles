@@ -241,7 +241,7 @@ function Dotfiles {
     }
     WriteMessage -Type Info -Inverse -Message "gdm.gent Dotfiles ${Global:DotfilesVersion}" -NoNewline
     $PSVersion = $PSVersionTable.GitCommitId # $PSVersionTable.PSVersion.ToString()
-    WriteMessage -Type Mute -Message " on PowerShell ${PSVersion} for ${OS}"
+    WriteMessage -Type Mute -Message " in PowerShell Core ${PSVersion} on ${OS}"
 }
 New-Alias -Name dot -Value Dotfiles
 
