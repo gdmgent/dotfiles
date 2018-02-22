@@ -635,9 +635,19 @@ function UninstallArtestead {
 
 if ($IsMacOS) {
     function UninstallBrew {
+        Param(
+            [Switch]
+            $Force
+        )
         WriteMessage -Type Info -Inverse -Message 'Uninstalling Homebrew'
-        WriteMessage -Type Info -Message 'Using Ruby to uninstall Homebrew...'
-        sh -c 'ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)\"'
+        if ($Force) {
+            WriteMessage -Type Info -Message 'First Download PowerShell...'
+            Set-Location -Path /usr/local/
+            sh -c 'sudo rm -rf *'
+        } else {
+            WriteMessage -Type Info -Message 'Using Ruby to uninstall Homebrew...'
+            sh -c 'ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)\"'
+        }
     }
 }
 
