@@ -15,7 +15,7 @@ function ExistCommand {
 
 if ($IsWindows) {
     function FindIp {
-        ipconfig | Select-String -Pattern '10.5.128.\d+$'
+        ipconfig | Select-String -Pattern '10.5.\d+.\d+$'
     }
     New-Alias -Name ip -Value FindIp
 }
