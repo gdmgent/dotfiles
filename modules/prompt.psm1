@@ -5,12 +5,9 @@ function PromptColors {
 function PromptGit {
     if (Test-Path -Path '.git') {
         $Branch = (git status | Select-Object -First 1) -replace 'On branch|\s'
-        $Prompt = [char]::ConvertFromUtf32(0x26A1)
         $HasChanged = (git status --branch --short | Measure-Object).Count -gt 1
+        $Prompt = if ($HasChanged) { "`u{26A0}" } else { "`u{26A1}" }
         if ($IsMacOS) {
-            if ($HasChanged) {
-                $Prompt = [char]::ConvertFromUtf32(0x26A0)
-            }
             return "${Prompt} (${Branch}) "
         } elseif ($IsWindows) {
             Write-Host "${Prompt} (" -NoNewline

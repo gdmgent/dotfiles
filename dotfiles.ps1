@@ -47,7 +47,6 @@ if (ExistCommand -Name git) {
     $Error.RemoveAt(0)
 }
 
-
 Pop-Location
 
 Set-Location -Path $HOME

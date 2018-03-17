@@ -110,110 +110,87 @@ function InstallCustomDotfilesPowerShellModule {
     }
 }
 
-function InstallFontFiraCode {
-    WriteMessage -Type Info -Inverse -Message 'Installing Fira Code typeface by Nikita Prokopov'
-    WriteMessage -Type Info -Message 'Downloading Fira Code typeface ...'
-    $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/tonsky/FiraCode/releases/latest
+function InstallFont {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [ValidateSet('FiraCode','Hack','Hasklig')]
+        [String]
+        $Typeface
+    )
     $FontFormat = 'otf'
-    $Name = 'FiraCode'
-    $Urn = "${Name}.zip"
-    $Uri = $Response.assets.browser_download_url
+    $Urn = "${Typeface}.zip"
     if ($IsMacOS) {
+        $DestinationPath = "${HOME}/Library/Fonts/"
         $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
-        Invoke-WebRequest -Uri $Uri -OutFile $OutFile
-        if (Test-Path -Path $OutFile) {
-            WriteMessage -Type Info -Message 'Installing Fira Code typeface...'
-            $DestinationPath = "${HOME}/Library/Fonts/"
-            $TempPath = "${env:TMPDIR}${Name}/"
-            $output = unzip $OutFile **/*.$FontFormat -d $TempPath -o
-            Remove-Item -Path $OutFile
-            Move-Item -Path ${TempPath}${FontFormat}/*.${FontFormat} -Destination $DestinationPath -Force
-            Remove-Item -Path $TempPath -Recurse -Force
-        }
+        $TempPath = "${env:TMPDIR}${Typeface}/"
     } elseif ($IsWindows) {
+        $DestinationPath = "C:\Windows\Fonts\"
         $OutFile = Join-Path -Path $env:TEMP -ChildPath $Urn
-        Invoke-WebRequest -Uri $Uri -OutFile $OutFile
-        if (Test-Path -Path $OutFile) {
-            WriteMessage -Type Info -Message 'Installing Fira Code typeface...'
-            $DestinationPath = "C:\Windows\Fonts\"
-            $TempPath = "${env:TEMP}${Name}\"
-            Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
-            Remove-Item -Path $OutFile
-            $Output = Get-ChildItem -Path ${TempPath}${FontFormat}\*.${FontFormat} | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
-            Remove-Item -Path $TempPath -Recurse -Force
+        $TempPath = "${env:TEMP}${Typeface}\"
+    }
+    WriteMessage -Type Info -Inverse -Message 'Installing Typeface: ' -NoNewline
+    switch ($Typeface) {
+        'FiraCode' {
+            WriteMessage -Type Info -Inverse -Message 'Fira Code by Nikita Prokopov'
+            WriteMessage -Type Info -Message 'Downloading Fira Code typeface...'
+            $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/tonsky/FiraCode/releases/latest
+            $Uri = $Response.assets.browser_download_url
+            Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+            if (Test-Path -Path $OutFile) {
+                WriteMessage -Type Info -Message 'Installing Fira Code typeface...'
+                if ($IsMacOS) {
+                    $Output = unzip $OutFile **/*.$FontFormat -d $TempPath -o
+                    Move-Item -Path ${TempPath}${FontFormat}/*.${FontFormat} -Destination $DestinationPath -Force
+                } elseif ($IsWindows) {
+                    Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
+                    $Output = Get-ChildItem -Path ${TempPath}${FontFormat}\*.${FontFormat} | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
+                }
+                Remove-Item -Path $OutFile
+            }
+        }
+        'Hack' {
+            $FontFormat = 'ttf'
+            WriteMessage -Type Info -Inverse -Message 'Hack by Chris Simpkins'
+            WriteMessage -Type Info -Message 'Downloading Hack typeface'
+            $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/source-foundry/Hack/releases/latest
+            $Uri = ($Response.assets | Where-Object { $_.name -match "^Hack-(.+)-${FontFormat}.zip$" }).browser_download_url
+            Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+            if (Test-Path -Path $OutFile) {
+                WriteMessage -Type Info -Message 'Installing Hack typeface...'
+                if ($IsMacOS) {
+                    $Output = unzip $OutFile *.${FontFormat} -d $TempPath -o
+                    Move-Item -Path ${TempPath}*.${FontFormat} -Destination $DestinationPath -Force
+                } elseif ($IsWindows) {
+                    Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
+                    $Output = Get-ChildItem -Path ${TempPath}*.${FontFormat} | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
+                }
+                Remove-Item -Path $OutFile
+            }
+        }
+        'Hasklig' {
+            WriteMessage -Type Info -Inverse -Message 'Hasklig by Ian Tuomi...'
+            WriteMessage -Type Info -Message 'Downloading Hasklig typeface...'
+            $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/i-tu/Hasklig/releases?per_page=1
+            # $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/i-tu/Hasklig/releases/latest
+            $Uri = $Response.assets.browser_download_url
+            Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+            if (Test-Path -Path $OutFile) {
+                WriteMessage -Type Info -Message 'Installing Hasklig typeface...'
+                if ($IsMacOS) {
+                    $Output = unzip $OutFile *.otf -d $TempPath -o
+                    Move-Item -Path ${TempPath}*.otf -Destination $DestinationPath -Force
+                } elseif ($IsWindows) {
+                    Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
+                    $Output = Get-ChildItem -Path "${TempPath}*.${FontFormat}" | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
+                }
+                Remove-Item -Path $OutFile
+            }
+        }
+        Default {
+            return
         }
     }
-}
-
-function InstallFontHack {
-    WriteMessage -Type Info -Inverse -Message 'Installing Hack typeface by Chris Simpkins'
-    WriteMessage -Type Info -Message 'Downloading Hack typeface'
-    $FontFormat = 'ttf'
-    $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/source-foundry/Hack/releases/latest
-    $Name = 'Hack'
-    $Urn = "${Name}.zip"
-    $Uri = ($Response.assets | Where-Object { $_.name -match "^Hack-(.+)-${FontFormat}.zip$" }).browser_download_url
-    if ($IsMacOS) {
-        $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
-        Invoke-WebRequest -Uri $Uri -OutFile $OutFile
-        if (Test-Path -Path $OutFile) {
-            WriteMessage -Type Info -Message 'Installing Hack typeface...'
-            $DestinationPath = "${HOME}/Library/Fonts/"
-            $TempPath = "${env:TMPDIR}${Name}/"
-            $output = unzip $OutFile *.${FontFormat} -d $TempPath -o
-            Remove-Item -Path $OutFile
-            Move-Item -Path ${TempPath}*.${FontFormat} -Destination $DestinationPath -Force
-            Remove-Item -Path $TempPath -Recurse -Force
-        }
-    } elseif ($IsWindows) {
-        $OutFile = Join-Path -Path $env:TEMP -ChildPath $Urn
-        Invoke-WebRequest -Uri $Uri -OutFile $OutFile
-        if (Test-Path -Path $OutFile) {
-            WriteMessage -Type Info -Message 'Installing Hack typeface...'
-            $DestinationPath = "C:\Windows\Fonts\"
-            $TempPath = "${env:TEMP}${Name}\"
-            Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
-            Remove-Item -Path $OutFile
-            $Output = Get-ChildItem -Path ${TempPath}*.${FontFormat} | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
-            Remove-Item -Path $TempPath -Recurse -Force
-        }
-    }
-}
-
-function InstallFontHasklig {
-    WriteMessage -Type Info -Inverse -Message 'Installing Hasklig typeface by Ian Tuomi...'
-    WriteMessage -Type Info -Message 'Downloading Hasklig typeface...'
-    $FontFormat = 'otf'
-    $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/i-tu/Hasklig/releases?per_page=1
-    # $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/i-tu/Hasklig/releases/latest
-    $Name = 'Hasklig'
-    $Urn = "${Name}.zip"
-    $Uri = $Response.assets.browser_download_url
-    if ($IsMacOS) {
-        $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
-        Invoke-WebRequest -Uri $Uri -OutFile $OutFile
-        if (Test-Path -Path $OutFile) {
-            WriteMessage -Type Info -Message 'Installing Hasklig typeface...'
-            $DestinationPath = "${HOME}/Library/Fonts/"
-            $TempPath = "${env:TMPDIR}${Name}/"
-            $output = unzip $OutFile *.otf -d $TempPath -o
-            Remove-Item -Path $OutFile
-            Move-Item -Path ${TempPath}*.otf -Destination $DestinationPath -Force
-            Remove-Item -Path $TempPath -Recurse -Force
-        }
-    } elseif ($IsWindows) {
-        $OutFile = Join-Path -Path $env:TEMP -ChildPath $Urn
-        Invoke-WebRequest -Uri $Uri -OutFile $OutFile
-        if (Test-Path -Path $OutFile) {
-            WriteMessage -Type Info -Message 'Installing Hasklig typeface...'
-            $DestinationPath = "C:\Windows\Fonts\"
-            $TempPath = "${env:TEMP}${Name}\"
-            Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
-            Remove-Item -Path $OutFile
-            $Output = Get-ChildItem -Path "${TempPath}*.${FontFormat}" | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
-            Remove-Item -Path $TempPath -Recurse -Force
-        }
-    }
+    Remove-Item -Path $TempPath -Recurse -Force
 }
 
 function InstallGit {
@@ -370,7 +347,7 @@ function InstallPhp {
         # }
     } elseif ($IsWindows) {
         WriteMessage -Type Info -Message "Downloading PHP ${Version}..."
-        $Url =  'http://windows.php.net'
+        $Url =  'https://windows.php.net'
         $File = "/php-${Version}.\d+-nts-Win32-VC15-x64.zip$"
         $FileUri = "${Url}/downloads/releases"
         $RelativeUri = ((Invoke-WebRequest -Uri $FileUri).Links | Where-Object { $_.href -match $File } | Select-Object -First 1).href
@@ -497,7 +474,7 @@ function InstallRuby {
         # if (ExistCommand -Name scoop) {
         #     cmd /c 'scoop install ruby'
         # }
-        $Url = 'http://rubyinstaller.org/downloads/'
+        $Url = 'https://rubyinstaller.org/downloads/'
         WriteMessage -Type Info -Message 'Downloading Ruby installer...'
         $Version = '2.4.\d+' # Jekyll is not compatible with newer versions of Ruby
         $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "rubyinstaller-$Version(.+)-x64.exe$" } | Select-Object -First 1).href
