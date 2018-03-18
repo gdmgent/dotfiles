@@ -70,7 +70,7 @@ function OpenUri {
         } elseif ($Firefox) {
             $Command += ' -a Firefox'
         } elseif ($FirefoxDeveloperEdition) {
-            $Command += ' -a FirefoxDeveloperEdition'
+            $Command += ' -a "Firefox Developer Edition"'
         } elseif ($Opera) {
             $Command += ' -a Opera'
         } elseif ($OperaDeveloper) {
