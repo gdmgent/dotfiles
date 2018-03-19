@@ -6,7 +6,7 @@ function PromptGit {
     if (Test-Path -Path '.git') {
         $Branch = (git status | Select-Object -First 1) -replace 'On branch|\s'
         $HasChanged = (git status --branch --short | Measure-Object).Count -gt 1
-        $Prompt = if ($HasChanged) { "`u{26A0}" } else { "`u{26A1}" }
+        $Prompt = if ($HasChanged) { "`u{2716}" } else { "`u{2714}" }
         if ($IsMacOS) {
             return "${Prompt} (${Branch}) "
         } elseif ($IsWindows) {
