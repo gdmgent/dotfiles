@@ -258,6 +258,11 @@ function FindListeners {
     }
 }
 
+function ReloadDotfiles {
+    pwsh -NoLogo
+    Stop-Process -Id $PID
+}
+
 function SearchDotfilesCommands {
     Get-Command "${args}" | Where-Object { $_.Source -eq 'dotfiles' }
     Get-Alias   "${args}" | Where-Object { $_.Source -eq 'dotfiles' -or $_.Source -like 'aliases*' }
