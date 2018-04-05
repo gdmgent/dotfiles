@@ -62,6 +62,22 @@ function GitCommit {
 }
 New-Alias -Name commit -Value GitCommit
 
+function GitConfig {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [String]
+        $UserName,
+        [Parameter(Mandatory=$true)]
+        [String]
+        $Email
+    )
+    if (! (ExistCommand -Name git)) {
+        InstallGit
+    }
+    git config --global user.name "${UserName}"
+    git config --global user.email "${Email}"
+}
+
 function GitConfigFixProtocol {
     git config --global url."https://".insteadOf git://
 }
