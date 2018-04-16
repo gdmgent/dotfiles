@@ -4,7 +4,7 @@ if ($IsOSX) { # Attempt compatibility with older PowerShell versions.
 
 Set-Variable -Name DotfilesInstallPath -Value (Split-Path -Path $MyInvocation.MyCommand.Path) -Option Constant -Scope Global -ErrorAction SilentlyContinue
 
-Push-Location -Path $Global:DotfilesInstallPath
+Set-Location -Path $Global:DotfilesInstallPath
 
 $Modules = @(
     'apps'

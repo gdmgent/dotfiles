@@ -23,6 +23,7 @@ function InitNode {
 
 function InstallNode {
     if ($IsMacOS) {
+        # nvm install --lts
         nvm install --lts
     } elseif ($IsWindows) {
         nvm install latest

@@ -2,8 +2,10 @@ function GitAdd {
     Param(
         [String]
         $Files = '.',
+
         [Switch]
         $All,
+
         [Switch]
         $Submodule
     )
@@ -26,6 +28,7 @@ function GitCheckoutMaster {
     Param (
         [Switch]
         $All,
+
         [Switch]
         $Submodule
     )
@@ -44,11 +47,14 @@ function GitCommit {
         [Parameter(Mandatory=$true)]
         [String]
         $Message,
+
         [ValidateSet('CHORE','ENHANCEMENT','FEATURE','FIX','REFACTOR','STYLE','TEST')]
         [String]
         $Type = 'WIP',
+
         [Switch]
         $All,
+
         [Switch]
         $Submodule
     )
@@ -67,6 +73,7 @@ function GitConfig {
         [Parameter(Mandatory=$true)]
         [String]
         $UserName,
+
         [Parameter(Mandatory=$true)]
         [String]
         $Email
@@ -96,6 +103,7 @@ function GitConfigUser {
         [Parameter(Mandatory=$true)]
         [String]
         $Email = 'olivier.parent@arteveldehs.be',
+
         [Parameter(Mandatory=$true)]
         [String]
         $User = 'OlivierParent'
@@ -111,8 +119,10 @@ function GitPull {
     Param (
         [Switch]
         $All,
+
         [Switch]
         $Force,
+
         [Switch]
         $Submodule
     )
@@ -135,6 +145,7 @@ function GitPush {
     Param (
         [Switch]
         $All,
+
         [Switch]
         $Submodule
     )
@@ -152,6 +163,7 @@ function GitPushWorkInProgress {
     Param(
         [Switch]
         $All,
+
         [Switch]
         $Submodule
     )

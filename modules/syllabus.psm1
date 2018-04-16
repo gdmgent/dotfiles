@@ -3,16 +3,20 @@ function CloneProject {
         [Parameter(Mandatory=$true)]
         [String]
         $Name,
+
         [String]
         $DestinationName,
         [ValidateSet('git','http','https')]
         [String]
         $Protocol = 'https',
+
         [ValidateSet('bitbucket.org','github.com','gitlab.com')]
         [String]
         $Service = 'github.com',
+
         [String]
         $Account = 'gdmgent',
+
         [ValidateSet('Code','CodeColleges','CodeStudents','CodeTest')]
         [String]
         $CodeFolder = 'Code'
@@ -32,18 +36,70 @@ function CloneProject {
     }
 }
 
+function CloneClassroomProjects {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [String]
+        $FilePath,
+
+        [Parameter(Mandatory=$true)]
+        [String]
+        $Organisation,
+
+        [String]
+        $Column = 'Repository',
+
+        [ValidateSet('Code','CodeColleges','CodeStudents','CodeTest')]
+        [String]
+        $CodeFolder = 'CodeStudents',
+
+        [ValidateSet(',',';')]
+        [String]
+        $Delimiter = ';'
+    )
+    $Rows = Import-Csv -Delimiter $Delimiter -Path $FilePath
+    $SetLocationPath = "SetLocationPath${CodeFolder}"
+    Invoke-Expression -Command "${SetLocationPath}"
+
+    if (! (Test-Path -Path $Organisation)) {
+        New-Item -Path $Organisation -ItemType Directory
+    }
+    Set-Location $Organisation
+    foreach ($Row in $Rows) {
+        $Name = $Row.$Column
+        $Name = $Name.ToLower()
+        if (! [regex]::matches($Name, ".git$")) {
+            $Name = "${Name}.git"
+        }
+        if ([regex]::matches($Name, "^https?://")) {
+            $Uri = $Name
+        } else {
+            $Uri = "https://github.com/${Organisation}/${Name}"
+        }
+        $Path = [regex]::matches($Uri, "^(https?://[/\w.-]+/)?([\w.-]+).git$").Groups[2].Value
+        if (! (Test-Path -Path $Path)) {
+            $Command = "git clone ${Uri}"
+            Invoke-Expression -Command $Command
+        }
+    }
+}
+
 function CloneSyllabusV1 {
     Param(
         [Parameter(Mandatory=$true)]
         [String]
         $Name,
+
         [String]
         $DestinationName,
+
         [ValidateSet('github.com','gitlab.com')]
         [String]
         $Service = 'github.com',
+
         [String]
         $Account = 'gdmgent',
+
         [Switch]
         $Master
     )
@@ -64,13 +120,17 @@ function CloneSyllabus {
         [Parameter(Mandatory=$true)]
         [String]
         $Name,
+
         [String]
         $DestinationName,
+
         [ValidateSet('github.com','gitlab.com')]
         [String]
         $Service = 'github.com',
+
         [String]
         $Account = 'gdmgent',
+
         [Switch]
         $Clean
     )
@@ -237,4 +297,3 @@ function UpdateSyllabusSnippets {
         Copy-Item -Path $Origin -Destination $Destination -Force
     }
 }
-

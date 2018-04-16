@@ -89,7 +89,7 @@ New-Alias -Name hosts -Value OpenHostsFile
 function SetLocationPath ([String] $Path, [String] $Directory) {
     $Location = Join-Path -Path $Path -ChildPath $Directory
     if (Test-Path -Path $Location) {
-        Set-Location $Location
+        Push-Location $Location
     } else {
         WriteMessage -Type Danger -Message "Cannot find path '${Location}' because it does not exist."
         WriteMessage -Type Info -Message 'Available directories:'
