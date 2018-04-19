@@ -286,7 +286,7 @@ function UpdateSyllabusSettings {
 function UpdateSyllabusSnippets {
     if (Test-Path -Path syllabusv2-resources) {
         WriteMessage -Type Info -Message 'Updating Syllabus Snippets...'
-        $Origin = [io.path]::Combine('syllabusv2-resources', '__tools', 'snippets', '*.json')
+        $Origin = [io.path]::Combine('syllabusv2-resources', '__tools', 'snippets', '*')
         if ($IsMacOS) {
             $Destination = "${HOME}/Library/Application Support/Code/User/snippets/"
         } elseif ($IsWindows) {
@@ -294,6 +294,6 @@ function UpdateSyllabusSnippets {
         } else {
             $Destination =  $MyInvocation.MyCommand.Path
         }
-        Copy-Item -Path $Origin -Destination $Destination -Force
+        Get-ChildItem -Path $Origin -Include *.json, *.code-snippets -Recurse | Copy-Item -Destination $Destination -Force
     }
 }
