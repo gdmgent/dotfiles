@@ -6,6 +6,7 @@ function CloneProject {
 
         [String]
         $DestinationName,
+
         [ValidateSet('git','http','https')]
         [String]
         $Protocol = 'https',
@@ -49,13 +50,20 @@ function CloneClassroomProjects {
         [String]
         $Column = 'Repository',
 
+        [String]
+        $RepositoryPrefix = '',
+
         [ValidateSet('Code','CodeColleges','CodeStudents','CodeTest')]
         [String]
         $CodeFolder = 'CodeStudents',
 
         [ValidateSet(',',';')]
         [String]
-        $Delimiter = ';'
+        $Delimiter = ';',
+
+        [ValidateSet('bitbucket.org','github.com','gitlab.com')]
+        [String]
+        $Service = 'github.com'
     )
     $Rows = Import-Csv -Delimiter $Delimiter -Path $FilePath
     $SetLocationPath = "SetLocationPath${CodeFolder}"
@@ -66,15 +74,18 @@ function CloneClassroomProjects {
     }
     Set-Location $Organisation
     foreach ($Row in $Rows) {
-        $Name = $Row.$Column
-        $Name = $Name.ToLower()
-        if (! [regex]::matches($Name, ".git$")) {
-            $Name = "${Name}.git"
+        $RepositoryName = $Row.$Column
+        $RepositoryName = $RepositoryName.ToLower()
+        if (! [regex]::matches($RepositoryName, ".git$")) {
+            $RepositoryName = "${RepositoryName}.git"
+        }
+        if (! $RepositoryPrefix -eq '' ) {
+            $RepositoryName = "${RepositoryPrefix}-${RepositoryName}.git"
         }
         if ([regex]::matches($Name, "^https?://")) {
             $Uri = $Name
         } else {
-            $Uri = "https://github.com/${Organisation}/${Name}"
+            $Uri = "https://${Service}/${Organisation}/${RepositoryName}"
         }
         $Path = [regex]::matches($Uri, "^(https?://[/\w.-]+/)?([\w.-]+).git$").Groups[2].Value
         if (! (Test-Path -Path $Path)) {
