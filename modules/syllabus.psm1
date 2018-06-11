@@ -80,7 +80,7 @@ function CloneClassroomProjects {
             $RepositoryName = "${RepositoryName}.git"
         }
         if (! $RepositoryPrefix -eq '' ) {
-            $RepositoryName = "${RepositoryPrefix}-${RepositoryName}.git"
+            $RepositoryName = "${RepositoryPrefix}-${RepositoryName}"
         }
         if ([regex]::matches($Name, "^https?://")) {
             $Uri = $Name
