@@ -92,7 +92,8 @@ function SetEnvironment {
 
         # Last
         $EnvironmentPath += @(
-            "${HOME}/.composer/vendor/bin"
+            "${HOME}/.composer/vendor/bin",
+            "/usr/local/opt/mysql@5.7/bin"
         )
 
         [System.Environment]::SetEnvironmentVariable('PATH', $EnvironmentPath -join ':')
