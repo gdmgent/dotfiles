@@ -470,25 +470,13 @@ function InstallRuby {
             sh -c 'brew install ruby'
         }
     } elseif ($IsWindows) {
-        # WriteMessage -Type Info -Message 'Using Scoop to install Ruby...'
-        # if (ExistCommand -Name scoop) {
-        #     cmd /c 'scoop install ruby'
-        # }
-        $Url = 'https://rubyinstaller.org/downloads/'
-        WriteMessage -Type Info -Message 'Downloading Ruby installer...'
-        $Version = '2.4.\d+' # Jekyll is not compatible with newer versions of Ruby
-        $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "rubyinstaller-$Version(.+)-x64.exe$" } | Select-Object -First 1).href
-        $Urn = "$RubyDirectoryName.exe"
-        $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
-        Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
-        if (Test-Path -Path $InstallerFile) {
-            WriteMessage -Type Info -Message 'Running Ruby installer...'
-            # WriteMessage -Type Warning -Inverse -Message " - 'English', [OK]"
-            WriteMessage -Type Warning -Inverse -Message " - 'I accept the License', [Next>]"
-            WriteMessage -Type Warning -Inverse -Message " - 'Run 'ridk install' to install MSYS2 and development toolchain.', [Finish>]"
-            WriteMessage -Type Warning -Inverse -Message " - 'Which components shall be installed? If unsure press ENTER [1,2,3]', [ENTER]"
-            Start-Process -FilePath $InstallerFile -Wait
-            Remove-Item -Path $InstallerFile
+        WriteMessage -Type Info -Message 'Using Scoop to install Ruby and MSYS2...'
+        if (ExistCommand -Name scoop) {
+            cmd /c 'scoop install ruby'
+            cmd /c 'scoop install msys2'
+        } else {
+            WriteMessage -Type Danger -Message 'Scoop is not installed!'
+            InstallScoop
         }
     }
     if (ExistCommand -Name ruby) {
@@ -500,6 +488,15 @@ function InstallRuby {
         }
     } else {
         WriteMessage -Type Danger -Message 'Ruby is not correctly installed.'
+        WriteMessage -Type Danger -Message 'Close window and try again.'
+    }
+}
+
+if ($IsWindows) {
+    function InstallRubyDevelopmentKit {
+        WriteMessage -Type Info -Inverse -Message 'Installing Ruby Development Kit...'
+        WriteMessage -Type Warning -Inverse -Message "When asked which components to install press [ENTER]"
+        cmd /c 'ridk install'
     }
 }
 
