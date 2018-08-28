@@ -95,37 +95,6 @@ function CloneClassroomProjects {
     }
 }
 
-function CloneSyllabusV1 {
-    Param(
-        [Parameter(Mandatory=$true)]
-        [String]
-        $Name,
-
-        [String]
-        $DestinationName,
-
-        [ValidateSet('github.com','gitlab.com')]
-        [String]
-        $Service = 'github.com',
-
-        [String]
-        $Account = 'gdmgent',
-
-        [Switch]
-        $Master
-    )
-    $Branch = if ($Master) { 'master' } else { 'gh-pages' }
-    $DestinationName = $DestinationName.ToLower()
-    SetLocationPathSyllabi
-    git clone https://$Service/$Account/$Name --branch $Branch --single-branch $DestinationName
-    if ($DestinationName) {
-        SetLocationPathSyllabi $DestinationName
-    } else {
-        SetLocationPathSyllabi $Name
-    }
-    bundle update
-}
-
 function CloneSyllabus {
     Param(
         [Parameter(Mandatory=$true)]
@@ -139,8 +108,9 @@ function CloneSyllabus {
         [String]
         $Service = 'github.com',
 
+        [ValidateSet('gdmgent','gdmgent-1819')]
         [String]
-        $Account = 'gdmgent',
+        $Account = 'gdmgent-1819',
 
         [Switch]
         $Clean
@@ -169,35 +139,6 @@ function CloneSyllabus {
         GitCheckoutMaster -Submodule
     }
     UpdateBundler
-}
-
-function NewSyllabusV1 {
-    Param(
-        [Parameter(Mandatory=$true)]
-        [String]
-        $Name,
-
-        [ValidateSet('github.com','gitlab.com')]
-        [String]
-        $Service = 'github.com',
-
-        [String]
-        $Account = 'gdmgent',
-
-        [Switch]
-        $Master
-    )
-    $Name = $Name.ToLower()
-    SetLocationPathSyllabi
-    New-Item -Path $Name -ItemType Directory
-    Set-Location -Path $Name
-    git init
-    git checkout -b gh-pages
-    git remote add origin https://$Service/$Account/$Name.git
-    New-Item -Path README.md -ItemType File
-    git add .
-    git commit -m [WIP]
-    git push --set-upstream origin gh-pages
 }
 
 function StatusSyllabi {
