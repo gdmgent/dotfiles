@@ -337,7 +337,7 @@ function InstallPhp {
     WriteMessage -Type Info -Inverse -Message "Installing PHP ${Version}"
     if ($IsMacOS) {
         WriteMessage -Type Info -Message "Using Homebrew to install PHP ${Version}..."
-        sh -c "brew install php${V} --with-argon2 && brew install php${V}-opcache"
+        sh -c "brew install php${V} --with-argon2"
         # $ConfigFilePath = "/usr/local/etc/php/${Version}/conf.d/ext-xdebug.ini"
         # if (Test-Path -Path $ConfigFilePath) {
         #     $ConfigFile = Get-Content -Path $ConfigFilePath
