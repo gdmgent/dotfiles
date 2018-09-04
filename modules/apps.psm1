@@ -446,6 +446,19 @@ function InstallPowerShell {
     }
 }
 
+function InstallPython {
+    WriteMessage -Type Info -Inverse -Message "Installing Python"
+    if ($IsMacOS) {
+        WriteMessage -Type Info -Message "Using Homebrew to install Python..."
+        sh -c "brew install python"
+    } elseif ($IsWindows) {
+        WriteMessage -Type Info -Message "Using Scoop to install Python..."
+        if (ExistCommand -Name scoop) {
+            cmd /c 'scoop install python'
+        }
+    }
+}
+
 function InstallCmake {
     WriteMessage -Type Info -Inverse -Message 'Installing CMake'
     if ($IsMacOS) {
