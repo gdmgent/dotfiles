@@ -104,7 +104,7 @@ function SetEnvironment {
             "${HOME}\AppData\Local\Yarn\bin",
             "${HOME}\AppData\Roaming\Composer\vendor\bin",
             'C:\php',
-            'C:\Program Files\MySQL\MySQL Server 5.7\bin'
+            'C:\Program Files\MySQL\MySQL Server 8.0\bin',
         )
 
         # PowerShell Paths @TODO replace with $PSPATH ?
