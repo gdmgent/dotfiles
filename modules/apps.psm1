@@ -242,10 +242,9 @@ function InstallHyperPreferences {
     $FileName = '.hyper.js'
     $SourcePath = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath $FileName
     $DestinationPath = Join-Path -Path $HOME -ChildPath $FileName
-    if ($IsMacOS) {
-        $Command = (Get-Command -Name $AppName -CommandType Application).Source
-    } elseif ($IsWindows) {
-        $Command = (Get-Command -Name $AppName -CommandType Application | Where-Object { $_.Source -match '6.\d+.\d+' } | Select-Object -First 1).Source -replace '\\', '\\' # replaces \ with \\
+    $Command = (Get-Command -Name $AppName -CommandType Application).Source
+    if ($IsWindows) {
+        $Command = $Command.Replace('\', '\\')
     }
     Copy-Item -Path $SourcePath -Destination $DestinationPath
     $FileContent = (Get-Content -Path $DestinationPath).Replace("shell: '${AppName}',", "shell: '${Command}',")

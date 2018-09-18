@@ -246,8 +246,7 @@ function MySQLStart {
     } elseif ($IsWindows) {
         if ($Service) {
             mysqld.exe --install
-        }
-        else {
+        } else {
             mysqld.exe
         }
     }
