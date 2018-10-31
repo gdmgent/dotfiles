@@ -64,7 +64,7 @@ function SetNode {
 
 function UseNode {
     Param(
-        [ValidateSet(8, 9, 10)]
+        [ValidateSet(10, 11)]
         [Int16]
         $Version = 10
     )
