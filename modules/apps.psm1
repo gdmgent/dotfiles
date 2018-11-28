@@ -482,13 +482,22 @@ function InstallRuby {
             sh -c 'brew install ruby'
         }
     } elseif ($IsWindows) {
-        WriteMessage -Type Info -Message 'Using Scoop to install Ruby and MSYS2...'
-        if (ExistCommand -Name scoop) {
-            cmd /c 'scoop install ruby'
-            cmd /c 'scoop install msys2'
-        } else {
-            WriteMessage -Type Danger -Message 'Scoop is not installed!'
-            InstallScoop
+        WriteMessage -Type Info -Message 'Installing Ruby and MSYS2...'
+        $Url = 'https://rubyinstaller.org/downloads/'
+        Write-Host 'Downloading Ruby installer...'
+        $Version = '2.5.\d+(-\d)?'
+        $RubyDirectoryName = 'Ruby25-x64'
+        $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "rubyinstaller-devkit-$Version-x64.exe$" } | Select-Object -First 1).href
+        $Urn = "$RubyDirectoryName.exe"
+        $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
+        Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
+        if (Test-Path -Path $InstallerFile) {
+            Write-Host 'Running Ruby installer...'
+            Write-Host " - 'I accept the License', [Next>]"
+            Write-Host " - 'C:\$RubyDirectoryName', 'Add Ruby executables to your PATH', [Install]"
+            Write-Host ' - [Finish]'
+            Start-Process -FilePath $InstallerFile -Wait
+            Remove-Item -Path $InstallerFile
         }
     }
     if (ExistCommand -Name ruby) {
