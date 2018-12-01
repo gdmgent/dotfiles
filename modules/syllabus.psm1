@@ -16,7 +16,7 @@ function CloneProject {
         $Service = 'github.com',
 
         [String]
-        $Account = 'gdmgent',
+        $Account = 'gdmgent-1819',
 
         [ValidateSet('Code','CodeColleges','CodeStudents','CodeTest')]
         [String]
@@ -126,9 +126,9 @@ function CloneSyllabus {
     }
     if ($Clean) {
         Remove-Item -Path '.git' -Recurse -Force
-        Remove-Item -Path 'syllabusv2-resources' -Recurse -Force
+        Remove-Item -Path 'syllabus-resources' -Recurse -Force
         git init
-        git submodule add https://github.com/gdmgent/syllabusv2-resources.git
+        git submodule add https://github.com/gdmgent/syllabus-resources.git
         if ($DestinationName) {
             git remote add origin https://github.com/gdmgent/$DestinationName.git
         } else {
@@ -212,9 +212,9 @@ function UpdateSyllabus {
 }
 
 function UpdateSyllabusResources {
-    if (Test-Path -Path syllabusv2-resources) {
+    if (Test-Path -Path syllabus-resources) {
         WriteMessage -Type Info -Message 'Updating Syllabus Resources...'
-        $Origin = [io.path]::Combine('syllabusv2-resources', '_data', 'shared', '*.yml')
+        $Origin = [io.path]::Combine('syllabus-resources', '_data', 'shared', '*.yml')
         $Destination = [io.path]::Combine('_data', 'shared')
         if (! (Test-Path -Path $Destination)) {
             New-Item -Path $Destination -ItemType Directory | Out-Null
@@ -224,9 +224,9 @@ function UpdateSyllabusResources {
 }
 
 function UpdateSyllabusSettings {
-    if (Test-Path -Path syllabusv2-resources) {
+    if (Test-Path -Path syllabus-resources) {
         WriteMessage -Type Info -Message 'Updating Syllabus Settings...'
-        $Origin = [io.path]::Combine('syllabusv2-resources', '__tools', 'settings', '*.json')
+        $Origin = [io.path]::Combine('syllabus-resources', '__tools', 'settings', '*.json')
         $Destination = '.vscode'
         if (! (Test-Path -Path $Destination)) {
             New-Item -Path $Destination -ItemType Directory | Out-Null
@@ -236,9 +236,9 @@ function UpdateSyllabusSettings {
 }
 
 function UpdateSyllabusSnippets {
-    if (Test-Path -Path syllabusv2-resources) {
+    if (Test-Path -Path syllabus-resources) {
         WriteMessage -Type Info -Message 'Updating Syllabus Snippets...'
-        $Origin = [io.path]::Combine('syllabusv2-resources', '__tools', 'snippets', '*')
+        $Origin = [io.path]::Combine('syllabus-resources', '__tools', 'snippets', '*')
         if ($IsMacOS) {
             $Destination = "${HOME}/Library/Application Support/Code/User/snippets/"
         } elseif ($IsWindows) {
