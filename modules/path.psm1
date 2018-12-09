@@ -312,6 +312,40 @@ function SetLocationPathSyllabi {
 }
 New-Alias -Name s -Value SetLocationPathSyllabi
 
+function OpenLocationPathSyllabi {
+    [CmdletBinding()]
+    Param()
+    DynamicParam {
+        $Path = Join-Path -Path $HOME -ChildPath Syllabi
+        if (! (Test-Path -Path $Path)) {
+            New-Item -Path $Path -ItemType Directory
+        }
+        try {
+            $ParameterAttribute = New-Object System.Management.Automation.ParameterAttribute
+            $ParameterAttribute.Position = 1
+            $ValidateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute((Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name))
+            $AttributeCollection = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
+            $AttributeCollection.Add($ParameterAttribute)
+            $AttributeCollection.Add($ValidateSetAttribute)
+            $ParameterName = 'Directory'
+            $RuntimeParameter = New-Object System.Management.Automation.RuntimeDefinedParameter($ParameterName, [String], $AttributeCollection)
+            $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
+            $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
+            return $RuntimeParameterDictionary
+        } catch {}
+    }
+    Begin {
+        try {
+            $Directory = $PSBoundParameters[$ParameterName]
+        } catch {}
+    }
+    Process {
+        $WorkingDirectory = [io.path]::Combine("$Path", "$Directory")
+        code $WorkingDirectory
+    }
+}
+New-Alias -Name so -Value OpenLocationPathSyllabi
+
 function SetLocationPathUpOne ([String] $Directory) {
     SetLocationPath -Path .. -Directory $Directory
 }
