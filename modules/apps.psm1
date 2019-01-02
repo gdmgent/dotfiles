@@ -331,7 +331,7 @@ if ($IsMacOS) {
 }
 
 function InstallPhp {
-    $Version = '7.2'
+    $Version = '7.3'
     $V = $Version.replace('.', '')
     WriteMessage -Type Info -Inverse -Message "Installing PHP ${Version}"
     if ($IsMacOS) {
