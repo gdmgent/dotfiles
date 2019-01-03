@@ -272,10 +272,10 @@ function InstallMySQL {
     WriteMessage -Type Info -Inverse -Message 'Installing MySQL Server'
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install MySQL Server...'
-        sh -c 'brew install mysql@5.7'
+        sh -c 'brew install mysql@'
         if (ExistCommand -Name mysql) {
-            sh -c 'brew services start mysql@5.7'
-            sh -c '$(brew --prefix mysql@5.7)/bin/mysqladmin -u root password secret'
+            sh -c 'brew services start mysql'
+            sh -c '$(brew --prefix mysql)/bin/mysqladmin -u root password secret'
             WriteMessage -Type Warning -Inverse -Message 'Open a new PowerShell window or tab to activate the MySQL commands.'
         } else { 
             WriteMessage -Type Danger -Inverse -Message 'MySQL was not correctly installed.'
