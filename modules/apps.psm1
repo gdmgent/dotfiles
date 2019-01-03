@@ -124,7 +124,7 @@ function InstallFont {
         $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
         $TempPath = "${env:TMPDIR}${Typeface}/"
     } elseif ($IsWindows) {
-        $DestinationPath = "C:\Windows\Fonts\"
+        $DestinationPath = 'C:\Windows\Fonts\'
         $OutFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         $TempPath = "${env:TEMP}${Typeface}\"
     }
@@ -275,7 +275,7 @@ function InstallMySQL {
         sh -c 'brew install mysql@5.7'
         if (ExistCommand -Name mysql) {
             sh -c 'brew services start mysql@5.7'
-            sh -c "$(brew --prefix mysql@5.7)/bin/mysqladmin -u root password secret"
+            sh -c '$(brew --prefix mysql@5.7)/bin/mysqladmin -u root password secret'
             WriteMessage -Type Warning -Inverse -Message 'Open a new PowerShell window or tab to activate the MySQL commands.'
         } else { 
             WriteMessage -Type Danger -Inverse -Message 'MySQL was not correctly installed.'
@@ -283,7 +283,7 @@ function InstallMySQL {
     } elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Using the MySQL Installer to install MySQL Server...'
         WriteMessage -Type Warning -Inverse -Message 'set "root" password to "secret"'
-        OpenUri -Uri https://dev.mysql.com/downloads/installer/
+        OpenUri -Uri 'https://dev.mysql.com/downloads/installer/'
         WriteMessage -Type Warning -Inverse -Message 'Open a new PowerShell window or tab once MySQL is installed to activate the MySQL commands.'
     }
 }
@@ -336,7 +336,7 @@ function InstallPhp {
     WriteMessage -Type Info -Inverse -Message "Installing PHP ${Version}"
     if ($IsMacOS) {
         WriteMessage -Type Info -Message "Using Homebrew to install PHP ${Version}..."
-        sh -c "brew install php${V} --with-argon2"
+        sh -c 'brew install php --with-argon2'
         # $ConfigFilePath = "/usr/local/etc/php/${Version}/conf.d/ext-xdebug.ini"
         # if (Test-Path -Path $ConfigFilePath) {
         #     $ConfigFile = Get-Content -Path $ConfigFilePath
@@ -356,7 +356,7 @@ function InstallPhp {
         if (Test-Path -Path $OutFile) {
             $DestinationPath = 'C:\php'
             if ((Test-Path -Path $DestinationPath) -and ! (Test-Path -Path "${DestinationPath}.bak")) {
-                WriteMessage -Type Info -Message "Making a backup of previously installed version..."
+                WriteMessage -Type Info -Message 'Making a backup of previously installed version...'
                 Move-Item -Path $DestinationPath -Destination "${DestinationPath}.bak"
             }
             WriteMessage -Type Info -Message 'Installing PHP...'
@@ -446,12 +446,12 @@ function InstallPowerShell {
 }
 
 function InstallPython {
-    WriteMessage -Type Info -Inverse -Message "Installing Python"
+    WriteMessage -Type Info -Inverse -Message 'Installing Python'
     if ($IsMacOS) {
-        WriteMessage -Type Info -Message "Using Homebrew to install Python..."
-        sh -c "brew install python"
+        WriteMessage -Type Info -Message 'Using Homebrew to install Python...'
+        sh -c 'brew install python'
     } elseif ($IsWindows) {
-        WriteMessage -Type Info -Message "Using Scoop to install Python..."
+        WriteMessage -Type Info -Message 'Using Scoop to install Python...'
         if (ExistCommand -Name scoop) {
             cmd /c 'scoop install python'
         }
@@ -459,15 +459,16 @@ function InstallPython {
 }
 
 function InstallRust {
-    WriteMessage -Type Info -Inverse -Message "Installing Rust"
+    WriteMessage -Type Info -Inverse -Message 'Installing Rust'
     if ($IsMacOS) {
-        WriteMessage -Type Info -Message "Using Homebrew to install Rust..."
-        sh -c "brew install rust"
+        WriteMessage -Type Info -Message 'Using Homebrew to install Rust...'
+        sh -c 'brew install rust'
     } elseif ($IsWindows) {
-        $Uri = "https://win.rustup.rs/"
+        $InstallerFile = 'rustup-init.exe'
+        $Uri = 'https://win.rustup.rs/x86_64'
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
         if (Test-Path -Path $InstallerFile) {
-            WriteMessage -Type Info -Message "Installing Rust..."
+            WriteMessage -Type Info -Message 'Installing Rust...'
             Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i ${InstallerFile}" -Wait
             Remove-Item -Path $InstallerFile
        }
@@ -498,7 +499,7 @@ function InstallRuby {
         if (Test-Path -Path $InstallerFile) {
             Write-Host 'Running Ruby installer...'
             Write-Host " - 'I accept the License', [Next>]"
-            Write-Host " - 'C:\$RubyDirectoryName', 'Add Ruby executables to your PATH', [Install]"
+            Write-Host " - 'C:\${RubyDirectoryName}', 'Add Ruby executables to your PATH', [Install]"
             Write-Host ' - [Finish]'
             Start-Process -FilePath $InstallerFile -Wait
             Remove-Item -Path $InstallerFile
@@ -520,7 +521,7 @@ function InstallRuby {
 if ($IsWindows) {
     function InstallRubyDevelopmentKit {
         WriteMessage -Type Info -Inverse -Message 'Installing Ruby Development Kit...'
-        WriteMessage -Type Warning -Inverse -Message "When asked which components to install press [ENTER]"
+        WriteMessage -Type Warning -Inverse -Message 'When asked which components to install press [ENTER]'
         cmd /c 'ridk install'
     }
 }
@@ -558,10 +559,10 @@ if ($IsMacOS) {
 
 function InstallYarn {
     if ($IsMacOS) {
-        WriteMessage -Type Info -Inverse -Message "Using Homebrew to install Yarn..."
+        WriteMessage -Type Info -Inverse -Message 'Using Homebrew to install Yarn...'
         sh -c 'brew install yarn --without-node'
     } elseif ($IsWindows) {
-        WriteMessage -Type Info -Inverse -Message "Using Scoop to install Yarn..."
+        WriteMessage -Type Info -Inverse -Message 'Using Scoop to install Yarn...'
         cmd /c 'scoop install yarn'
     }
     if (ExistCommand -Name yarn) {
