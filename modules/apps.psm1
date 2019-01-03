@@ -272,7 +272,7 @@ function InstallMySQL {
     WriteMessage -Type Info -Inverse -Message 'Installing MySQL Server'
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install MySQL Server...'
-        sh -c 'brew install mysql@'
+        sh -c 'brew install mysql'
         if (ExistCommand -Name mysql) {
             sh -c 'brew services start mysql'
             sh -c '$(brew --prefix mysql)/bin/mysqladmin -u root password secret'

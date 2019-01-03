@@ -1,5 +1,5 @@
 function GetLongList {
-    Get-ChildItem -Force "$args"
+    Get-ChildItem -Force "${args}"
 }
 New-Alias -Name ll -Value GetLongList
 
@@ -74,7 +74,7 @@ New-Alias -Name f -Value OpenFolderInGui
 function OpenHostsFile {
     if (ExistCommand -Name code) {
         if ($IsMacOS) {
-            WriteMessage -Type Warning -Message "Please close all instances of Visual Studio Code before continuing"
+            WriteMessage -Type Warning -Message 'Please close all instances of Visual Studio Code before continuing'
             [void](Read-Host 'Press Enter to continue…')
             sudo code /etc/hosts
         } elseif ($IsWindows) {

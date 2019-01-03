@@ -95,7 +95,7 @@ function WebpackCommand {
     } elseif (ExistCommand -Name webpack) {
         Invoke-Expression -Command ((Get-Command -Name webpack -Type Application).Source + " ${args}")
     } else {
-        WriteMessage -Type Warning -Message "Webpack is not available from this directory, nor is it installed globally."
+        WriteMessage -Type Warning -Message 'Webpack is not available from this directory, nor is it installed globally.'
     }
 }
 New-Alias -Name webpack -Value WebpackCommand
