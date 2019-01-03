@@ -458,25 +458,29 @@ function InstallPython {
     }
 }
 
-function InstallCmake {
-    WriteMessage -Type Info -Inverse -Message 'Installing CMake'
+function InstallRust {
+    WriteMessage -Type Info -Inverse -Message "Installing Rust"
     if ($IsMacOS) {
-        WriteMessage -Type Info -Message 'Using Homebrew to install CMake...'
-        if (ExistCommand -Name brew) {
-            sh -c 'brew install cmake'
-        }
+        WriteMessage -Type Info -Message "Using Homebrew to install Rust..."
+        sh -c "brew install rust"
     } elseif ($IsWindows) {
-        WriteMessage -Type Info -Message 'Using Scoop to install CMake...'
-        if (ExistCommand -Name scoop) {
-            cmd /c 'scoop install cmake'
-        }
+        $Uri = "https://win.rustup.rs/"
+        Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
+        if (Test-Path -Path $InstallerFile) {
+            WriteMessage -Type Info -Message "Installing Rust..."
+            Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i ${InstallerFile}" -Wait
+            Remove-Item -Path $InstallerFile
+       }
     }
 }
 
 function InstallRuby {
     WriteMessage -Type Info -Inverse -Message 'Installing Ruby'
     if ($IsMacOS) {
-        InstallCmake
+        WriteMessage -Type Info -Message 'Using Homebrew to install CMake...'
+        if (ExistCommand -Name brew) {
+            sh -c 'brew install cmake'
+        }
         WriteMessage -Type Info -Message 'Using Homebrew to install Ruby...'
         if (ExistCommand -Name brew) {
             sh -c 'brew install ruby'
