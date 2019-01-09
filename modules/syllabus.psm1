@@ -128,11 +128,11 @@ function CloneSyllabus {
         Remove-Item -Path '.git' -Recurse -Force
         Remove-Item -Path 'syllabus-resources' -Recurse -Force
         git init
-        git submodule add https://github.com/gdmgent/syllabus-resources.git
+        git submodule add https://$Service/$Account/syllabus-resources.git
         if ($DestinationName) {
-            git remote add origin https://github.com/gdmgent/$DestinationName.git
+            git remote add origin https://$Service/$Account/$DestinationName.git
         } else {
-            git remote add origin https://github.com/gdmgent/$Name.git
+            git remote add origin https://$Service/$Account/$Name.git
         }
     } else {
         git submodule update --init --recursive --remote
