@@ -142,18 +142,9 @@ function CloneSyllabus {
 }
 
 function StatusSyllabi {
-    Param(
-        [Switch]
-        $V1
-    )
-    if ($V1) {
-        $Pattern = '^((\d{4}|utl|mod)(_|-)|syllabus)|.github.io$'
-    } else {
-        $Pattern = '^\d{4}-'
-    }
     Push-Location
     SetLocationPathSyllabi
-    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match $Pattern }
+    $Directories = Get-ChildItem -Directory -Name
     foreach ($Directory in $Directories) {
         Push-Location $Directory
         if (Test-Path -Path .git) {
@@ -176,7 +167,7 @@ function UpdateSyllabi {
     )
     Push-Location
     SetLocationPathSyllabi
-    $Directories = Get-ChildItem -Directory -Name | Where-Object { $_ -match '^\d{4}-' }
+    $Directories = Get-ChildItem -Directory -Name
     foreach ($Directory in $Directories) {
         Push-Location $Directory
             WriteMessage -Type Info -Inverse -Message $Directory
