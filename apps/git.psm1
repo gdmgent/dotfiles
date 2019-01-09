@@ -159,6 +159,12 @@ function GitPush {
 }
 New-Alias -Name push -Value GitPush
 
+function GitPushFirst {
+    $Command = 'git push --set-upstream origin master'
+    Invoke-Expression -Command $Command
+}
+New-Alias -Name pushfirst -Value GitPushFirst
+
 function GitPushWorkInProgress {
     Param(
         [Switch]
