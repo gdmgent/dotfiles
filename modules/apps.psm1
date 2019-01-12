@@ -49,6 +49,7 @@ if ($IsMacOS) {
 function InstallBundler {
     WriteMessage -Type Info -Inverse -Message 'Installing Bundler'
     WriteMessage -Type Info -Message 'Using Ruby Gem to install the Bundler Gem...'
+    gem update --system
     gem install bundler
     if (ExistCommand -Name bundle) {
         WriteMessage -Type Success -Message 'Installed version of Bundler: ' -NoNewline
