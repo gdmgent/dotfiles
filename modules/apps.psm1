@@ -237,6 +237,23 @@ function InstallHotel {
     }
 }
 
+function InstallHugo {
+    WriteMessage -Type Info -Inverse -Message 'Installing Hugo'
+    if ($IsMacOS) {
+        WriteMessage -Type Info -Message 'Using Homebrew to install Hugo...'
+        sh -c 'brew install hugo'
+    } elseif ($IsWindows) {
+        WriteMessage -Type Info -Message 'Using Scoop to install Hugo...'
+        cmd /c 'scoop install hugo'
+    }
+    if (ExistCommand -Name InstallHugo) {
+        WriteMessage -Type Success -Message 'Installed version of Hugo: ' -NoNewline
+        hugo --version
+    } else {
+        WriteMessage -Type Danger -Message 'Hugo was not installed.'
+    }
+}
+
 function InstallHyperPreferences {
     WriteMessage -Type Info -Inverse -Message 'Installing Hyper.js preferences'
     $AppName = 'pwsh'
