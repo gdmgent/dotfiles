@@ -21,9 +21,9 @@ foreach ($Module in $Modules) {
 
 $Applications = @(
     'bash'
+    'bundler'
     'git'
     'hotel'
-    'jekyll'
     'mysql'
     'nginx'
     'php'
