@@ -508,8 +508,8 @@ function InstallRuby {
         WriteMessage -Type Info -Message 'Installing Ruby and MSYS2...'
         $Url = 'https://rubyinstaller.org/downloads/'
         Write-Host 'Downloading Ruby installer...'
-        $Version = '2.5.\d+(-\d)?'
-        $RubyDirectoryName = 'Ruby25-x64'
+        $Version = '2.6.\d+(-\d)?'
+        $RubyDirectoryName = 'Ruby26-x64'
         $Uri = ((Invoke-WebRequest -Uri $Url).Links | Where-Object { $_.href -match "rubyinstaller-devkit-$Version-x64.exe$" } | Select-Object -First 1).href
         $Urn = "$RubyDirectoryName.exe"
         $InstallerFile = Join-Path -Path $env:TEMP -ChildPath $Urn
