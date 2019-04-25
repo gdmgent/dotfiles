@@ -266,6 +266,14 @@ function ReloadDotfiles {
     Stop-Process -Id $PID
 }
 
+if ($IsWindows) {
+    function RunBlender {
+        WriteMessage -Type Info -Inverse -Message 'Starting Blender from Remote Desktop...'
+        Start-Process TSCON -Verb RunAs -ArgumentList '1 /DEST:console' -Wait
+        Start-Process 'C:\Program Files\Blender Foundation\Blender\2.80\blender.exe'
+    }
+}
+
 function SearchDotfilesCommands {
     Get-Command "${args}" | Where-Object { $_.Source -eq 'dotfiles' }
     Get-Alias   "${args}" | Where-Object { $_.Source -eq 'dotfiles' -or $_.Source -like 'aliases*' }
