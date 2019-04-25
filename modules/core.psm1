@@ -242,7 +242,7 @@ function Dotfiles {
     } else {
         $OS = 'unknown operating system'
     }
-    WriteMessage -Type Info -Inverse -Message "gdm.gent Dotfiles ${Global:DotfilesVersion}" -NoNewline
+    WriteMessage -Type Info -Inverse -Message "pgm&gdm.gent Dotfiles ${Global:DotfilesVersion}" -NoNewline
     $PSVersion = $PSVersionTable.GitCommitId # $PSVersionTable.PSVersion.ToString()
     WriteMessage -Type Mute -Message " in PowerShell Core ${PSVersion} on ${OS}"
 }

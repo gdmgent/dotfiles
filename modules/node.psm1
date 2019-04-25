@@ -23,7 +23,6 @@ function InitNode {
 
 function InstallNode {
     if ($IsMacOS) {
-        # nvm install --lts
         nvm install --lts
     } elseif ($IsWindows) {
         nvm install latest
@@ -64,9 +63,9 @@ function SetNode {
 
 function UseNode {
     Param(
-        [ValidateSet(10, 11)]
+        [ValidateSet(10, 11, 12)]
         [Int16]
-        $Version = 10
+        $Version = 12
     )
     if ($IsMacOS) {
         $NodeVersion = $(nvm version $Version)

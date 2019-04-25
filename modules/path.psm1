@@ -8,7 +8,7 @@ function ExtendHostsFile {
         [Switch]
         $Undo
     )
-    $Tag = '# gdm.gent Dotfiles'
+    $Tag = '# pgm&gdm.gent Dotfiles'
     if ($IsMacOS) {
         $HostsPath = '/etc/hosts'
         sudo pwsh -c "(Get-Content -Path '${HostsPath}' | Select-String -Pattern '${Tag}' -NotMatch).Line | Out-File $HostsPath -Encoding utf8"
