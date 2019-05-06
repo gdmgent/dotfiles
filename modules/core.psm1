@@ -267,9 +267,16 @@ function ReloadDotfiles {
 }
 
 if ($IsWindows) {
+    function RunBlenderInfo {
+        query user
+    }
+    
     function RunBlender {
+        Param(
+            $SessionName = 'console'
+        )
         WriteMessage -Type Info -Inverse -Message 'Starting Blender from Remote Desktop...'
-        Start-Process TSCON -Verb RunAs -ArgumentList '1 /DEST:console' -Wait
+        Start-Process tscon.exe -Verb RunAs -ArgumentList "$SessionName /DEST:console" -Wait
         Start-Process 'C:\Program Files\Blender Foundation\Blender\2.80\blender.exe'
     }
 }

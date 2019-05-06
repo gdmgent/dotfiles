@@ -259,7 +259,11 @@ function InstallHyperPreferences {
     $AppName = 'pwsh'
     $FileName = '.hyper.js'
     $SourcePath = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath $FileName
-    $DestinationPath = Join-Path -Path $HOME -ChildPath $FileName
+    if ($IsWindows) {
+        $DestinationPath = Join-Path -Path $HOME\AppData\Roaming\Hyper -ChildPath $FileName
+    } else {
+        $DestinationPath = Join-Path -Path $HOME -ChildPath $FileName
+    }
     $Command = (Get-Command -Name $AppName -CommandType Application).Source
     if ($IsWindows) {
         $Command = $Command.Replace('\', '\\')
