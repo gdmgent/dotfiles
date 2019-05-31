@@ -508,11 +508,11 @@ function InstallRust {
 function InstallRuby {
     WriteMessage -Type Info -Inverse -Message 'Installing Ruby'
     if ($IsMacOS) {
-        WriteMessage -Type Info -Message 'Using Homebrew to install CMake...'
+        WriteMessage -Type Info -Message '[1/2] Using Homebrew to install CMake...'
         if (ExistCommand -Name brew) {
             sh -c 'brew install cmake'
         }
-        WriteMessage -Type Info -Message 'Using Homebrew to install Ruby...'
+        WriteMessage -Type Info -Message '[2/2] Using Homebrew to install Ruby...'
         if (ExistCommand -Name brew) {
             sh -c 'brew install ruby'
         }
@@ -741,11 +741,11 @@ if ($IsMacOS) {
         )
         WriteMessage -Type Primary -Inverse -Message 'Updating Homebrew'
         if (ExistCommand -Name brew) {
-            WriteMessage -Type Info -Message 'Updating Homebrew...'
+            WriteMessage -Type Info -Message '[1/3] Updating Homebrew...'
             sh -c 'brew update'
-            WriteMessage -Type Info -Message 'Upgrading Homebrew...'
+            WriteMessage -Type Info -Message '[2/3] Upgrading Homebrew...'
             sh -c 'brew upgrade'
-            WriteMessage -Type Info -Message 'Cleaning up Homebrew...'
+            WriteMessage -Type Info -Message '[3/3] Cleaning up Homebrew...'
             if ($Force) {
                 sh -c 'brew cleanup -s'
             } else {
@@ -760,9 +760,9 @@ function UpdateBundler {
     if (Test-Path $File) {
         if (ExistCommand -Name bundle) {
             WriteMessage -Type Primary -Inverse -Message 'Updating Bundler'
-            WriteMessage -Type Info -Message 'Updating Bundler Bundle...'
+            WriteMessage -Type Info -Message '[1/2] Updating Bundler Bundle...'
             bundle update
-            WriteMessage -Type Info -Message 'Cleaning up unused Ruby Gems...'
+            WriteMessage -Type Info -Message '[2/2] Cleaning up unused Ruby Gems...'
             gem cleanup
         } else {
             WriteMessage -Type Danger -Message 'Bundler Ruby Gem is not installed.'
@@ -778,13 +778,13 @@ if ($IsWindows) {
     function UpdateScoop {
         WriteMessage -Type Primary -Inverse -Message 'Updating Scoop'
         if (ExistCommand -Name scoop) {
-            WriteMessage -Type Info -Message 'Updating Scoop...'
+            WriteMessage -Type Info -Message '[1/4] Updating Scoop...'
             cmd /c 'scoop update'
-            WriteMessage -Type Info -Message 'Updating Scoop apps...'
+            WriteMessage -Type Info -Message '[2/4] Updating Scoop apps...'
             cmd /c 'scoop update *'
-            WriteMessage -Type Info -Message 'Cleaning up Scoop apps...'
+            WriteMessage -Type Info -Message '[3/4] Cleaning up Scoop apps...'
             cmd /c 'scoop cleanup *'
-            WriteMessage -Type Info -Message 'Clearing Scoop cache...'
+            WriteMessage -Type Info -Message '[4/4] Clearing Scoop cache...'
             cmd /c 'scoop cache rm *'
         }
     }
