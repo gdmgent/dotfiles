@@ -255,6 +255,10 @@ function InstallHugo {
 }
 
 function InstallHyperPreferences {
+    Param(
+        [Switch]
+        $Preview
+    )   
     WriteMessage -Type Info -Inverse -Message 'Installing Hyper.js preferences'
     $AppName = 'pwsh'
     $FileName = '.hyper.js'
@@ -264,7 +268,11 @@ function InstallHyperPreferences {
     } else {
         $DestinationPath = Join-Path -Path $HOME -ChildPath $FileName
     }
-    $Command = (Get-Command -Name $AppName -CommandType Application).Source
+    if ($Preview) {
+        $Command = (Get-Command -Name "${AppName}-preview" -CommandType Application).Source
+    } else {
+        $Command = (Get-Command -Name $AppName -CommandType Application).Source
+    }
     if ($IsWindows) {
         $Command = $Command.Replace('\', '\\')
     }
