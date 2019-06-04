@@ -371,7 +371,10 @@ function InstallPhp {
         #     }
         # }
     } elseif ($IsWindows) {
-        WriteMessage -Type Info -Message "Downloading PHP ${Version}..."
+        $Step = 0
+        $Steps = 6
+        $Step++
+        WriteMessage -Type Info -Message "[${Step}/${Steps}] Downloading PHP ${Version}..."
         $Url =  'https://windows.php.net'
         $File = "/php-${Version}.\d+-nts-Win32-VC15-x64.zip$"
         $FileUri = "${Url}/downloads/releases"
@@ -381,14 +384,18 @@ function InstallPhp {
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile
         if (Test-Path -Path $OutFile) {
             $DestinationPath = 'C:\php'
+            $Step++
             if ((Test-Path -Path $DestinationPath) -and ! (Test-Path -Path "${DestinationPath}.bak")) {
-                WriteMessage -Type Info -Message 'Making a backup of previously installed version...'
+               
+                WriteMessage -Type Info -Message "[${Step}/${Steps}] Making a backup of previously installed version..."
                 Move-Item -Path $DestinationPath -Destination "${DestinationPath}.bak"
             }
-            WriteMessage -Type Info -Message 'Installing PHP...'
+            $Step++
+            WriteMessage -Type Info -Message "[${Step}/${Steps}] Installing PHP..."
             Expand-Archive -Path $OutFile -DestinationPath $DestinationPath -Force
             Remove-Item -Path $OutFile
-            WriteMessage -Type Info -Message 'Configuring PHP...'
+            $Step++
+            WriteMessage -Type Info -Message "[${Step}/${Steps}] Configuring PHP..."
             $ConfigFile = Get-Content -Path C:\php\php.ini-development
             $Extensions = @(
                 'extension=curl',
@@ -419,10 +426,12 @@ function InstallPhp {
             # Adding CA Root Certificates for SSL
             $ConfigFile = $ConfigFile.Replace(';openssl.cafile=', 'openssl.cafile=' + $Global:DotfilesInstallPath + '\ssl\cacert.pem')
             Set-Content -Path ($ConfigFilePath = Join-Path -Path $DestinationPath -ChildPath 'php.ini') -Value $ConfigFile
-            WriteMessage -Type Info 'Configuring PHP to use Sodium...'
+            $Step++
+            WriteMessage -Type Info "[${Step}/${Steps}] Configuring PHP to use Sodium..."
             Add-Content -Path $ConfigFilePath -Value "`nextension=sodium"
             # OPcache
-            WriteMessage -Type Info 'Configuring PHP to use OPcache...'
+            $Step++
+            WriteMessage -Type Info "[${Step}/${Steps}] Configuring PHP to use OPcache..."
             Add-Content -Path $ConfigFilePath -Value "`nzend_extension=opcache"
             # Xdebug
             # WriteMessage -Type Info -Message 'Downloading Xdebug for PHP...'
