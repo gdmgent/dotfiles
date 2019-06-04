@@ -261,21 +261,17 @@ function InstallHyperPreferences {
     )   
     WriteMessage -Type Info -Inverse -Message 'Installing Hyper.js preferences'
     $AppName = 'pwsh'
-    $FileName = '.hyper.js'
-    $SourcePath = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath $FileName
-    if ($IsWindows) {
-        $DestinationPath = Join-Path -Path $HOME\AppData\Roaming\Hyper -ChildPath $FileName
-    } else {
-        $DestinationPath = Join-Path -Path $HOME -ChildPath $FileName
-    }
-    if ($Preview) {
-        $Command = (Get-Command -Name "${AppName}-preview" -CommandType Application).Source
-    } else {
-        $Command = (Get-Command -Name $AppName -CommandType Application).Source
-    }
+    $CommandName = if ($Preview -and $IsMacOS) { "${AppName}-preview" } else { $AppName }
+    $Command = (Get-Command -Name $CommandName -CommandType Application).Source
+    $CommandIndex = if ($Preview) { $Command.Count - 1 } else { 0 }
+    $Command = $Command.Get($CommandIndex)
     if ($IsWindows) {
         $Command = $Command.Replace('\', '\\')
     }
+    $FileName = '.hyper.js'
+    $SourcePath = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath $FileName
+    $DestinationPath = Join-Path -Path $(if ($IsWindows) { "$HOME\AppData\Roaming\Hyper" } else { $HOME }) -ChildPath $FileName
+
     Copy-Item -Path $SourcePath -Destination $DestinationPath
     $FileContent = (Get-Content -Path $DestinationPath).Replace("shell: '${AppName}',", "shell: '${Command}',")
     Set-Content -Path $DestinationPath -Value $FileContent
