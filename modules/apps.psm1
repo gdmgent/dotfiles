@@ -264,7 +264,7 @@ function InstallHyperPreferences {
     $CommandName = if ($Preview -and $IsMacOS) { "${AppName}-preview" } else { $AppName }
     $Command = (Get-Command -Name $CommandName -CommandType Application).Source
     $CommandIndex = if ($Preview) { $Command.Count - 1 } else { 0 }
-    $Command = $Command.Get($CommandIndex)
+    $Command = @($Command).Get($CommandIndex)
     if ($IsWindows) {
         $Command = $Command.Replace('\', '\\')
     }
