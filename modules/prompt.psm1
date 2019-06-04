@@ -7,13 +7,9 @@ function PromptGit {
         $Branch = (git status | Select-Object -First 1) -replace 'On branch|\s'
         $HasChanged = (git status --branch --short | Measure-Object).Count -gt 1
         $Prompt = if ($HasChanged) { "`u{2716}" } else { "`u{2714}" }
-        if ($IsMacOS) {
-            return "${Prompt} (${Branch}) "
-        } elseif ($IsWindows) {
-            Write-Host "${Prompt} (" -NoNewline
-            Write-Host $Branch -NoNewline -ForegroundColor $(if ($HasChanged) { 'Red' } else { 'Green' })
-            Write-Host ') ' -NoNewline
-        }
+        Write-Host "${Prompt} (" -NoNewline
+        Write-Host $Branch -NoNewline -ForegroundColor $(if ($HasChanged) { 'Red' } else { 'Green' })
+        Write-Host ') ' -NoNewline
     }
 }
 
