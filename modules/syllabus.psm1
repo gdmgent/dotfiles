@@ -108,7 +108,7 @@ function CloneSyllabus {
         [String]
         $Service = 'github.com',
 
-        [ValidateSet('gdmgent','gdmgent-1819')]
+        [ValidateSet('gdmgent','gdmgent-1819','pgmgent')]
         [String]
         $Account = 'gdmgent-1819',
 
