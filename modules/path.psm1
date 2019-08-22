@@ -97,6 +97,23 @@ function SetLocationPath ([String] $Path, [String] $Directory) {
     }
 }
 
+function SetLocationPathBlenderAddOns {
+    Param(
+        [String]
+        $Version = '2.80'
+    )
+    if ($IsMacOS) {
+        $BlenderPath = [io.path]::Combine($HOME, 'Library', 'Application Support', 'Blender', $Version, 'scripts', 'addons')
+    } elseif ($IsWindows) {
+        $BlenderPath = [io.path]::Combine($HOME, 'AppData', 'Roaming', 'Blender Foundation', 'Blender', $Version, 'scripts', 'addons')
+    }
+    if (Test-Path -Path $BlenderPath) {
+        Set-Location -Path $BlenderPath
+    }
+}
+New-Alias -Name ba -Value SetLocationPathBlenderAddOns
+
+
 function SetLocationPathDotfilesInstall {
     Param(
         [Switch]
