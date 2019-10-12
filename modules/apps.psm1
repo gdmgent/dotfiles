@@ -594,8 +594,8 @@ if ($IsMacOS) {
 
 function InstallYarn {
     if ($IsMacOS) {
-        WriteMessage -Type Info -Inverse -Message 'Using Homebrew to install Yarn...'
-        sh -c 'brew install yarn --without-node'
+        WriteMessage -Type Info -Inverse -Message 'Using Brew to install Yarn...'
+        sh -c 'brew install yarn --ignore-dependencies'
     } elseif ($IsWindows) {
         WriteMessage -Type Info -Inverse -Message 'Using Scoop to install Yarn...'
         cmd /c 'scoop install yarn'
