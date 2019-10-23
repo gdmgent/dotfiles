@@ -25,7 +25,9 @@ function InstallNode {
     if ($IsMacOS) {
         nvm install --lts
     } elseif ($IsWindows) {
-        nvm install latest
+        $Latest = (($(nvm list available) | Select-Object -Index 3).Split('|') | Select-Object -Index 2).Trim()
+        WriteMessage -Type Info -Message "Using NVM to install Node.js ${Latest}..."
+        nvm.exe install $Latest
     }
 }
 
@@ -63,7 +65,7 @@ function SetNode {
 
 function UseNode {
     Param(
-        [ValidateSet(10, 12)]
+        [ValidateSet(12, 13)]
         [Int16]
         $Version = 12
     )
