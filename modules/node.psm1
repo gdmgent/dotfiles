@@ -23,6 +23,7 @@ function InitNode {
 
 function InstallNode {
     if ($IsMacOS) {
+        WriteMessage -Type Info -Message "Using NVM to install Node.js..."
         nvm install --lts
     } elseif ($IsWindows) {
         $Latest = (($(nvm list available) | Select-Object -Index 3).Split('|') | Select-Object -Index 2).Trim()
