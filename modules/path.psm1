@@ -113,6 +113,13 @@ function SetLocationPathBlenderAddOns {
 }
 New-Alias -Name ba -Value SetLocationPathBlenderAddOns
 
+function SetLocationPathDesktop {
+    $DesktopPath = [io.path]::Combine($HOME, 'Desktop')
+    if (Test-Path -Path $DesktopPath) {
+        Set-Location -Path $DesktopPath
+    }
+}
+New-Alias -Name dt -Value SetLocationPathDesktop
 
 function SetLocationPathDotfilesInstall {
     Param(
@@ -130,6 +137,7 @@ function SetLocationPathDotfilesInstall {
     }
 }
 New-Alias -Name d -Value SetLocationPathDotfilesInstall
+
 
 function SetLocationPathCode {
     [CmdletBinding()]
