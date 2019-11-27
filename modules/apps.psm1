@@ -490,6 +490,19 @@ function InstallPython {
         if (ExistCommand -Name scoop) {
             cmd /c 'scoop install python'
         }
+    } elseif ($IsLinux) {
+        $Version = '3.8.0'
+        WriteMessage -Type Info -Message 'Install Python...'
+        sudo apt update
+        sudo apt-get install -y build-essential tk-dev libncurses5-dev libncursesw5-dev libreadline6-dev libdb5.3-dev libgdbm-dev libsqlite3-dev libssl-dev libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev libffi-dev
+        cd /usr/src
+        sudo wget https://www.python.org/ftp/python/${Version}/Python-${Version}.tgz
+        sudo tar -xf Python-${Version}.tgz
+        cd /usr/src/Python-${Version}/
+        sudo ./configure --enable-optimizations
+        sudo make
+        cd /usr/src/Python-${Version}/
+        sudo make altinstall
     }
 }
 
