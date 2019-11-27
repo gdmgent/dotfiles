@@ -502,7 +502,7 @@ function InstallPython {
         sudo ./configure --enable-optimizations
         sudo make
         cd /usr/src/Python-${Version}/
-        sudo make altinstall
+        sudo make install
     }
 }
 
