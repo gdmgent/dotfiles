@@ -612,6 +612,11 @@ function InstallYarn {
     } elseif ($IsWindows) {
         WriteMessage -Type Info -Inverse -Message 'Using Scoop to install Yarn...'
         cmd /c 'scoop install yarn'
+    } elseif ($IsLinux) {
+        WriteMessage -Type Info -Inverse -Message 'Using apt to install Yarn...'
+        sh -c 'curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -'
+        sh -c 'echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list'
+        sh -c 'sudo apt update && sudo apt install yarn'
     }
     if (ExistCommand -Name yarn) {
         WriteMessage -Type Success -Message 'Installed version of Yarn: ' -NoNewline
