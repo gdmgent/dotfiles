@@ -78,9 +78,10 @@ function SetEnvironment {
 
         # User Paths
         $EnvironmentPath += @(
-            '/usr/local/bin',
-            '/usr/local/lib/ruby/gems/2.5.0/bin',
+            '/usr/local/opt/python@3.8/bin'
             '/usr/local/opt/ruby/bin',
+            '/usr/local/lib/ruby/gems/2.6.0/bin',
+            '/usr/local/bin',
             '/usr/bin',
             '/bin'
         )
@@ -95,7 +96,6 @@ function SetEnvironment {
         # Last
         $EnvironmentPath += @(
             "${HOME}/.composer/vendor/bin"
-            # "/usr/local/opt/mysql@5.7/bin"
         )
 
         [System.Environment]::SetEnvironmentVariable('PATH', $EnvironmentPath -join ':')

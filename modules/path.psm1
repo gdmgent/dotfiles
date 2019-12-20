@@ -26,10 +26,8 @@ function ExtendHostsFile {
         $Domains = @(
             'cms.localhost     ',
             'cmsdev.localhost  ',
-            'csse.localhost    ',
-            'nmd1.localhost    ',
-            'nmd2.localhost    ',
-            'nmd3.localhost    ',
+            'csse1.localhost   ',
+            'csse2.localhost   ',
             'nmt1.localhost    ',
             'nmt2.localhost    ',
             'webdev1.localhost ',
@@ -100,7 +98,7 @@ function SetLocationPath ([String] $Path, [String] $Directory) {
 function SetLocationPathBlenderAddOns {
     Param(
         [String]
-        $Version = '2.80'
+        $Version = '2.81'
     )
     if ($IsMacOS) {
         $BlenderPath = [io.path]::Combine($HOME, 'Library', 'Application Support', 'Blender', $Version, 'scripts', 'addons')

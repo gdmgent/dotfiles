@@ -357,19 +357,12 @@ if ($IsMacOS) {
 }
 
 function InstallPhp {
-    $Version = '7.3'
+    $Version = '7.4'
     $V = $Version.replace('.', '')
     WriteMessage -Type Info -Inverse -Message "Installing PHP ${Version}"
     if ($IsMacOS) {
         WriteMessage -Type Info -Message "Using Homebrew to install PHP ${Version}..."
         sh -c 'brew install php'
-        # $ConfigFilePath = "/usr/local/etc/php/${Version}/conf.d/ext-xdebug.ini"
-        # if (Test-Path -Path $ConfigFilePath) {
-        #     $ConfigFile = Get-Content -Path $ConfigFilePath
-        #     if (! [bool]($ConfigFile -match "xdebug.remote_enable")) {
-        #         Add-Content -Path $ConfigFilePath -Value "`nxdebug.remote_enable=1"
-        #     }
-        # }
     } elseif ($IsWindows) {
         $Step = 0
         $Steps = 6
@@ -386,7 +379,6 @@ function InstallPhp {
             $DestinationPath = 'C:\php'
             $Step++
             if ((Test-Path -Path $DestinationPath) -and ! (Test-Path -Path "${DestinationPath}.bak")) {
-               
                 WriteMessage -Type Info -Message "[${Step}/${Steps}] Making a backup of previously installed version..."
                 Move-Item -Path $DestinationPath -Destination "${DestinationPath}.bak"
             }
@@ -484,7 +476,7 @@ function InstallPython {
     WriteMessage -Type Info -Inverse -Message 'Installing Python'
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install Python...'
-        sh -c 'brew install python'
+        sh -c 'brew install python@3.8'
     } elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Using Scoop to install Python...'
         if (ExistCommand -Name scoop) {
