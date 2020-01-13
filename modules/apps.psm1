@@ -618,6 +618,20 @@ function InstallYarn {
     }
 }
 
+# Disable Functions
+# -----------------
+
+if ($IsWindows) {
+    function DisableHypervisorPlatform {
+        $admin = IsAdministrator
+        if ($admin) {
+            dism.exe /Online /Disable-Feature:HypervisorPlatform
+        } else {
+            WriteMessage -Type Danger -Message 'Run this window as administrator and try again.'
+        }
+    }
+}
+
 # Remove Functions
 # ----------------
 

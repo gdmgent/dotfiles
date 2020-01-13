@@ -261,6 +261,13 @@ function FindListeners {
     }
 }
 
+if ($IsWindows) {
+    function IsAdministrator {
+        $principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
+        return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+    }
+}
+
 function ReloadDotfiles {
     pwsh -NoLogo
     Stop-Process -Id $PID
