@@ -114,7 +114,7 @@ function InstallCustomDotfilesPowerShellModule {
 function InstallFont {
     Param(
         [Parameter(Mandatory=$true)]
-        [ValidateSet('FiraCode','Hack','Hasklig')]
+        [ValidateSet('FiraCode','Hack','Hasklig','JetBrainsMono')]
         [String]
         $Typeface
     )
@@ -178,8 +178,26 @@ function InstallFont {
             if (Test-Path -Path $OutFile) {
                 WriteMessage -Type Info -Message 'Installing Hasklig typeface...'
                 if ($IsMacOS) {
-                    $Output = unzip $OutFile *.otf -d $TempPath -o
-                    Move-Item -Path ${TempPath}*.otf -Destination $DestinationPath -Force
+                    $Output = unzip $OutFile *.${FontFormat} -d $TempPath -o
+                    Move-Item -Path ${TempPath}*.${FontFormat} -Destination $DestinationPath -Force
+                } elseif ($IsWindows) {
+                    Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
+                    $Output = Get-ChildItem -Path "${TempPath}*.${FontFormat}" | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
+                }
+                Remove-Item -Path $OutFile
+            }
+        }
+        'JetBrainsMono' {
+            $FontFormat = 'ttf'
+            WriteMessage -Type Info -Inverse -Message 'JetBrains Mono by Philipp Nurullin...'
+            WriteMessage -Type Info -Message 'Downloading JetBrains Mono typeface...'
+            $Uri = 'https://download.jetbrains.com/fonts/JetBrainsMono-1.0.0.zip'
+            Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+            if (Test-Path -Path $OutFile) {
+                WriteMessage -Type Info -Message 'Installing JetBrains Mono typeface...'
+                if ($IsMacOS) {
+                    $Output = unzip $OutFile *.${FontFormat} -d $TempPath -o
+                    Move-Item -Path ${TempPath}*.${FontFormat} -Destination $DestinationPath -Force
                 } elseif ($IsWindows) {
                     Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
                     $Output = Get-ChildItem -Path "${TempPath}*.${FontFormat}" | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
