@@ -650,6 +650,17 @@ if ($IsWindows) {
     }
 }
 
+# Reinstall Functions
+# -------------------
+
+if ($IsMacOS) {
+    function ReinstallXcode {
+        WriteMessage -Type Info -Inverse -Message 'Reinstalling Xcode'
+        sh -c 'sudo rm -rf $(xcode-select -print-path)'
+        sh -c 'xcode-select --install'
+    }
+}
+
 # Remove Functions
 # ----------------
 
