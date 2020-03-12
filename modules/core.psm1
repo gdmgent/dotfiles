@@ -242,9 +242,10 @@ function Dotfiles {
     } else {
         $OS = 'unknown operating system'
     }
-    WriteMessage -Type Info -Inverse -Message "pgm&gdm.gent Dotfiles ${Global:DotfilesVersion}" -NoNewline
-    $PSVersion = $PSVersionTable.GitCommitId # $PSVersionTable.PSVersion.ToString()
-    WriteMessage -Type Mute -Message " in PowerShell Core ${PSVersion} on ${OS}"
+    $PSVersion = $PSVersionTable.PSVersion.ToString()
+    WriteMessage -Type Info -Inverse -Message 'Artevelde University of Applied Sciences' -NoNewline
+    WriteMessage -Type Strong -Message " Dotfiles ${Global:DotfilesVersion}" -NoNewline
+    WriteMessage -Type Mute -Message " in PowerShell ${PSEdition} ${PSVersion} on ${OS}"
 }
 New-Alias -Name dot -Value Dotfiles
 
