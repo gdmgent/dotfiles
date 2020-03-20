@@ -138,7 +138,8 @@ function CloneSyllabus {
         git submodule update --init --recursive --remote
         GitCheckoutMaster -Submodule
     }
-    UpdateBundler
+    yarn
+    # UpdateBundler
 }
 
 function StatusSyllabi {
