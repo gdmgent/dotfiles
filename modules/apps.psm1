@@ -650,6 +650,17 @@ if ($IsWindows) {
     }
 }
 
+if ($IsWindows) {
+    function DisableHypervisorLaunch {
+        $admin = IsAdministrator
+        if ($admin) {
+            bcdedit /set hypervisorlaunchtype off
+        } else {
+            WriteMessage -Type Danger -Message 'Run this window as administrator and try again.'
+        }
+    }
+}
+
 # Reinstall Functions
 # -------------------
 
