@@ -203,6 +203,39 @@ function SetLocationPathCodeColleges {
 }
 New-Alias -Name cc -Value SetLocationPathCodeColleges
 
+function SetLocationPathCodeLearning {
+    [CmdletBinding()]
+    Param()
+    DynamicParam {
+        $Path = Join-Path -Path $HOME -ChildPath CodeLearning
+        if (! (Test-Path -Path $Path)) {
+            New-Item -Path $Path -ItemType Directory
+        }
+        try {
+            $ParameterAttribute = New-Object System.Management.Automation.ParameterAttribute
+            $ParameterAttribute.Position = 1
+            $ValidateSetAttribute = New-Object System.Management.Automation.ValidateSetAttribute((Get-ChildItem -Path $Path -Directory | Select-Object -ExpandProperty Name))
+            $AttributeCollection = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
+            $AttributeCollection.Add($ParameterAttribute)
+            $AttributeCollection.Add($ValidateSetAttribute)
+            $ParameterName = 'Directory'
+            $RuntimeParameter = New-Object System.Management.Automation.RuntimeDefinedParameter($ParameterName, [String], $AttributeCollection)
+            $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
+            $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
+            return $RuntimeParameterDictionary
+        } catch {}
+    }
+    Begin {
+        try {
+            $Directory = $PSBoundParameters[$ParameterName]
+        } catch {}
+    }
+    Process {
+        SetLocationPath -Path $Path -Directory $Directory
+    }
+}
+New-Alias -Name cl -Value SetLocationPathCodeLearning
+
 function SetLocationPathCodeStudents {
     [CmdletBinding()]
     Param()
