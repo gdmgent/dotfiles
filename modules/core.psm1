@@ -270,7 +270,7 @@ if ($IsWindows) {
 }
 
 function ReloadDotfiles {
-    pwsh -NoLogo
+    pwsh -NoLogo -NoExit -Command "cd $pwd"
     Stop-Process -Id $PID
 }
 
