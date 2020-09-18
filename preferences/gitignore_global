@@ -40,7 +40,3 @@ Thumbs.db
 # JetBrains #
 #############
 .idea/
-
-# Visual Studio Code #
-######################
-.vscode/
