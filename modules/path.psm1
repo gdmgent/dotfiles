@@ -56,7 +56,11 @@ function OpenFolderInGui {
         [Int]
         [ValidateRange(0,9)]
         [Alias('w')]
-        $Windows = 1
+        $Windows = 1,
+
+        [String]
+        [Alias('p')]
+        $Path = "."
     )
     if ($IsMacOS) {
         $App = 'open'
@@ -64,7 +68,7 @@ function OpenFolderInGui {
         $App = 'explorer'
     }
     for ($I = 0; $I -lt $Windows; $I++) {
-        Invoke-Expression -Command "${App} ."
+        Invoke-Expression -Command "${App} ${Path}"
     }
 }
 New-Alias -Name f -Value OpenFolderInGui
