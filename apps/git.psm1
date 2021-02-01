@@ -19,11 +19,6 @@ function GitAdd {
 }
 New-Alias -Name add -Value GitAdd
 
-function GitCheckoutGitHubPages {
-    git checkout gh-pages
-}
-New-Alias -Name pages -Value GitCheckoutGitHubPages
-
 function GitCheckoutMaster {
     Param (
         [Switch]
@@ -68,25 +63,8 @@ function GitCommit {
 }
 New-Alias -Name commit -Value GitCommit
 
-function GitConfig {
-    Param(
-        [Parameter(Mandatory=$true)]
-        [String]
-        $UserName,
-
-        [Parameter(Mandatory=$true)]
-        [String]
-        $Email
-    )
-    if (! (ExistCommand -Name git)) {
-        InstallGit
-    }
-    git config --global user.name "${UserName}"
-    git config --global user.email "${Email}"
-}
-
 function GitConfigFixProtocol {
-    git config --global url."https://".insteadOf git://
+    Invoke-Expression -Command "git config --global url.'https://'.insteadOf git://"
 }
 
 function GitConfigIgnoreGlobal {
@@ -95,23 +73,33 @@ function GitConfigIgnoreGlobal {
     }
     WriteMessage -Type Info -Inverse -Message 'Installing .gitignore_global'
     $GitIgnoreSource = Join-Path -Path $Global:DotfilesInstallPath -ChildPath 'preferences' | Join-Path -ChildPath 'gitignore_global'
-    git config --global core.excludesfile $GitIgnoreSource
+    Invoke-Expression -Command "git config --global core.excludesfile $GitIgnoreSource"
 }
+
+function GitInit {
+    Invoke-Expression -Command "git init"
+    Invoke-Expression -Command "git branch -m master main"
+}
+New-Alias -Name init -Value GitInit
 
 function GitConfigUser {
     Param(
         [Parameter(Mandatory=$true)]
         [String]
-        $Email = 'olivier.parent@arteveldehs.be',
-
+         $Email = 'olivier.parent@arteveldehs.be',
         [Parameter(Mandatory=$true)]
         [String]
-        $User = 'OlivierParent'
+         $User = 'OlivierParent'
+
+
     )
-    git config --global user.email $Email
-    git config --global user.name $User
+    if (! (ExistCommand -Name git)) {
+        InstallGit
+    }
+    Invoke-Expression -Command "git config --global user.name '${UserName}'"
+    Invoke-Expression -Command "git config --global user.email '${Email}'"
     if ($IsWindows) {
-        git config --global credential.helper wincred
+        Invoke-Expression -Command "git config --global credential.helper wincred"
     }
 }
 
