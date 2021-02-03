@@ -243,7 +243,7 @@ function Dotfiles {
         $OS = 'unknown operating system'
     }
     $PSVersion = $PSVersionTable.PSVersion.ToString()
-    WriteMessage -Type Info -Inverse -Message 'Artevelde University of Applied Sciences' -NoNewline
+    WriteMessage -Type Info -Inverse -Message 'Artevelde UAS' -NoNewline
     WriteMessage -Type Strong -Message " Dotfiles ${Global:DotfilesVersion}" -NoNewline
     WriteMessage -Type Mute -Message " in PowerShell ${PSEdition} ${PSVersion} on ${OS}"
 }

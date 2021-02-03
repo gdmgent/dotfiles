@@ -19,7 +19,12 @@ function GitAdd {
 }
 New-Alias -Name add -Value GitAdd
 
-function GitCheckoutMaster {
+function GitBranchDefaultMain {
+    Invoke-Expression -Command "git config --global init.defaultBranch main"
+}
+New-Alias -Name main -Value GitBranchDefaultMain
+
+function GitCheckoutMain {
     Param (
         [Switch]
         $All,
@@ -27,7 +32,7 @@ function GitCheckoutMaster {
         [Switch]
         $Submodule
     )
-    $Command = 'git checkout master'
+    $Command = 'git checkout main'
     if ($All -or $Submodule) {
         Invoke-Expression -Command "git submodule foreach --recursive '${Command}'"
     }
@@ -35,7 +40,7 @@ function GitCheckoutMaster {
         Invoke-Expression -Command $Command
     }
 }
-New-Alias -Name master -Value GitCheckoutMaster
+New-Alias -Name checkout -Value GitCheckoutMain
 
 function GitCommit {
     Param(
@@ -53,7 +58,10 @@ function GitCommit {
         [Switch]
         $Submodule
     )
-    $Command = "git commit -m `"[${Type}] ${Message}`""
+    if ($Message) {
+        $Message = " ${Message}"
+    }
+    $Command = "git commit -m `"[${Type}]${Message}`""
     if ($All -or $Submodule) {
         Invoke-Expression -Command "git submodule foreach --recursive '${Command}'"
     }
@@ -64,7 +72,7 @@ function GitCommit {
 New-Alias -Name commit -Value GitCommit
 
 function GitConfigFixProtocol {
-    Invoke-Expression -Command "git config --global url.'https://'.insteadOf git://"
+    Invoke-Expression -Command "git config --global url.`"https://`".insteadOf git://"
 }
 
 function GitConfigIgnoreGlobal {
@@ -96,8 +104,8 @@ function GitConfigUser {
     if (! (ExistCommand -Name git)) {
         InstallGit
     }
-    Invoke-Expression -Command "git config --global user.name '${UserName}'"
-    Invoke-Expression -Command "git config --global user.email '${Email}'"
+    Invoke-Expression -Command "git config --global user.name `"${UserName}`""
+    Invoke-Expression -Command "git config --global user.email `"${Email}`""
     if ($IsWindows) {
         Invoke-Expression -Command "git config --global credential.helper wincred"
     }
@@ -120,8 +128,8 @@ function GitPull {
     $Command = 'git pull'
     if ($All -or $Submodule) {
         # git submodule update --recursive --remote
-        $CommandMaster = 'git checkout master'
-        Invoke-Expression -Command "git submodule foreach --recursive '${CommandMaster};${Command}'"
+        $CommandMain = 'git checkout main'
+        Invoke-Expression -Command "git submodule foreach --recursive '${CommandMain};${Command}'"
     }
     if ($All -or !$Submodule) {
         Invoke-Expression -Command $Command
@@ -148,7 +156,7 @@ function GitPush {
 New-Alias -Name push -Value GitPush
 
 function GitPushFirst {
-    $Command = 'git push --set-upstream origin master'
+    $Command = 'git push --set-upstream origin main'
     Invoke-Expression -Command $Command
 }
 New-Alias -Name pushfirst -Value GitPushFirst
