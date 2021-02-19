@@ -48,7 +48,7 @@ function GitCommit {
         [String]
         $Message,
 
-        [ValidateSet('CHORE','ENHANCEMENT','FEATURE','FIX','REFACTOR','STYLE','TEST')]
+        [ValidateSet('CHORE','ENHANCEMENT','FEATURE','FIX','REFACTOR','STYLE','TEST','WIP')]
         [String]
         $Type = 'WIP',
 
@@ -70,6 +70,28 @@ function GitCommit {
     }
 }
 New-Alias -Name commit -Value GitCommit
+
+function GitPublish {
+    Param(
+        [ValidateSet('build','dist','docs')]
+        [String]
+        $Folder = 'build'
+    )
+    Invoke-Expression -Command "git add -f ./${Folder}"
+    Invoke-Expression -Command "git commit -m `"[PUBLICATION]`""
+    Invoke-Expression -Command "git subtree push --prefix ${Folder} origin gh-pages"
+}
+New-Alias -Name publish -Value GitPublish
+
+function GitPublishDist {
+    GitPublish -Folder 'dist'
+}
+New-Alias -Name dist -Value GitPublishDist
+
+function GitPublishDocs {
+    GitPublish -Folder 'docs'
+}
+New-Alias -Name docs -Value GitPublishDocs
 
 function GitConfigFixProtocol {
     Invoke-Expression -Command "git config --global url.`"https://`".insteadOf git://"
