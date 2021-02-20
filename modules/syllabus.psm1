@@ -142,6 +142,30 @@ function CloneSyllabus {
     # UpdateBundler
 }
 
+function GitHubVuepress {
+    Param (
+        [Parameter(Mandatory=$true)]
+        [String]
+        $Name,
+
+        [ValidateSet('gdm','pgm')]
+        [String]
+        $Organisation = 'gdm',
+
+        [Switch]
+        $CreateNew
+    )
+    if ($CreateNew) {
+        SetLocationPathSyllabi
+        Invoke-Expression -Command "gh repo clone gdmgent/vuepress-demo `"${Organisation}-${Name}`""
+        Set-Location "${Organisation}-${Name}"
+        Invoke-Expression -Command "rm -r -fo .git"
+    }
+    Invoke-Expression -Command "git init ."
+    Invoke-Expression -Command "gh repo create ${Organisation}gent/${Name} --confirm --enable-issues=false --enable-wiki=false --homepage=https://www.${Organisation}.gent/${Name}/ --private"
+}
+New-Alias -Name vp -Value GitHubVuepress
+
 function StatusSyllabi {
     Push-Location
     SetLocationPathSyllabi

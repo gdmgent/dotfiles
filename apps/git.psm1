@@ -78,7 +78,7 @@ function GitPublish {
         $Folder = 'build'
     )
     Invoke-Expression -Command "git add -f ./${Folder}"
-    Invoke-Expression -Command "git commit -m `"[PUBLICATION]`""
+    Invoke-Expression -Command "git commit -a -m `"[PUBLICATION]`""
     Invoke-Expression -Command "git subtree push --prefix ${Folder} origin gh-pages"
 }
 New-Alias -Name publish -Value GitPublish
