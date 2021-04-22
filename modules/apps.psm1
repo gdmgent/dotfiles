@@ -620,8 +620,10 @@ function InstallYarn {
         WriteMessage -Type Info -Inverse -Message 'Using Brew to install Yarn...'
         sh -c 'brew install yarn --ignore-dependencies'
     } elseif ($IsWindows) {
-        WriteMessage -Type Info -Inverse -Message 'Using Scoop to install Yarn...'
-        cmd /c 'scoop install yarn'
+        # WriteMessage -Type Info -Inverse -Message 'Using Scoop to install Yarn...'
+        # cmd /c 'scoop install yarn'
+        WriteMessage -Type Info -Inverse -Message 'Using npm to install Yarn...'
+        npm install --global yarn
     } elseif ($IsLinux) {
         WriteMessage -Type Info -Inverse -Message 'Using apt to install Yarn...'
         sh -c 'curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -'

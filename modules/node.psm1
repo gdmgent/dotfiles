@@ -24,13 +24,13 @@ function InitNode {
 function InstallNode {
     if ($IsMacOS) {
         WriteMessage -Type Info -Message "Using NVM to install Node.js..."
-        # nvm install --lts
-        nvm install
+        # nvm install
+        nvm install --lts
     } elseif ($IsWindows) {
-        # $Latest = (($(nvm list available) | Select-Object -Index 3).Split('|') | Select-Object -Index 2).Trim()
-        $Latest = (($(nvm list available) | Select-Object -Index 3).Split('|') | Select-Object -Index 1).Trim()
+        # $Latest = (($(nvm list available) | Select-Object -Index 3).Split('|') | Select-Object -Index 1).Trim()
+        $Latest = (($(nvm list available) | Select-Object -Index 3).Split('|') | Select-Object -Index 2).Trim()
         WriteMessage -Type Info -Message "Using NVM to install Node.js ${Latest}..."
-        nvm.exe install latest
+        nvm.exe install $Latest
     }
 }
 
@@ -70,7 +70,7 @@ function UseNode {
     Param(
         [ValidateSet(14, 15, 16)]
         [Int16]
-        $Version = 16
+        $Version = 14
     )
     if ($IsMacOS) {
         $NodeVersion = $(nvm version $Version)
