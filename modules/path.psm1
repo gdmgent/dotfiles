@@ -343,7 +343,7 @@ function SetLocationPathSyllabi {
     [CmdletBinding()]
     Param()
     DynamicParam {
-        $Year = '2021'
+        $Year = '2022'
         $Path = [io.path]::Combine($HOME, 'Syllabi', $Year)
         if (! (Test-Path -Path $Path)) {
             New-Item -Path $Path -ItemType Directory
