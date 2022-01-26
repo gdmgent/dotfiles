@@ -241,6 +241,22 @@ function InstallGitIgnoreGlobal {
     git config --global core.excludesfile $GitIgnoreSource
 }
 
+function InstallGitHubCLI {
+    WriteMessage -Type Info -Inverse -Message 'Installing GitHub CLI'
+    if ($IsMacOS) {
+        WriteMessage -Type Info -Message 'Using Homebrew to install GitHub CLI...'
+        bash -c 'brew install gh'
+    } elseif ($IsWindows) {
+        WriteMessage -Type Info -Message 'Using Scoop to install GitHub CLI...'
+        cmd /c 'scoop install gh'
+    }
+    if (ExistCommand -Name gh) {
+        gh --version
+    } else {
+        WriteMessage -Type Danger -Message 'GitHub CLI was not installed.'
+    }
+}
+
 function InstallHotel {
     WriteMessage -Type Info -Inverse -Message 'Installing Hotel'
     if (! (ExistCommand -Name yarn)) {
