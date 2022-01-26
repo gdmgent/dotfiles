@@ -78,9 +78,8 @@ function SetEnvironment {
 
         # User Paths
         $EnvironmentPath += @(
-            '/usr/local/opt/python@3.8/bin'
-            '/usr/local/opt/ruby/bin',
-            '/usr/local/lib/ruby/gems/2.6.0/bin',
+            '/opt/homebrew/bin',
+            '/usr/local/opt/python@3.8/bin',
             '/usr/local/bin',
             '/usr/bin',
             '/bin'
@@ -102,10 +101,8 @@ function SetEnvironment {
     } elseif ($IsWindows) {
         $EnvironmentPath = [System.Environment]::GetEnvironmentVariable('Path').Split([io.path]::PathSeparator)
         $EnvironmentPath += @(
-            'C:\cygwin64\bin',
             "${HOME}\AppData\Local\Yarn\bin",
             "${HOME}\AppData\Roaming\Composer\vendor\bin",
-            'C:\php',
             'C:\Program Files\MySQL\MySQL Server 8.0\bin'
         )
 

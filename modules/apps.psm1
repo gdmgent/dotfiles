@@ -216,7 +216,7 @@ function InstallGit {
     WriteMessage -Type Info -Inverse -Message 'Installing Git'
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install Git...'
-        sh -c 'brew install git'
+        bash -c 'brew install git'
     } elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Using Scoop to install Git...'
         cmd /c 'scoop install git'
