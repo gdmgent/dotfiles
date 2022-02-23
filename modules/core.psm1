@@ -79,7 +79,7 @@ function SetEnvironment {
         # User Paths
         $EnvironmentPath += @( 
             '/opt/homebrew/bin',
-            '/usr/local/opt/python@3.8/bin',
+            '/opt/homebrew/opt/python@3.10/bin',
             '/usr/local/bin',
             '/usr/bin',
             '/bin'

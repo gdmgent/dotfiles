@@ -510,14 +510,16 @@ function InstallPython {
     WriteMessage -Type Info -Inverse -Message 'Installing Python'
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install Python...'
-        sh -c 'brew install python@3.8'
+        sh -c 'brew install python@3.10'
+        python3 --version
+        pip3 --version
     } elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Using Scoop to install Python...'
         if (ExistCommand -Name scoop) {
             cmd /c 'scoop install python'
         }
     } elseif ($IsLinux) {
-        $Version = '3.8.0'
+        $Version = '3.10.2'
         WriteMessage -Type Info -Message 'Install Python...'
         sh -c 'sudo apt update'
         sh -c 'sudo apt-get install -y build-essential tk-dev libncurses5-dev libncursesw5-dev libreadline6-dev libdb5.3-dev libgdbm-dev libsqlite3-dev libssl-dev libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev libffi-dev'
