@@ -68,9 +68,9 @@ function SetNode {
 
 function UseNode {
     Param(
-        [ValidateSet(16, 17)]
+        [ValidateSet(14, 16, 18, 19, 20)]
         [Int16]
-        $Version = 16
+        $Version = 18
     )
     if ($IsMacOS) {
         $NodeVersion = $(nvm version $Version)
