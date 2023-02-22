@@ -417,3 +417,5 @@ function SetLocationPathUpTwo ([String] $Directory) {
     SetLocationPath -Path $Path -Directory $Directory
 }
 New-Alias -Name ... -Value SetLocationPathUpTwo
+
+New-Alias -Name python -Value python3
