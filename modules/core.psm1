@@ -94,6 +94,7 @@ function SetEnvironment {
         # Last
         $EnvironmentPath += @(
             "${HOME}/.composer/vendor/bin"
+            "${HOME}/.yarn/bin"
         )
 
         [System.Environment]::SetEnvironmentVariable('PATH', $EnvironmentPath -join ':')
