@@ -879,3 +879,14 @@ if ($IsWindows) {
         }
     }
 }
+
+# Utility functions
+# -----------------
+
+if ($IsMacOS) {
+    function RestartSshAgent {
+        WriteMessage -Type Info -Message 'Restarting SSH Agent'
+        sh -c 'launchctl stop /System/Library/LaunchAgents/org.openbsd.ssh-agent'
+        sh -c 'launchctl start /System/Library/LaunchAgents/org.openbsd.ssh-agent'
+    }
+}
