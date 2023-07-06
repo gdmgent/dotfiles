@@ -2,6 +2,8 @@ if ($IsOSX) { # Attempt compatibility with older PowerShell versions.
     $IsMacOS = True
 }
 
+New-Variable -Name WorkingDirectory -Value $pwd
+
 Set-Variable -Name DotfilesInstallPath -Value (Split-Path -Path $MyInvocation.MyCommand.Path) -Option Constant -Scope Global -ErrorAction SilentlyContinue
 
 Set-Location -Path $Global:DotfilesInstallPath
@@ -56,3 +58,5 @@ if (! $Error) {
 }
 
 Dotfiles
+
+Set-Location $WorkingDirectory
