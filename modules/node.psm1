@@ -7,7 +7,8 @@ if ($IsMacOS) {
 function nvm {
     if ($IsMacOS) {
         Invoke-Expression "sh -c 'export NVM_DIR=~/.nvm && source $(brew --prefix nvm)/nvm.sh && nvm ${args}'"
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         nvm.exe $args
     }
 }
@@ -26,17 +27,23 @@ function InstallNode {
         WriteMessage -Type Info -Message "Using NVM to install Node.js..."
         # nvm install
         nvm install --lts
-    } elseif ($IsWindows) {
+        
+    }
+    elseif ($IsWindows) {
         # $Latest = (($(nvm list available) | Select-Object -Index 3).Split('|') | Select-Object -Index 1).Trim()
         $Latest = (($(nvm list available) | Select-Object -Index 3).Split('|') | Select-Object -Index 2).Trim()
         WriteMessage -Type Info -Message "Using NVM to install Node.js ${Latest}..."
         nvm.exe install $Latest
     }
+    if (ExistCommand -Name npm) {
+        WriteMessage -Type Info -Message "Updating npm..."
+        npm install --global npm@latest
+    }
 }
 
 function SetNode {
     Param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [String]
         $Version
     )
@@ -49,12 +56,14 @@ function SetNode {
                 nvm alias default $Version
                 $env:PATH = @($nodePath, $env:PATH) -join [io.path]::PathSeparator
                 Set-Alias -Name node -Value $(Get-Command -Name node -Type Application | Select-Object -First 1).Source -Scope Global
-            } else {
+            }
+            else {
                 WriteConfig -Name Node -Value $null
             }
             return
         }
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         $Versions = nvm.exe list | Select-String -Pattern '(\d+(.\d+){2})' | ForEach-Object { ($_.Matches).Value }
         if ($Versions -contains "${Version}") {
             WriteConfig -Name Node -Value $Version
@@ -74,7 +83,8 @@ function UseNode {
     )
     if ($IsMacOS) {
         $NodeVersion = $(nvm version $Version)
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         $NodeVersion = nvm.exe list | Select-String -Pattern "(${Version}(.\d+){2})" -AllMatches | ForEach-Object { ($_.Matches).Value } | Select-Object -First 1
     }
     if ($NodeVersion) {
@@ -87,7 +97,8 @@ function ShowNodeConfig {
     WriteMessage -Type Info -Message 'Node.js is currently version ' -NoNewline
     if ($Version) {
         WriteMessage -Type Success -Message $Version -NoNewline
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message 'Undefined' -NoNewline
     }
     WriteMessage -Message '.'
@@ -96,9 +107,11 @@ function ShowNodeConfig {
 function WebpackCommand {
     if (Test-Path -Path ($Path = [io.path]::Combine('.', 'node_modules', '.bin', 'webpack'))) {
         Invoke-Expression -Command "${Path} ${args}"
-    } elseif (ExistCommand -Name webpack) {
+    }
+    elseif (ExistCommand -Name webpack) {
         Invoke-Expression -Command ((Get-Command -Name webpack -Type Application).Source + " ${args}")
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message 'Webpack is not available from this directory, nor is it installed globally.'
     }
 }
