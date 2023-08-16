@@ -27,7 +27,8 @@ function InstallArtestead {
     }
     if (ExistCommand -Name cgr) {
         ComposerGlobalRequire gdmgent/artestead
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message 'Run InstallComposerCgr and try again.'
     }
 }
@@ -40,7 +41,8 @@ if ($IsMacOS) {
         if (ExistCommand -Name brew) {
             WriteMessage -Type Success -Message 'Installed version of Homebrew: ' -NoNewline
             brew --version
-        } else {
+        }
+        else {
             WriteMessage -Type Danger -Message 'Homebrew was not installed.'
         }
     }
@@ -54,7 +56,8 @@ function InstallBundler {
     if (ExistCommand -Name bundle) {
         WriteMessage -Type Success -Message 'Installed version of Bundler: ' -NoNewline
         bundle --version
-    } else {
+    }
+    else {
         WriteMessage -Type Danger -Message 'Bundler was not installed.'
     }
 }
@@ -64,14 +67,16 @@ function InstallComposer {
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using PHP to install Composer...'
         sh -c 'curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer'
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Using Scoop to install Composer...'
         cmd /c 'scoop install composer'
     }
     if (ExistCommand -Name composer) {
         WriteMessage -Type Success -Message 'Installed version of Composer: ' -NoNewline
         composer --version
-    } else {
+    }
+    else {
         WriteMessage -Type Danger -Message 'Composer was not installed.'
     }
 }
@@ -85,7 +90,8 @@ function InstallComposerCgr {
     composer global require consolidation/cgr
     if (ExistCommand -Name cgr) {
         WriteMessage -Type Success -Message 'CGR is installed.'
-    } else {
+    }
+    else {
         WriteMessage -Type Danger -Message  'CGR was not installed.'
     }
 }
@@ -106,15 +112,16 @@ function InstallCustomDotfilesPowerShellModule {
     if (! (Test-Path -Path $CustomModuleDestination)) {
         WriteMessage -Type Info -Message 'Copying file...'
         Copy-Item -Path $CustomModule -Destination $CustomModuleDestination
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message 'Custom Dotfiles PowerShell Module already installed.'
     }
 }
 
 function InstallFont {
     Param(
-        [Parameter(Mandatory=$true)]
-        [ValidateSet('FiraCode','Hack','Hasklig','JetBrainsMono')]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('FiraCode', 'Hack', 'Hasklig', 'JetBrainsMono')]
         [String]
         $Typeface
     )
@@ -124,7 +131,8 @@ function InstallFont {
         $DestinationPath = "${HOME}/Library/Fonts/"
         $OutFile = Join-Path -Path $env:TMPDIR -ChildPath $Urn
         $TempPath = "${env:TMPDIR}${Typeface}/"
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         $DestinationPath = 'C:\Windows\Fonts\'
         $OutFile = Join-Path -Path $env:TEMP -ChildPath $Urn
         $TempPath = "${env:TEMP}${Typeface}\"
@@ -142,7 +150,8 @@ function InstallFont {
                 if ($IsMacOS) {
                     $Output = unzip $OutFile **/*.$FontFormat -d $TempPath -o
                     Move-Item -Path ${TempPath}${FontFormat}/*.${FontFormat} -Destination $DestinationPath -Force
-                } elseif ($IsWindows) {
+                }
+                elseif ($IsWindows) {
                     Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
                     $Output = Get-ChildItem -Path ${TempPath}${FontFormat}\*.${FontFormat} | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
                 }
@@ -161,7 +170,8 @@ function InstallFont {
                 if ($IsMacOS) {
                     $Output = unzip $OutFile *.${FontFormat} -d $TempPath -o
                     Move-Item -Path ${TempPath}*.${FontFormat} -Destination $DestinationPath -Force
-                } elseif ($IsWindows) {
+                }
+                elseif ($IsWindows) {
                     Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
                     $Output = Get-ChildItem -Path ${TempPath}*.${FontFormat} | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
                 }
@@ -180,7 +190,8 @@ function InstallFont {
                 if ($IsMacOS) {
                     $Output = unzip $OutFile *.${FontFormat} -d $TempPath -o
                     Move-Item -Path ${TempPath}*.${FontFormat} -Destination $DestinationPath -Force
-                } elseif ($IsWindows) {
+                }
+                elseif ($IsWindows) {
                     Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
                     $Output = Get-ChildItem -Path "${TempPath}*.${FontFormat}" | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
                 }
@@ -198,7 +209,8 @@ function InstallFont {
                 if ($IsMacOS) {
                     $Output = unzip $OutFile *.${FontFormat} -d $TempPath -o
                     Move-Item -Path ${TempPath}*.${FontFormat} -Destination $DestinationPath -Force
-                } elseif ($IsWindows) {
+                }
+                elseif ($IsWindows) {
                     Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
                     $Output = Get-ChildItem -Path "${TempPath}*.${FontFormat}" | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
                 }
@@ -217,7 +229,8 @@ function InstallGit {
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install Git...'
         bash -c 'brew install git'
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Using Scoop to install Git...'
         cmd /c 'scoop install git'
     }
@@ -227,7 +240,8 @@ function InstallGit {
         }
         WriteMessage -Type Success -Message 'Installed version of Git: ' -NoNewline
         git --version
-    } else {
+    }
+    else {
         WriteMessage -Type Danger -Message 'Git was not installed.'
     }
 }
@@ -246,13 +260,16 @@ function InstallGitHubCLI {
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install GitHub CLI...'
         bash -c 'brew install gh'
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Using Scoop to install GitHub CLI...'
         cmd /c 'scoop install gh'
     }
     if (ExistCommand -Name gh) {
         gh --version
-    } else {
+        gh extension install github/gh-classroom
+    }
+    else {
         WriteMessage -Type Danger -Message 'GitHub CLI was not installed.'
     }
 }
@@ -266,7 +283,8 @@ function InstallHotel {
     if (ExistCommand -Name hotel) {
         WriteMessage -Type Success -Message 'Installed version of Hotel: ' -NoNewline
         hotel --version
-    } else {
+    }
+    else {
         WriteMessage -Type Danger -Message 'Hotel was not installed.'
     }
 }
@@ -276,14 +294,16 @@ function InstallHugo {
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install Hugo...'
         sh -c 'brew install hugo'
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Using Scoop to install Hugo...'
         cmd /c 'scoop install hugo'
     }
     if (ExistCommand -Name InstallHugo) {
         WriteMessage -Type Success -Message 'Installed version of Hugo: ' -NoNewline
         hugo --version
-    } else {
+    }
+    else {
         WriteMessage -Type Danger -Message 'Hugo was not installed.'
     }
 }
@@ -316,14 +336,16 @@ function InstallNvm {
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install NVM...'
         sh -c 'brew install nvm'
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Using Scoop to install NVM...'
         cmd /c 'scoop install nvm'
     }
     WriteMessage -Type Success -Message 'Installed version of NVM: ' -NoNewline
     if ($IsMacOS) {
         nvm --version
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         nvm version
     }
 }
@@ -337,10 +359,12 @@ function InstallMySQL {
             sh -c 'brew services start mysql'
             sh -c '$(brew --prefix mysql)/bin/mysqladmin -u root password secret'
             WriteMessage -Type Warning -Inverse -Message 'Open a new PowerShell window or tab to activate the MySQL commands.'
-        } else { 
+        }
+        else { 
             WriteMessage -Type Danger -Inverse -Message 'MySQL was not correctly installed.'
         }
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Using the MySQL Installer to install MySQL Server...'
         WriteMessage -Type Warning -Inverse -Message 'set "root" password to "secret"'
         OpenUri -Uri 'https://dev.mysql.com/downloads/installer/'
@@ -353,7 +377,8 @@ function InstallNginx {
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install NGINX...'
         sh -c 'brew install nginx --devel'
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Using Scoop to install NGINX...'
         cmd /c 'scoop install nginx'
     }
@@ -365,7 +390,8 @@ function InstallNginx {
     if ($IsMacOS) {
         # $NginxConfigDirectory = (brew --prefix nginx) + '/.bottle/etc/nginx'
         $NginxConfigDirectory = '/usr/local/etc/nginx'
-    } else {
+    }
+    else {
         $NginxConfigDirectory = "${HOME}/scoop/apps/nginx/current/conf".replace('\', '/')
     }
     $FileContent = (Get-Content -Path $DestinationPath).Replace('»NGINX-CONFIG-DIRECTORY«', $NginxConfigDirectory)
@@ -373,7 +399,8 @@ function InstallNginx {
     if (ExistCommand -Name nginx) {
         WriteMessage -Type Success 'Installed version of NGINX: ' -NoNewline
         nginx -v
-    } else {
+    }
+    else {
         WriteMessage -Type Danger -Message 'NGINX is not correctly installed.'
     }
 }
@@ -397,12 +424,13 @@ function InstallPhp {
     if ($IsMacOS) {
         WriteMessage -Type Info -Message "Using Homebrew to install PHP ${Version}..."
         sh -c 'brew install php'
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         $Step = 0
         $Steps = 6
         $Step++
         WriteMessage -Type Info -Message "[${Step}/${Steps}] Downloading PHP ${Version}..."
-        $Url =  'https://windows.php.net'
+        $Url = 'https://windows.php.net'
         $File = "/php-${Version}.\d+-nts-Win32-VC15-x64.zip$"
         $FileUri = "${Url}/downloads/releases"
         $RelativeUri = ((Invoke-WebRequest -Uri $FileUri).Links | Where-Object { $_.href -match $File } | Select-Object -First 1).href
@@ -479,7 +507,8 @@ function InstallPowerShell {
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install PowerShell...'
         sh -c 'brew cask install powershell'
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         $OS = 'win10-win2016-x64.msi$'
         $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
         $Urn = 'powershell-win10-x64.msi'
@@ -494,8 +523,9 @@ function InstallPowerShell {
             WriteMessage -Type Warning -Inverse -Message 'Run InstallHyperPreferences and reopen Hyper'
             Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i ${InstallerFile}" -Wait
             Remove-Item -Path $InstallerFile
-       }
-    } elseif ($IsLinux) {
+        }
+    }
+    elseif ($IsLinux) {
         $OS = 'ubuntu1.16.04.1_amd64.deb$'
         $Uri = ($Response.assets | Where-Object { $_.name -match $OS }).browser_download_url
         $Urn = 'powershell-ubuntu1.16.04.1_amd64.deb'
@@ -513,12 +543,14 @@ function InstallPython {
         sh -c 'brew install python'
         python3 --version
         pip3 --version
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Using Scoop to install Python...'
         if (ExistCommand -Name scoop) {
             cmd /c 'scoop install python'
         }
-    } elseif ($IsLinux) {
+    }
+    elseif ($IsLinux) {
         $Version = '3.11.2'
         WriteMessage -Type Info -Message 'Install Python...'
         sh -c 'sudo apt update'
@@ -539,7 +571,8 @@ function InstallRust {
     if ($IsMacOS) {
         WriteMessage -Type Info -Message 'Using Homebrew to install Rust...'
         sh -c 'brew install rust'
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         $InstallerFile = 'rustup-init.exe'
         $Uri = 'https://win.rustup.rs/x86_64'
         Invoke-WebRequest -Uri $Uri -OutFile $InstallerFile
@@ -547,7 +580,7 @@ function InstallRust {
             WriteMessage -Type Info -Message 'Installing Rust...'
             Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i ${InstallerFile}" -Wait
             Remove-Item -Path $InstallerFile
-       }
+        }
     }
 }
 
@@ -562,7 +595,8 @@ function InstallRuby {
         if (ExistCommand -Name brew) {
             sh -c 'brew install ruby'
         }
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Installing Ruby and MSYS2...'
         $Url = 'https://rubyinstaller.org/downloads/'
         Write-Host 'Downloading Ruby installer...'
@@ -588,7 +622,8 @@ function InstallRuby {
             WriteMessage -Type Success -Message 'Installed version of Gem: ' -NoNewline
             gem --version
         }
-    } else {
+    }
+    else {
         WriteMessage -Type Danger -Message 'Ruby is not correctly installed.'
         WriteMessage -Type Danger -Message 'Close window and try again.'
     }
@@ -627,7 +662,8 @@ if ($IsMacOS) {
             WriteMessage -Type Success -Message 'Installed version of Laravel Valet: ' -NoNewline
             valet --version
             valet install
-        } else {
+        }
+        else {
             WriteMessage -Type Danger -Message 'Laravel Valet was not installed.'
         }
     }
@@ -635,15 +671,16 @@ if ($IsMacOS) {
 
 function InstallYarn {
     # if ($IsMacOS) {
-        # WriteMessage -Type Info -Inverse -Message 'Using Brew to install Yarn...'
-        # sh -c 'brew install yarn --ignore-dependencies'
+    # WriteMessage -Type Info -Inverse -Message 'Using Brew to install Yarn...'
+    # sh -c 'brew install yarn --ignore-dependencies'
     # } elseif ($IsWindows) {
-        # WriteMessage -Type Info -Inverse -Message 'Using Scoop to install Yarn...'
-        # cmd /c 'scoop install yarn'
+    # WriteMessage -Type Info -Inverse -Message 'Using Scoop to install Yarn...'
+    # cmd /c 'scoop install yarn'
     if ($IsMacOS -or $IsWindows) {
         WriteMessage -Type Info -Inverse -Message 'Using npm to install Yarn...'
         npm install --global yarn
-    } elseif ($IsLinux) {
+    }
+    elseif ($IsLinux) {
         WriteMessage -Type Info -Inverse -Message 'Using apt to install Yarn...'
         sh -c 'curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -'
         sh -c 'echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list'
@@ -652,7 +689,8 @@ function InstallYarn {
     if (ExistCommand -Name yarn) {
         WriteMessage -Type Success -Message 'Installed version of Yarn: ' -NoNewline
         yarn --version
-    } else {
+    }
+    else {
         WriteMessage -Type Danger -Message 'Yarn is not correctly installed.'
     }
 }
@@ -665,7 +703,8 @@ if ($IsWindows) {
         $admin = IsAdministrator
         if ($admin) {
             dism.exe /Online /Disable-Feature:HypervisorPlatform
-        } else {
+        }
+        else {
             WriteMessage -Type Danger -Message 'Run this window as administrator and try again.'
         }
     }
@@ -676,7 +715,8 @@ if ($IsWindows) {
         $admin = IsAdministrator
         if ($admin) {
             bcdedit /set hypervisorlaunchtype off
-        } else {
+        }
+        else {
             WriteMessage -Type Danger -Message 'Run this window as administrator and try again.'
         }
     }
@@ -719,7 +759,8 @@ function RemoveLocalArtestead {
             'vendor'
         )
         Remove-Item -Path $ToRemove -Recurse -Force -ErrorAction SilentlyContinue
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message "This is not an Artestead project. Could not find '${File}' in this directory."
     }
 }
@@ -729,7 +770,7 @@ function RemoveAndroidStudio {
         $ToRemove = @(
             '/Applications/Android\ Studio.app',
             '~/.android', # Android Virtual Devices
-            '~/.gradle',  # Gradle
+            '~/.gradle', # Gradle
             '~/AndroidStudioProjects',
             '~/Library/Application\ Support/AndroidStudio*',
             '~/Library/Android*', # Android SDK
@@ -764,7 +805,8 @@ if ($IsMacOS) {
             WriteMessage -Type Info -Message 'First Download PowerShell...'
             Set-Location -Path /usr/local/
             sh -c 'sudo rm -rf *'
-        } else {
+        }
+        else {
             WriteMessage -Type Info -Message 'Using Ruby to uninstall Homebrew...'
             sh -c 'ruby -e \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)\"'
         }
@@ -790,7 +832,8 @@ function UninstallRuby {
         if (ExistCommand -Name brew) {
             sh -c 'brew uninstall ruby'
         }
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         WriteMessage -Type Info -Message 'Using Scoop to uninstall Ruby...'
         if (ExistCommand -Name brew) {
             cmd /c 'scoop uninstall ruby'
@@ -807,7 +850,7 @@ if ($IsWindows) {
         LxRun.exe /uninstall /y
     }
     function ResetUbuntu {
-    WriteMessage -Type Info -Inverse -Message 'Resetting Bash on Ubuntu on Windows...'
+        WriteMessage -Type Info -Inverse -Message 'Resetting Bash on Ubuntu on Windows...'
         LxRun.exe /uninstall /full /y
         LxRun.exe /install /y
     }
@@ -838,7 +881,8 @@ if ($IsMacOS) {
             WriteMessage -Type Info -Message '[3/3] Cleaning up Homebrew...'
             if ($Force) {
                 sh -c 'brew cleanup -s'
-            } else {
+            }
+            else {
                 sh -c 'brew cleanup'
             }
         }
@@ -854,12 +898,14 @@ function UpdateBundler {
             bundle update
             WriteMessage -Type Info -Message '[2/2] Cleaning up unused Ruby Gems...'
             gem cleanup
-        } else {
+        }
+        else {
             WriteMessage -Type Danger -Message 'Bundler Ruby Gem is not installed.'
             InstallBundler
             UpdateBundler
         }
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message "Cannot run Bundler in this directory because a '${File}' is required."
     }
 }
