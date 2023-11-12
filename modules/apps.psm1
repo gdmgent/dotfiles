@@ -121,7 +121,7 @@ function InstallCustomDotfilesPowerShellModule {
 function InstallFont {
     Param(
         [Parameter(Mandatory = $true)]
-        [ValidateSet('FiraCode', 'Hack', 'Hasklig', 'JetBrainsMono')]
+        [ValidateSet('FiraCode', 'Hack', 'Hasklig', 'JetBrainsMono', 'Monaspace')]
         [String]
         $Typeface
     )
@@ -143,7 +143,7 @@ function InstallFont {
             WriteMessage -Type Info -Inverse -Message 'Fira Code by Nikita Prokopov'
             WriteMessage -Type Info -Message 'Downloading Fira Code typeface...'
             $Response = Invoke-RestMethod -Method Get -Uri https://api.github.com/repos/tonsky/FiraCode/releases/latest
-            $Uri = $Response.assets.browser_download_url
+            $Uri = $Response.assets.zipball_url
             Invoke-WebRequest -Uri $Uri -OutFile $OutFile
             if (Test-Path -Path $OutFile) {
                 WriteMessage -Type Info -Message 'Installing Fira Code typeface...'
@@ -202,10 +202,28 @@ function InstallFont {
             $FontFormat = 'ttf'
             WriteMessage -Type Info -Inverse -Message 'JetBrains Mono by Philipp Nurullin...'
             WriteMessage -Type Info -Message 'Downloading JetBrains Mono typeface...'
-            $Uri = 'https://download.jetbrains.com/fonts/JetBrainsMono-1.0.0.zip'
+            $Uri = 'https://download.jetbrains.com/fonts/JetBrainsMono-2.304.zip'
             Invoke-WebRequest -Uri $Uri -OutFile $OutFile
             if (Test-Path -Path $OutFile) {
                 WriteMessage -Type Info -Message 'Installing JetBrains Mono typeface...'
+                if ($IsMacOS) {
+                    $Output = unzip $OutFile *.${FontFormat} -d $TempPath -o
+                    Move-Item -Path ${TempPath}*.${FontFormat} -Destination $DestinationPath -Force
+                }
+                elseif ($IsWindows) {
+                    Expand-Archive -Path $OutFile -DestinationPath $TempPath -Force
+                    $Output = Get-ChildItem -Path "${TempPath}*.${FontFormat}" | Select-Object { (New-Object -ComObject Shell.Application).Namespace(0x14).CopyHere($_.FullName) }
+                }
+                Remove-Item -Path $OutFile
+            }
+        }
+        'Monaspace' {
+            WriteMessage -Type Info -Inverse -Message 'Monaspace by GitHub...'
+            WriteMessage -Type Info -Message 'Downloading GitHub Monaspace family of typefaces...'
+            $Uri = 'https://github.com/githubnext/monaspace/releases/download/v1.000/monaspace-v1.000.zip'
+            Invoke-WebRequest -Uri $Uri -OutFile $OutFile
+            if (Test-Path -Path $OutFile) {
+                WriteMessage -Type Info -Message 'Installing GitHub Monaspace family of typefaces...'
                 if ($IsMacOS) {
                     $Output = unzip $OutFile *.${FontFormat} -d $TempPath -o
                     Move-Item -Path ${TempPath}*.${FontFormat} -Destination $DestinationPath -Force
