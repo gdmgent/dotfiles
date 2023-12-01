@@ -12,7 +12,8 @@ function ExtendHostsFile {
     if ($IsMacOS) {
         $HostsPath = '/etc/hosts'
         sudo pwsh -c "(Get-Content -Path '${HostsPath}' | Select-String -Pattern '${Tag}' -NotMatch).Line | Out-File $HostsPath -Encoding utf8"
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         $HostsPath = 'C:\Windows\System32\drivers\etc\hosts'
         (Get-Content -Path $HostsPath | Select-String -Pattern $Tag -NotMatch).Line | Out-File $HostsPath -Encoding utf8
     }
@@ -45,7 +46,8 @@ function ExtendHostsFile {
         $Command = "Add-Content -Path '${HostsPath}' -Value '${DomainEntries}';"
         if ($IsMacOS) {
             sudo pwsh -c "$Command"
-        } elseif ($IsWindows) {
+        }
+        elseif ($IsWindows) {
             Invoke-Expression -Command $Command
         }
     }
@@ -54,7 +56,7 @@ function ExtendHostsFile {
 function OpenFolderInGui {
     Param(
         [Int]
-        [ValidateRange(0,9)]
+        [ValidateRange(0, 9)]
         [Alias('w')]
         $Windows = 1,
 
@@ -64,7 +66,8 @@ function OpenFolderInGui {
     )
     if ($IsMacOS) {
         $App = 'open'
-    } elseif($IsWindows) {
+    }
+    elseif ($IsWindows) {
         $App = 'explorer'
     }
     for ($I = 0; $I -lt $Windows; $I++) {
@@ -79,10 +82,12 @@ function OpenHostsFile {
             WriteMessage -Type Warning -Message 'Please close all instances of Visual Studio Code before continuing'
             [void](Read-Host 'Press Enter to continue…')
             sudo code /etc/hosts
-        } elseif ($IsWindows) {
+        }
+        elseif ($IsWindows) {
             code C:\Windows\System32\drivers\etc\hosts
         }
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message "Please install Visual Studio Code and install the 'code' command in PATH."
     }
 }
@@ -92,7 +97,8 @@ function SetLocationPath ([String] $Path, [String] $Directory) {
     $Location = Join-Path -Path $Path -ChildPath $Directory
     if (Test-Path -Path $Location) {
         Push-Location $Location
-    } else {
+    }
+    else {
         WriteMessage -Type Danger -Message "Cannot find path '${Location}' because it does not exist."
         WriteMessage -Type Info -Message 'Available directories:'
         Get-ChildItem -Name $Path | Write-Host -ForegroundColor DarkGray
@@ -106,7 +112,8 @@ function SetLocationPathBlenderAddOns {
     )
     if ($IsMacOS) {
         $BlenderPath = [io.path]::Combine($HOME, 'Library', 'Application Support', 'Blender', $Version, 'scripts', 'addons')
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         $BlenderPath = [io.path]::Combine($HOME, 'AppData', 'Roaming', 'Blender Foundation', 'Blender', $Version, 'scripts', 'addons')
     }
     if (Test-Path -Path $BlenderPath) {
@@ -134,7 +141,8 @@ function SetLocationPathDotfilesInstall {
         if (Test-Path -Path $DotfilesConfigPath) {
             Set-Location -Path $DotfilesConfigPath
         }
-    } else {
+    }
+    else {
         Set-Location -Path $DotfilesInstallPath
     }
 }
@@ -161,12 +169,14 @@ function SetLocationPathCode {
             $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
             $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
             return $RuntimeParameterDictionary
-        } catch {}
+        }
+        catch {}
     }
     Begin {
         try {
             $Directory = $PSBoundParameters[$ParameterName]
-        } catch {}
+        }
+        catch {}
     }
     Process {
         SetLocationPath -Path $Path -Directory $Directory
@@ -194,12 +204,14 @@ function SetLocationPathCodeColleges {
             $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
             $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
             return $RuntimeParameterDictionary
-        } catch {}
+        }
+        catch {}
     }
     Begin {
         try {
             $Directory = $PSBoundParameters[$ParameterName]
-        } catch {}
+        }
+        catch {}
     }
     Process {
         SetLocationPath -Path $Path -Directory $Directory
@@ -227,12 +239,14 @@ function SetLocationPathCodeLearning {
             $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
             $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
             return $RuntimeParameterDictionary
-        } catch {}
+        }
+        catch {}
     }
     Begin {
         try {
             $Directory = $PSBoundParameters[$ParameterName]
-        } catch {}
+        }
+        catch {}
     }
     Process {
         SetLocationPath -Path $Path -Directory $Directory
@@ -260,12 +274,14 @@ function SetLocationPathCodeStudents {
             $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
             $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
             return $RuntimeParameterDictionary
-        } catch {}
+        }
+        catch {}
     }
     Begin {
         try {
             $Directory = $PSBoundParameters[$ParameterName]
-        } catch {}
+        }
+        catch {}
     }
     Process {
         SetLocationPath -Path $Path -Directory $Directory
@@ -293,12 +309,14 @@ function SetLocationPathCodeTest {
             $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
             $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
             return $RuntimeParameterDictionary
-        } catch {}
+        }
+        catch {}
     }
     Begin {
         try {
             $Directory = $PSBoundParameters[$ParameterName]
-        } catch {}
+        }
+        catch {}
     }
     Process {
         SetLocationPath -Path $Path -Directory $Directory
@@ -326,12 +344,14 @@ function SetLocationPathHome {
             $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
             $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
             return $RuntimeParameterDictionary
-        } catch {}
+        }
+        catch {}
     }
     Begin {
         try {
             $Directory = $PSBoundParameters[$ParameterName]
-        } catch {}
+        }
+        catch {}
     }
     Process {
         SetLocationPath -Path $Path -Directory $Directory
@@ -360,12 +380,14 @@ function SetLocationPathSyllabi {
             $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
             $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
             return $RuntimeParameterDictionary
-        } catch {}
+        }
+        catch {}
     }
     Begin {
         try {
             $Directory = $PSBoundParameters[$ParameterName]
-        } catch {}
+        }
+        catch {}
     }
     Process {
         SetLocationPath -Path $Path -Directory $Directory
@@ -393,12 +415,14 @@ function OpenLocationPathSyllabi {
             $RuntimeParameterDictionary = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
             $RuntimeParameterDictionary.Add($ParameterName, $RuntimeParameter)
             return $RuntimeParameterDictionary
-        } catch {}
+        }
+        catch {}
     }
     Begin {
         try {
             $Directory = $PSBoundParameters[$ParameterName]
-        } catch {}
+        }
+        catch {}
     }
     Process {
         $WorkingDirectory = [io.path]::Combine("$Path", "$Directory")

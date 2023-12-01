@@ -1,6 +1,6 @@
 function OpenUri {
     Param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [String]
         $Uri,
 
@@ -63,51 +63,71 @@ function OpenUri {
         $Command = "open ${Uri}"
         if ($Blisk) {
             $Command += ' -a Blisk'
-        } elseif ($Chrome) {
+        }
+        elseif ($Chrome) {
             $Command += ' -a "Google Chrome"'
-        } elseif ($ChromeCanary) {
+        }
+        elseif ($ChromeCanary) {
             $Command += ' -a "Google Chrome Canary"'
-        } elseif ($Firefox) {
+        }
+        elseif ($Firefox) {
             $Command += ' -a Firefox'
-        } elseif ($FirefoxDeveloperEdition) {
+        }
+        elseif ($FirefoxDeveloperEdition) {
             $Command += ' -a "Firefox Developer Edition"'
-        } elseif ($Opera) {
+        }
+        elseif ($Opera) {
             $Command += ' -a Opera'
-        } elseif ($OperaDeveloper) {
+        }
+        elseif ($OperaDeveloper) {
             $Command += ' -a "Opera Developer"'
-        } elseif ($Safari) {
+        }
+        elseif ($Safari) {
             $Command += ' -a Safari'
-        } elseif ($SafariTechnologyPreview) {
+        }
+        elseif ($SafariTechnologyPreview) {
             $Command += ' -a "Safari Technology Preview"'
-        } elseif ($Vivaldi) {
+        }
+        elseif ($Vivaldi) {
             $Command += ' -a Vivaldi'
         }
         Invoke-Expression -Command $Command
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         if ($Blisk) {
             $Browser = 'blisk.exe'
-        } elseif ($Chrome) {
+        }
+        elseif ($Chrome) {
             $Browser = "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe"
-        } elseif ($ChromeCanary) {
+        }
+        elseif ($ChromeCanary) {
             $Browser = "$HOME\AppData\Local\Google\Chrome SxS\Application\chrome.exe"
-        } elseif ($Edge) {
+        }
+        elseif ($Edge) {
             $Command = "microsoft-edge:${Uri}"
-        } elseif ($Firefox) {
+        }
+        elseif ($Firefox) {
             $Browser = "${env:ProgramFiles}\Mozilla Firefox\firefox.exe"
-        } elseif ($FirefoxDeveloperEdition) {
+        }
+        elseif ($FirefoxDeveloperEdition) {
             $Browser = "${env:ProgramFiles}\Firefox Developer Edition\firefox.exe"
-         } elseif ($Opera) {
-             $Browser = "${env:ProgramFiles(x86)}\Opera\launcher.exe"
-         } elseif ($OperaDeveloper) {
-             $Browser = "${env:ProgramFiles(x86)}\Opera developer\launcher.exe"
-        } elseif ($Vivaldi) {
-             $Browser = 'vivaldi.exe'
-        } else {
+        }
+        elseif ($Opera) {
+            $Browser = "${env:ProgramFiles(x86)}\Opera\launcher.exe"
+        }
+        elseif ($OperaDeveloper) {
+            $Browser = "${env:ProgramFiles(x86)}\Opera developer\launcher.exe"
+        }
+        elseif ($Vivaldi) {
+            $Browser = 'vivaldi.exe'
+        }
+        else {
             $Command = $Uri;
         }
         if ($Browser) {
             Start-Process -FilePath $Browser -ArgumentList $Uri
-        } elseif ($Command) {
+        }
+        elseif ($Command) {
             Start-Process -FilePath $Command
         }
     }

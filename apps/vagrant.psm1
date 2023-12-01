@@ -11,7 +11,7 @@ New-Alias -Name va -Value VagrantAccount
 
 function VagrantBoxAdd {
     Param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [String]
         $Version
     )
@@ -26,7 +26,7 @@ New-Alias -Name vbl -Value VagrantBoxList
 
 function VagrantBoxRemove {
     Param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [String]
         $Version
     )
@@ -162,7 +162,8 @@ function HasVagrantfile {
     $File = 'Vagrantfile'
     if (Test-Path -Path $File) {
         return $true
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message "Cannot run Vagrant in this directory because a '${File}' is required."
     }
 }

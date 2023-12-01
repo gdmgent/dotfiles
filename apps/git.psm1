@@ -44,11 +44,11 @@ New-Alias -Name checkout -Value GitCheckoutMain
 
 function GitCommit {
     Param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [String]
         $Message,
 
-        [ValidateSet('CHORE','ENHANCEMENT','FEATURE','FIX','REFACTOR','STYLE','TEST','WIP')]
+        [ValidateSet('CHORE', 'ENHANCEMENT', 'FEATURE', 'FIX', 'REFACTOR', 'STYLE', 'TEST', 'WIP')]
         [String]
         $Type = 'WIP',
 
@@ -73,7 +73,7 @@ New-Alias -Name commit -Value GitCommit
 
 function GitPublish {
     Param(
-        [ValidateSet('build','dist','docs')]
+        [ValidateSet('build', 'dist', 'docs')]
         [String]
         $Folder = 'build'
     )
@@ -114,12 +114,12 @@ New-Alias -Name init -Value GitInit
 
 function GitConfigUser {
     Param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [String]
-         $Email = 'olivier.parent@arteveldehs.be',
-        [Parameter(Mandatory=$true)]
+        $Email = 'olivier.parent@arteveldehs.be',
+        [Parameter(Mandatory = $true)]
         [String]
-         $User = 'OlivierParent'
+        $User = 'OlivierParent'
 
 
     )

@@ -16,7 +16,8 @@ function ServeNginx {
             $Expression = 'Get-Process -Name nginx -ErrorAction SilentlyContinue | Stop-Process'
             if ($IsMacOS) {
                 sudo pwsh -c $Expression
-            } elseif ($IsWindows) {
+            }
+            elseif ($IsWindows) {
                 Invoke-Expression -Command $Expression
             }
         }
@@ -25,7 +26,8 @@ function ServeNginx {
             if ($IsMacOS) {
                 $Expression = "sudo ${Expression}"
                 Invoke-Expression -Command $Expression
-            } elseif ($IsWindows) {
+            }
+            elseif ($IsWindows) {
                 Set-Location $HOME\scoop\apps\nginx\current
                 Invoke-Expression -Command $Expression
                 Pop-Location
@@ -39,7 +41,8 @@ function ServeNginx {
             $Expression = 'nginx -s quit'
             if ($IsMacOS) {
                 Invoke-Expression -Command "sudo ${Expression}"
-            } elseif ($IsWindows) {
+            }
+            elseif ($IsWindows) {
                 Set-Location $HOME\scoop\apps\nginx\current
                 Invoke-Expression -Command $Expression
                 Pop-Location
@@ -63,7 +66,8 @@ function ServeNginx {
                 $Expression = $args[0]
                 if ($IsMacOS) {
                     Invoke-Expression -Command "sudo ${Expression}"
-                } elseif ($IsWindows) {
+                }
+                elseif ($IsWindows) {
                     Set-Location $HOME\scoop\apps\nginx\current
                     Invoke-Expression -Command $Expression
                 }
@@ -92,13 +96,16 @@ function ConfigureNginxSite {
     if (Test-Path -Path drupal -PathType Container) {
         $Directories += 'drupal'
         $SourceFileName = 'nginx-drupal.conf'
-    } elseif (Test-Path -Path laravel -PathType Container) {
+    }
+    elseif (Test-Path -Path laravel -PathType Container) {
         $Directories += 'laravel/public'
         $SourceFileName = 'nginx-laravel.conf'
-    } elseif (Test-Path -Path lumen -PathType Container) {
+    }
+    elseif (Test-Path -Path lumen -PathType Container) {
         $Directories += 'lumen/public'
         $SourceFileName = 'nginx-laravel.conf'
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message 'No configurable site found.'
         return
     }
@@ -107,7 +114,8 @@ function ConfigureNginxSite {
     if ($IsMacOS) {
         # $NginxConfigDirectory = (brew --prefix nginx) + '/.bottle/etc/nginx'
         $NginxConfigDirectory = '/usr/local/etc/nginx'
-    } else {
+    }
+    else {
         $NginxConfigDirectory = "${HOME}/scoop/apps/nginx/current/conf".replace('\', '/')
     }
     $DomainName = GenerateDomainName($Directories)

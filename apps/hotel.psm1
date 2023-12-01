@@ -1,6 +1,7 @@
 if ($IsMacOS) {
     Set-Variable -Name HotelPort -Value '$PORT' -Option Constant -Scope Global
-} elseif ($IsWindows) {
+}
+elseif ($IsWindows) {
     Set-Variable -Name HotelPort -Value '%PORT%' -Option Constant -Scope Global
 }
 

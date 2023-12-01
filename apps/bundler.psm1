@@ -1,5 +1,5 @@
 function JekyllServe {
-    [CmdletBinding(PositionalBinding=$false)]
+    [CmdletBinding(PositionalBinding = $false)]
     Param(
         [Switch]
         [Alias('a')]
@@ -26,7 +26,7 @@ function JekyllServe {
         $Open,
 
         [Int]
-        [ValidateRange(0,999)]
+        [ValidateRange(0, 999)]
         [Alias('p')]
         $PortOffset,
 
@@ -57,7 +57,7 @@ function JekyllServe {
         }
         if ($PortOffset) {
             $Port = 4000 + $PortOffset
-            $Command +=  " --port=${Port}"
+            $Command += " --port=${Port}"
         }
         if ($Unpublished) {
             $Command += ' --unpublished'
@@ -83,7 +83,8 @@ function IsJekyllSite {
     $File = '_config.yml'
     if (Test-Path -Path $File) {
         return $true
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message "Cannot run Jekyll in this directory because a '${File}' is required."
     }
 }

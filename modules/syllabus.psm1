@@ -1,24 +1,24 @@
 function CloneProject {
     Param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [String]
         $Name,
 
         [String]
         $DestinationName,
 
-        [ValidateSet('git','http','https')]
+        [ValidateSet('git', 'http', 'https')]
         [String]
         $Protocol = 'https',
 
-        [ValidateSet('bitbucket.org','github.com','gitlab.com')]
+        [ValidateSet('bitbucket.org', 'github.com', 'gitlab.com')]
         [String]
         $Service = 'github.com',
 
         [String]
         $Account = 'gdmgent-1819',
 
-        [ValidateSet('Code','CodeColleges','CodeStudents','CodeTest')]
+        [ValidateSet('Code', 'CodeColleges', 'CodeStudents', 'CodeTest')]
         [String]
         $CodeFolder = 'Code'
     )
@@ -31,7 +31,8 @@ function CloneProject {
         $DestinationName = $DestinationName.ToLower()
         Invoke-Expression -Command "${Command} ${DestinationName}"
         Invoke-Expression -Command "${SetLocationPath} -Directory ${DestinationName}"
-    } else {
+    }
+    else {
         Invoke-Expression -Command $Command
         Invoke-Expression -Command "${SetLocationPath} -Directory ${Name}"
     }
@@ -39,11 +40,11 @@ function CloneProject {
 
 function CloneClassroomProjects {
     Param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [String]
         $FilePath,
 
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [String]
         $Organisation,
 
@@ -53,15 +54,15 @@ function CloneClassroomProjects {
         [String]
         $RepositoryPrefix = '',
 
-        [ValidateSet('Code','CodeColleges','CodeStudents','CodeTest')]
+        [ValidateSet('Code', 'CodeColleges', 'CodeStudents', 'CodeTest')]
         [String]
         $CodeFolder = 'CodeStudents',
 
-        [ValidateSet(',',';')]
+        [ValidateSet(',', ';')]
         [String]
         $Delimiter = ';',
 
-        [ValidateSet('bitbucket.org','github.com','gitlab.com')]
+        [ValidateSet('bitbucket.org', 'github.com', 'gitlab.com')]
         [String]
         $Service = 'github.com'
     )
@@ -84,7 +85,8 @@ function CloneClassroomProjects {
         }
         if ([regex]::matches($Name, "^https?://")) {
             $Uri = $Name
-        } else {
+        }
+        else {
             $Uri = "https://${Service}/${Organisation}/${RepositoryName}"
         }
         $Path = [regex]::matches($Uri, "^(https?://[/\w.-]+/)?([\w.-]+).git$").Groups[2].Value
@@ -97,18 +99,18 @@ function CloneClassroomProjects {
 
 function CloneSyllabus {
     Param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [String]
         $Name,
 
         [String]
         $DestinationName,
 
-        [ValidateSet('github.com','gitlab.com')]
+        [ValidateSet('github.com', 'gitlab.com')]
         [String]
         $Service = 'github.com',
 
-        [ValidateSet('gdmgent','pgmgent')]
+        [ValidateSet('gdmgent', 'pgmgent')]
         [String]
         $Account = 'gdmgent',
 
@@ -121,7 +123,8 @@ function CloneSyllabus {
     git clone https://$Service/$Account/$Name --branch $Branch --single-branch $DestinationName
     if ($DestinationName) {
         SetLocationPathSyllabi -Directory $DestinationName
-    } else {
+    }
+    else {
         SetLocationPathSyllabi -Directory $Name
     }
     if ($Clean) {
@@ -131,10 +134,12 @@ function CloneSyllabus {
         git submodule add https://$Service/$Account/syllabus-resources.git
         if ($DestinationName) {
             git remote add origin https://$Service/$Account/$DestinationName.git
-        } else {
+        }
+        else {
             git remote add origin https://$Service/$Account/$Name.git
         }
-    } else {
+    }
+    else {
         git submodule update --init --recursive --remote
         GitCheckoutMaster -Submodule
     }
@@ -144,11 +149,11 @@ function CloneSyllabus {
 
 function GitHubVuepress {
     Param (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [String]
         $Name,
 
-        [ValidateSet('gdm','pgm')]
+        [ValidateSet('gdm', 'pgm')]
         [String]
         $Organisation = 'gdm',
 
@@ -195,8 +200,8 @@ function UpdateSyllabi {
     $Directories = Get-ChildItem -Directory -Name
     foreach ($Directory in $Directories) {
         Push-Location $Directory
-            WriteMessage -Type Info -Inverse -Message $Directory
-            UpdateSyllabus -NoBundlerUpdate:$NoBundlerUpdate -Push:$Push
+        WriteMessage -Type Info -Inverse -Message $Directory
+        UpdateSyllabus -NoBundlerUpdate:$NoBundlerUpdate -Push:$Push
         Pop-Location
     }
     Pop-Location
@@ -257,10 +262,12 @@ function UpdateSyllabusSnippets {
         $Origin = [io.path]::Combine('syllabus-resources', '__tools', 'snippets', '*')
         if ($IsMacOS) {
             $Destination = "${HOME}/Library/Application Support/Code/User/snippets/"
-        } elseif ($IsWindows) {
+        }
+        elseif ($IsWindows) {
             $Destination = "${env:APPDATA}\Code\User\snippets\"
-        } else {
-            $Destination =  $MyInvocation.MyCommand.Path
+        }
+        else {
+            $Destination = $MyInvocation.MyCommand.Path
         }
         Get-ChildItem -Path $Origin -Include *.json, *.code-snippets -Recurse | Copy-Item -Destination $Destination -Force
     }

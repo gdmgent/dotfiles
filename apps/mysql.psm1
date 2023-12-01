@@ -5,15 +5,15 @@ New-Alias -Name my -Value MySQLAliases
 
 function MySQLCreateDatabase {
     Param(
-        [Parameter(Mandatory=$true)]
-        [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech2')]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('cms', 'cmsdev', 'webdev1', 'webdev2', 'webtech2')]
         [String]
         $Course,
 
         [String]
         $DatabaseName,
 
-        [ValidateSet('Colleges','Default','Student','Test')]
+        [ValidateSet('Colleges', 'Default', 'Student', 'Test')]
         [String]
         $Mode = 'Default',
 
@@ -37,9 +37,10 @@ function MySQLCreateDatabase {
             }
             Default {}
         }
-    } else {
+    }
+    else {
         $DatabaseName = $DatabaseName.ToLower()
-        $Course       = $DatabaseName
+        $Course = $DatabaseName
     }
     $DatabaseUserUsername = "${Course}-user"
     $DatabaseUserPassword = "${Course}-pass"
@@ -64,15 +65,15 @@ New-Alias -Name mycrdb -Value MySQLCreateDatabase
 
 function MySQLCreateDatabaseUser {
     Param(
-        [Parameter(Mandatory=$true)]
-        [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech2')]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('cms', 'cmsdev', 'webdev1', 'webdev2', 'webtech2')]
         [String]
         $Course,
 
         [String]
         $DatabaseName,
 
-        [ValidateSet('Colleges','Default','Student','Test')]
+        [ValidateSet('Colleges', 'Default', 'Student', 'Test')]
         [String]
         $Mode = 'Default',
 
@@ -96,14 +97,15 @@ function MySQLCreateDatabaseUser {
             }
             Default {}
         }
-    } else {
+    }
+    else {
         $DatabaseName = $DatabaseName.ToLower()
-        $Course       = $DatabaseName
+        $Course = $DatabaseName
     }
     $DatabaseAdministratorUsername = 'root'
     $DatabaseAdministratorPassword = 'secret'
-    $DatabaseUserUsername          = "${Course}-user"
-    $DatabaseUserPassword          = "${Course}-pass"
+    $DatabaseUserUsername = "${Course}-user"
+    $DatabaseUserPassword = "${Course}-pass"
     if ($DatabaseUserUsername.Length -gt 13) {
         WriteMessage -Type Danger -Message "The username '${DatabaseUserUsername}' is longer than the maximum allowed number of characters of 13."
         return
@@ -132,8 +134,8 @@ New-Alias -Name mycruser -Value MySQLCreateDatabaseUser
 
 function MySQLDropDatabase {
     Param(
-        [Parameter(Mandatory=$true)]
-        [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech2')]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('cms', 'cmsdev', 'webdev1', 'webdev2', 'webtech2')]
         [String]
         $Course,
 
@@ -143,7 +145,7 @@ function MySQLDropDatabase {
         [Int16]
         $Port = 3306,
 
-        [ValidateSet('Colleges','Default','Student','Test')]
+        [ValidateSet('Colleges', 'Default', 'Student', 'Test')]
         [String]
         $Mode = 'Default',
 
@@ -151,7 +153,7 @@ function MySQLDropDatabase {
         $ShowSQL
     )
     if (! $DatabaseName) {
-        $DatabaseName= "${Course}-db"
+        $DatabaseName = "${Course}-db"
         switch ($Mode) {
             'Colleges' {
                 $DatabaseName = "${DatabaseName}-colleges"
@@ -164,9 +166,10 @@ function MySQLDropDatabase {
             }
             Default {}
         }
-    } else {
+    }
+    else {
         $DatabaseName = $DatabaseName.ToLower()
-        $Course       = $DatabaseName
+        $Course = $DatabaseName
     }
     $DatabaseUserUsername = "${Course}-user"
     $DatabaseUserPassword = "${Course}-pass"
@@ -186,12 +189,12 @@ New-Alias -Name mydrdb -Value MySQLDropDatabase
 
 function MySQLCreateDatabaseUserAndDatabase {
     Param(
-        [Parameter(Mandatory=$true)]
-        [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech2')]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('cms', 'cmsdev', 'webdev1', 'webdev2', 'webtech2')]
         [String]
         $Course,
 
-        [ValidateSet('Colleges','Default','Student','Test')]
+        [ValidateSet('Colleges', 'Default', 'Student', 'Test')]
         [String]
         $Mode = 'Default'
     )
@@ -202,8 +205,8 @@ New-Alias -Name mycr -Value MySQLCreateDatabaseUserAndDatabase
 
 function MySQLLogin {
     Param(
-        [Parameter(Mandatory=$true)]
-        [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech2')]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('cms', 'cmsdev', 'webdev1', 'webdev2', 'webtech2')]
         [String]
         $Course,
 
@@ -216,7 +219,8 @@ function MySQLLogin {
     if ($Root) {
         $Username = 'root'
         $Password = 'secret'
-    } else {
+    }
+    else {
         $Username = "${Course}-user"
         $Password = "${Course}-pass"
     }
@@ -240,13 +244,16 @@ function MySQLStart {
     if ($IsMacOS) {
         if ($Service) {
             brew services start mysql
-        } else {
+        }
+        else {
             mysql.server start
         }
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         if ($Service) {
             mysqld.exe --install
-        } else {
+        }
+        else {
             mysqld.exe
         }
     }
@@ -270,13 +277,16 @@ function MySQLStop {
     if ($IsMacOS) {
         if ($Service) {
             brew services stop mysql
-        } else {
+        }
+        else {
             mysql.server stop
         }
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         if ($Service) {
             mysqld.exe --remove
-        } else {
+        }
+        else {
             mysqladmin.exe -u root -p shutdown
         }
     }

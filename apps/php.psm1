@@ -3,18 +3,23 @@ function BehatCommand {
     if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
         if ($IsWindows) {
             Invoke-Expression -Command "${Path} ${args}"
-        } else {
+        }
+        else {
             Invoke-Expression -Command "php ${Path} ${args}"
         }
-    } elseif (Test-Path -Path ($Path = Join-Path -Path vendor -ChildPath $Path)) {
+    }
+    elseif (Test-Path -Path ($Path = Join-Path -Path vendor -ChildPath $Path)) {
         if ($IsWindows) {
             Invoke-Expression -Command "${Path} ${args}"
-        } else {
+        }
+        else {
             Invoke-Expression -Command "php ${Path} ${args}"
         }
-    } elseif (ExistCommand -Name $Command) {
+    }
+    elseif (ExistCommand -Name $Command) {
         Invoke-Expression -Command (((Get-Command -Name $Command -Type Application).Source | Select-Object -first 1) + " ${args}")
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message 'Behat is not available from this directory, nor is it installed globally.'
     }
 }
@@ -22,7 +27,7 @@ New-Alias -Name behat -Value BehatCommand
 
 function ComposerGlobalRequire {
     Param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [String]
         $Package,
 
@@ -35,7 +40,8 @@ function ComposerGlobalRequire {
     if ($Remove) {
         WriteMessage -Type Info -Message "Removing ${Package}..."
         Invoke-Expression -Command "cgr remove ${Package}"
-    } else {
+    }
+    else {
         WriteMessage -Type Info -Message "Installing ${Package}..."
         Invoke-Expression -Command "cgr ${Package}"
     }
@@ -50,22 +56,29 @@ function DrupalCommand {
     if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
         if ($IsWindows) {
             Invoke-Expression -Command "${Path} ${args}"
-        } elseif ($SuperUser) {
+        }
+        elseif ($SuperUser) {
             Invoke-Expression -Command "sudo php ${Path} ${args}"
-        } else {
+        }
+        else {
             Invoke-Expression -Command "php ${Path} ${args}"
         }
-    } elseif (Test-Path -Path ($Path = Join-Path -Path vendor -ChildPath $Path)) {
+    }
+    elseif (Test-Path -Path ($Path = Join-Path -Path vendor -ChildPath $Path)) {
         if ($IsWindows) {
             Invoke-Expression -Command "${Path} ${args}"
-        } elseif ($SuperUser) {
+        }
+        elseif ($SuperUser) {
             Invoke-Expression -Command "sudo php ${Path} ${args}"
-        } else {
+        }
+        else {
             Invoke-Expression -Command "php ${Path} ${args}"
         }
-    } elseif (ExistCommand -Name $Command) {
+    }
+    elseif (ExistCommand -Name $Command) {
         Invoke-Expression -Command (((Get-Command -Name $Command -Type Application).Source | Select-Object -first 1) + " --nocolor ${args}")
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message 'Drupal is not available from this directory, nor is it installed globally.'
     }
 }
@@ -76,22 +89,27 @@ function DrushCommand {
     if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
         if ($IsWindows) {
             Invoke-Expression -Command "${Path} ${args}"
-        } else {
+        }
+        else {
             Invoke-Expression -Command "php ${Path} ${args}"
         }
-    } elseif (Test-Path -Path ($Path = Join-Path -Path vendor -ChildPath $Path)) {
+    }
+    elseif (Test-Path -Path ($Path = Join-Path -Path vendor -ChildPath $Path)) {
         if ($IsWindows) {
             # Invoke-Expression -Command "$Path $args"
             # Temp fix for Drush 9?
             Push-Location -Path ([io.path]::Combine('vendor', 'bin'))
             Invoke-Expression -Command ".\drush ${args}"
             Pop-Location
-        } else {
+        }
+        else {
             Invoke-Expression -Command "php ${Path} ${args}"
         }
-    } elseif (ExistCommand -Name $Command) {
+    }
+    elseif (ExistCommand -Name $Command) {
         Invoke-Expression -Command (((Get-Command -Name $Command -Type Application).Source | Select-Object -first 1) + " --nocolor $args")
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message 'Drush is not available from this directory, nor is it installed globally.'
     }
 }
@@ -101,7 +119,8 @@ function GravCommand {
     $Command = 'grav'
     if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
         Invoke-Expression -Command "php ${Path} ${args}"
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message 'Grav CLI Application is not available from this directory.'
     }
 }
@@ -111,7 +130,8 @@ function GravGPMCommand {
     $Command = 'gpm'
     if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
         Invoke-Expression -Command "php ${Path} ${args}"
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message 'Grav Package Manager is not available from this directory.'
     }
 }
@@ -121,7 +141,8 @@ function LaravelArtisanCommand {
     $Command = 'artisan'
     if (Test-Path -Path $Command) {
         Invoke-Expression -Command "php ${Command} ${args}"
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message 'Laravel Artisan Console is not available from this directory.'
     }
 }
@@ -133,18 +154,23 @@ function PHPUnitCommand {
     if (Test-Path -Path ($Path = Join-Path -Path bin -ChildPath $Command)) {
         if ($IsWindows) {
             Invoke-Expression -Command "${Path} ${args}"
-        } else {
+        }
+        else {
             Invoke-Expression -Command "php ${Path} ${args}"
         }
-    } elseif (Test-Path -Path ($Path = Join-Path -Path vendor -ChildPath $Path)) {
+    }
+    elseif (Test-Path -Path ($Path = Join-Path -Path vendor -ChildPath $Path)) {
         if ($IsWindows) {
             Invoke-Expression -Command "${Path} ${args}"
-        } else {
+        }
+        else {
             Invoke-Expression -Command "php ${Path} ${args}"
         }
-    } elseif (ExistCommand -Name $Command) {
+    }
+    elseif (ExistCommand -Name $Command) {
         Invoke-Expression -Command ((Get-Command -Name $Command -Type Application).Source + " ${args}")
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message 'PHPUnit is not available from this directory, nor is it installed globally.'
     }
 }
@@ -162,7 +188,7 @@ function ServePhp {
         $RouterScript = [io.path]::Combine($DotfilesInstallPath, 'scripts', 'php', 'router.php'),
 
         [String]
-        [ValidateSet('cms','cmsdev','webdev1','webdev2','webtech1')]
+        [ValidateSet('cms', 'cmsdev', 'webdev1', 'webdev2', 'webtech1')]
         $Course,
 
         [Switch]
@@ -178,7 +204,8 @@ function ServePhp {
             OpenUri -Uri "http://${Uri}"
             if (ExistCommand -Name ([io.path]::Combine('vendor', 'bin', 'drupal'))) {
                 DrupalCommand -SuperUser server $Uri
-            } else {
+            }
+            else {
                 ServePhp -Hostname $Hostname -Port $Port
             }
             break
@@ -195,15 +222,18 @@ function ServePhp {
             if ($NoRouterScript) {
                 OpenUri -Uri "http://${Uri}"
                 Invoke-Expression -Command "php -S ${Uri}"
-            } else {
+            }
+            else {
                 if (Test-Path -Path index.php) {
                     OpenUri -Uri "http://${Uri}"
                     if ($Port -eq 80 -and $IsMacOS) {
                         Invoke-Expression -Command "sudo php -S ${Uri} ${RouterScript}"
-                    } else {
+                    }
+                    else {
                         Invoke-Expression -Command "php -S ${Uri} ${RouterScript}"
                     }
-                } else {
+                }
+                else {
                     WriteMessage -Type Warning -Message '`index.php` could not be found in this directory.'
                 }
             }
@@ -218,10 +248,12 @@ function SymfonyConsoleCommand {
     if (Test-Path -Path ($PathBin = Join-Path -Path bin -ChildPath $Command)) {
         # Symfony 3.*.*
         Invoke-Expression -Command "php ${PathBin} ${args}"
-    } elseif (Test-Path -Path ($PathApp = Join-Path -Path app -ChildPath $Command)) {
+    }
+    elseif (Test-Path -Path ($PathApp = Join-Path -Path app -ChildPath $Command)) {
         # Symfony 2.*.*
         Invoke-Expression -Command "php ${PathBin} ${args}"
-    } else {
+    }
+    else {
         WriteMessage -Type Warning -Message 'Symfony Console is not available from this directory.'
     }
 }
@@ -243,7 +275,8 @@ if (ExistCommand -Name composer) {
             WriteMessage -Type Info -Message 'Updating Composer...'
             if ($IsWindows) {
                 cmd /c 'scoop update composer'
-            } else {
+            }
+            else {
                 composer self-update
             }
             WriteMessage -Type Info -Message 'Updating globally installed Composer packages...'

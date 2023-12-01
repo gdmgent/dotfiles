@@ -1,7 +1,3 @@
-if ($IsOSX) { # Attempt compatibility with older PowerShell versions.
-    $IsMacOS = True
-}
-
 New-Variable -Name WorkingDirectory -Value $pwd
 
 Set-Variable -Name DotfilesInstallPath -Value (Split-Path -Path $MyInvocation.MyCommand.Path) -Option Constant -Scope Global -ErrorAction SilentlyContinue
@@ -34,7 +30,8 @@ $Applications = @(
 foreach ($Application in $Applications) {
     if (ExistCommand -Name $Application) {
         Import-Module -Name ([io.path]::Combine($Global:DotfilesInstallPath, 'apps', "${Application}.psm1"))
-    } else {
+    }
+    else {
         $Error.RemoveAt(0)
     }
 }
@@ -45,7 +42,8 @@ if (Test-Path -Path $CustomModule) {
 
 if (ExistCommand -Name git) {
     git pull
-} else {
+}
+else {
     $Error.RemoveAt(0)
 }
 

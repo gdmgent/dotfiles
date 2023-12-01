@@ -3,7 +3,7 @@ Set-Variable -Name DotfilesVersion -Value (Get-Content -Path (Join-Path -Path $G
 
 function ExistCommand {
     Param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [String]
         $Name
     )
@@ -24,7 +24,8 @@ function InitConfig {
     if (Test-Path $Global:DotfilesConfigPath) {
         WriteMessage -Type Info -Message 'Reading config file...'
         Set-Variable -Name DotfilesConfig -Value (Get-Content -Raw -Path $Global:DotfilesConfigPath | ConvertFrom-Json) -Scope Global
-    } else {
+    }
+    else {
         WriteMessage -Type Info -Message 'Creating a new config file...'
         New-Item -Path $Global:DotfilesConfigPath -Force
         Set-Variable -Name DotfilesConfig -Value (New-Object -TypeName PSObject) -Scope Global
@@ -35,7 +36,8 @@ function InitConfig {
 function ReadConfig([String] $Name) {
     if (Get-Member -InputObject $Global:DotfilesConfig -Name $Name -MemberType NoteProperty) {
         return $Global:DotfilesConfig.$Name
-    } else {
+    }
+    else {
         return $null
     }
 }
@@ -47,7 +49,8 @@ function SaveConfig {
 function WriteConfig([String] $Name, [String] $Value) {
     if (Get-Member -InputObject $Global:DotfilesConfig -Name $Name -MemberType NoteProperty) {
         $Global:DotfilesConfig.$Name = $Value
-    } else {
+    }
+    else {
         Add-Member -InputObject $Global:DotfilesConfig -NotePropertyName $Name -NotePropertyValue $Value
     }
     SaveConfig
@@ -98,7 +101,8 @@ function SetEnvironment {
         )
 
         [System.Environment]::SetEnvironmentVariable('PATH', $EnvironmentPath -join ':')
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         $EnvironmentPath = [System.Environment]::GetEnvironmentVariable('Path').Split([io.path]::PathSeparator)
         $EnvironmentPath += @(
             "${HOME}\AppData\Local\Yarn\bin",
@@ -125,7 +129,7 @@ SetEnvironment
 
 function AddToEnvironmentPath {
     Param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [String]
         $Path,
 
@@ -136,7 +140,8 @@ function AddToEnvironmentPath {
 
     if ($First) {
         $EnvironmentPath = @($Path) + $EnvironmentPath
-    } else {
+    }
+    else {
         $EnvironmentPath += @($Path)
     }
     
@@ -148,11 +153,11 @@ function AddToEnvironmentPath {
 
 function WriteMessage {
     Param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [String]
         $Message,
 
-        [ValidateSet('Danger','Info','Mute','Primary','Strong','Success','Warning')]
+        [ValidateSet('Danger', 'Info', 'Mute', 'Primary', 'Strong', 'Success', 'Warning')]
         [String]
         $Type,
 
@@ -224,7 +229,8 @@ function WriteMessage {
     }
     if ($Background) {
         Write-Host " ${Message} " -BackgroundColor $Background -ForegroundColor $Foreground -NoNewline:$NoNewline;
-    } else {
+    }
+    else {
         Write-Host "${Message}" -ForegroundColor $Foreground -NoNewline:$NoNewline;
     }
 }
@@ -232,11 +238,14 @@ function WriteMessage {
 function Dotfiles {
     if ($IsMacOS) {
         $OS = 'macOS'
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         $OS = 'Windows'
-    } elseif ($IsLinux) {
+    }
+    elseif ($IsLinux) {
         $OS = 'Linux'
-    } else {
+    }
+    else {
         $OS = 'unknown operating system'
     }
     $PSVersion = $PSVersionTable.PSVersion.ToString()
@@ -248,13 +257,14 @@ New-Alias -Name dot -Value Dotfiles
 
 function FindListeners {
     Param(
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [Int16]
         $Port
     )
     if ($IsMacOS) {
         (sudo lsof -i ":${Port}" | Where-Object { $_ -match 'LISTEN' })
-    } elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
         (NETSTAT.EXE -ao | Where-Object { $_ -match 'Proto' -or ($_ -match ":${Port} " -and $_ -match 'LISTENING') })
     }
 }

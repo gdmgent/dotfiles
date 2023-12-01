@@ -1,5 +1,5 @@
 function PromptColors {
-     [enum]::GetValues([System.ConsoleColor]) | Foreach-Object { Write-Host $_ -ForegroundColor $_ }
+    [enum]::GetValues([System.ConsoleColor]) | Foreach-Object { Write-Host $_ -ForegroundColor $_ }
 }
 
 function PromptGit {
