@@ -38,6 +38,9 @@ function InstallNode {
     if (ExistCommand -Name npm) {
         WriteMessage -Type Info -Message "Updating npm..."
         npm install --global npm@latest
+        $nodeVersion = (node --version) -join "`n"
+        $npmVersion = (npm --version) -join "`n"
+        WriteMessage -Type Success -Message "Node.js ${nodeVersion} and npm v${npmVersion} installed."
     }
 }
 
